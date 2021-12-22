@@ -1,0 +1,49 @@
+name: gocery
+description: Semua kebutuhan dapur kamu dalam satu aplikasi.
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.5.1
+  get_storage: ^2.0.3
+  flutter_secure_storage: ^5.0.2
+  flutter_svg: ^1.0.0
+  firebase_core: ^1.10.5
+  firebase_messaging: ^11.2.3
+  firebase_auth: ^3.3.3
+  dio: ^4.0.4
+  google_sign_in: ^5.2.1
+  json_serializable: ^6.1.3
+  json_annotation: ^4.4.0
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner:
+
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - asset/image/
+
+  fonts:
+    - family: SFPRO
+      fonts:
+        - asset: asset/font/SFPRODISPLAYREGULAR.OTF
+        - asset: asset/font/SFPRODISPLAYMEDIUM.OTF
+          weight: 400
+        - asset: asset/font/SFPRODISPLAYBOLD.OTF
+          weight: 600
+        - asset: asset/font/SFPRODISPLAYLIGHTITALIC.OTF
+          style: italic
