@@ -1,10 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gocery/core/config/app_route.dart';
 import 'package:gocery/core/config/app_theme.dart';
 import 'package:get/get.dart';
 import 'package:gocery/dependency.dart';
+import 'package:gocery/firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const Gocery());
 }
 
@@ -20,7 +27,7 @@ class Gocery extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       getPages: AppRoute.routes,
-      initialRoute: AppRoute.introPage,
+      initialRoute: AppRoute.kIntroPage,
     );
   }
 }

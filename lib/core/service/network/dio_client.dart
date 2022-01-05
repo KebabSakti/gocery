@@ -57,12 +57,12 @@ class DioClient extends Network {
   }
 
   @override
-  Future get(String path, {Map<String, String>? query}) async {
+  Future get(String path, {Map<String, String?>? query}) async {
     return await _dio.get(path, queryParameters: query);
   }
 
   @override
-  Future post(String path, {required Map<String, String> data}) async {
+  Future post(String path, {required Map<String, String?>? data}) async {
     return await _dio.post(path, data: data);
   }
 

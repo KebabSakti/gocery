@@ -27,9 +27,13 @@ class AppTheme {
         fontWeight: FontWeight.w800,
         fontSize: 32,
       ),
+      headline6: const TextStyle(
+        color: Color(0xff8F9BB3),
+        fontSize: 20,
+      ),
       bodyText2: const TextStyle(
         color: Color(0xff8F9BB3),
-        fontSize: 15,
+        fontSize: 18,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
