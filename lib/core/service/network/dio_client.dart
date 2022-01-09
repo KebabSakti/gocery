@@ -42,7 +42,7 @@ class DioClient extends Network {
     }
 
     if (kProxy) {
-      //proxy all connection to local sever for request/response logging (development only)
+      //proxy all connection to host:port for request/response logging (development only)
       (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (HttpClient client) {
         client.findProxy = (uri) {

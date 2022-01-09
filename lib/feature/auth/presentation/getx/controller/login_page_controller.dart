@@ -59,6 +59,8 @@ class LoginPageController extends GetxController {
   void googleLoginPressed() async {
     try {
       await _loginUsecase.googleLogin();
+
+      Get.offAllNamed(AppRoute.kHomePage);
     } on Failure catch (e) {
       MToast.show(e.message);
     }

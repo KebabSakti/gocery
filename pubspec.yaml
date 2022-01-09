@@ -26,6 +26,8 @@ dependencies:
   intl_phone_number_input: ^0.7.0+2
   uuid: 3.0.5
   fluttertoast: ^8.0.8
+  cached_network_image: ^3.2.0
+  shimmer: ^2.0.0
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
@@ -51,3 +53,6 @@ flutter:
           weight: 600
         - asset: asset/font/SFPRODISPLAYLIGHTITALIC.OTF
           style: italic
+    - family: AppIcon
+      fonts:
+        - asset: asset/font/app_icon.ttf

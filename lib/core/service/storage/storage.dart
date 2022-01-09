@@ -8,10 +8,6 @@ abstract class Storage {
   Future<void> deleteAll({required String key});
 }
 
-abstract class StorageInitInterface {
-  Future<Storage> init();
-}
-
 class StorageImpl implements Storage {
   StorageImpl(this.storage);
 

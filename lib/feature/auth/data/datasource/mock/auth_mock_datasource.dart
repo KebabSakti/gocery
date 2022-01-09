@@ -24,7 +24,7 @@ class AuthMockDatasource implements AuthRepository {
   }
 
   Future<T> _getResult<T>(T result) async {
-    //simulate network connection
+    //simulate network connection delay
     await Future.delayed(Utility.randomDuration(min: 1, max: 5));
 
     //simulate network exception (There's 30% chance exception will thrown on each request)
