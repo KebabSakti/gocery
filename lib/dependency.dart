@@ -8,9 +8,9 @@ import 'package:gocery/core/service/storage/storage.dart';
 class Dependency extends Bindings {
   @override
   void dependencies() {
-    //do not change the load order of dependency, executed from top to bottom
-    Get.lazyPut(() => SecureStorageImpl(SecureStorageClient()));
-    Get.lazyPut(() => LocalStorageImpl(GetStorageClient()));
-    Get.lazyPut(() => NetworkImpl(DioClient()));
+    //SERVICE
+    Get.lazyPut(() => SecureStorageImpl(SecureStorageClient()), fenix: true);
+    Get.lazyPut(() => LocalStorageImpl(GetStorageClient()), fenix: true);
+    Get.lazyPut(() => NetworkImpl(DioClient()), fenix: true);
   }
 }

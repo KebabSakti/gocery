@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/auth/presentation/getx/controller/forgot_password_page_controller.dart';
 import 'package:gocery/feature/auth/presentation/widget/auth_form_field.dart';
 
@@ -18,7 +19,7 @@ class ForgotPasswordPage extends StatelessWidget {
             ),
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(kMediumPadding),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -27,15 +28,15 @@ class ForgotPasswordPage extends StatelessWidget {
                       children: [
                         Text(
                           'Lupa Password',
-                          style: Get.theme.textTheme.headline4,
+                          style: Get.theme.textTheme.headline1,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: kSmallPadding),
                         SizedBox(
                           width: Get.size.width / 1.3,
                           child: Text(
                             'Ketik email atau no hp anda untuk reset password',
                             textAlign: TextAlign.center,
-                            style: Get.theme.textTheme.headline6,
+                            style: Get.theme.textTheme.headline2,
                           ),
                         )
                       ],

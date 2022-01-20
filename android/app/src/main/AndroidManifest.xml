@@ -2,15 +2,32 @@
     package="com.gocery">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <queries>
         <provider android:authorities="com.facebook.katana.provider.PlatformProvider" /> <!-- allows app to access Facebook app features -->
         <provider android:authorities="com.facebook.orca.provider.PlatformProvider" /> <!-- allows sharing to Messenger app -->
+
+        <!-- If your app opens https URLs -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        
     </queries>
 
    <application
-        android:label="gocery"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Gocery"
+        android:icon="@mipmap/launcher_icon">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB7doxfW-m-TpBRogzeX2EVyIL9RmGXar0" />
 
         <activity
             android:name=".MainActivity"

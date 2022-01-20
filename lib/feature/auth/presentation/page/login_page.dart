@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:gocery/core/config/app_asset.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/auth/presentation/getx/controller/login_page_controller.dart';
 import 'package:gocery/feature/auth/presentation/widget/auth_form_field.dart';
 
@@ -18,7 +18,7 @@ class LoginPage extends StatelessWidget {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(kMediumPadding),
                   alignment: Alignment.center,
                   constraints: BoxConstraints(
                     minHeight: Get.size.height - 24,
@@ -34,10 +34,10 @@ class LoginPage extends StatelessWidget {
                             kGoceryLogoTop,
                             width: 80,
                           ),
-                          const SizedBox(height: 30),
-                          Text(
+                          const SizedBox(height: kHugePadding),
+                          Text( 
                             'Selamat Datang',
-                            style: Get.theme.textTheme.headline4,
+                            style: Get.theme.textTheme.headline1,
                           ),
                           const SizedBox(height: 10),
                           SizedBox(
@@ -45,12 +45,12 @@ class LoginPage extends StatelessWidget {
                             child: Text(
                               'Login untuk memulai',
                               textAlign: TextAlign.center,
-                              style: Get.theme.textTheme.headline6,
+                              style: Get.theme.textTheme.headline2,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: kHugePadding),
                       Form(
                         key: c.formKey,
                         child: Column(
@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: kBigPadding),
                             AuthFormField(
                               controller: c.passwordField,
                               hintText: 'Password',
@@ -83,21 +83,21 @@ class LoginPage extends StatelessWidget {
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: kBigPadding),
                             SizedBox(
                               width: double.infinity,
                               child: GestureDetector(
                                 onTap: c.forgotPasswordPressed,
-                                child: Text(
+                                child: const Text(
                                   'Lupa password',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
-                                    color: Get.theme.primaryColor,
+                                    color: kPrimaryColor,
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: kBigPadding),
                             SizedBox(
                               width: double.infinity,
                               height: 45,
@@ -109,7 +109,7 @@ class LoginPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: kHugePadding),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -124,7 +124,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(kSmallPadding),
                                   primary: const Color(0xff0041A8),
                                 ),
                               ),
@@ -135,7 +135,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(kSmallPadding),
                                   primary: const Color(0xff42AAFF),
                                 ),
                               ),
@@ -144,13 +144,13 @@ class LoginPage extends StatelessWidget {
                                 child: SvgPicture.asset(kGoogleLogo, width: 28),
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(kSmallPadding),
                                   primary: const Color(0xffF2F8FF),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: kBigPadding),
                           RichText(
                             text: TextSpan(
                               text: 'Belum punya akun ? ',
@@ -158,8 +158,7 @@ class LoginPage extends StatelessWidget {
                               children: <TextSpan>[
                                 TextSpan(
                                   text: 'Daftar',
-                                  style:
-                                      TextStyle(color: Get.theme.primaryColor),
+                                  style: const TextStyle(color: kPrimaryColor),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = c.registerPressed,
                                 ),

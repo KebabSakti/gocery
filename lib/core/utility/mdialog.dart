@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class MDialog {
@@ -21,6 +22,31 @@ class MDialog {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  static exitPrompt() {
+    Get.dialog(
+      AlertDialog(
+        content: Text(
+          'Keluar dari aplikasi ?',
+          style: Get.textTheme.bodyText1,
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: const Text('Keluar'),
+            onPressed: () {
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            },
+          ),
+        ],
       ),
     );
   }

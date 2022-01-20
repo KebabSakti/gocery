@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:gocery/core/config/app_route.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/core/service/storage/storage.dart';
 import 'package:gocery/core/utility/mdialog.dart';
@@ -21,7 +21,7 @@ class PhonePageController extends GetxController {
     try {
       if (Get.find<AuthController>().timerStarted()) {
         Get.toNamed(
-          AppRoute.kOtpPage,
+          kOtpPage,
           arguments: Get.find<AuthController>().phoneLoginParam,
         );
       } else {
@@ -46,7 +46,7 @@ class PhonePageController extends GetxController {
               resendToken: resendToken,
             );
 
-            Get.toNamed(AppRoute.kOtpPage);
+            Get.toNamed(kOtpPage);
           },
         );
       }

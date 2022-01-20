@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gocery/core/config/app_asset.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/landing/presentation/getx/landing_page_controller.dart';
 import 'package:gocery/feature/landing/presentation/widget/landing_page_item.dart';
 
@@ -15,7 +15,7 @@ class LandingPage extends StatelessWidget {
         builder: (LandingPageController c) {
           return Scaffold(
             body: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(kMediumPadding),
               child: Column(
                 children: [
                   Expanded(

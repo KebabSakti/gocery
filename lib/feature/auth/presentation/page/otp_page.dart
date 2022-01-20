@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/auth/presentation/getx/controller/auth_controller.dart';
 import 'package:gocery/feature/auth/presentation/getx/controller/otp_page_controller.dart';
@@ -19,36 +20,35 @@ class OtpPage extends StatelessWidget {
               elevation: 0,
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 61),
+              padding: const EdgeInsets.all(kMediumPadding),
               child: Column(
                 children: [
                   Text(
                     'Verifikasi',
-                    style: Get.theme.textTheme.headline4,
+                    style: Get.theme.textTheme.headline1,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kBigPadding),
                   SizedBox(
                     width: Get.size.width / 1.3,
                     child: Text(
                       'Masukkan kode OTP yang kami kirimkan ke no hp anda',
                       textAlign: TextAlign.center,
-                      style: Get.theme.textTheme.headline6,
+                      style: Get.theme.textTheme.headline2,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kBigPadding),
                   PinPut(
                     autofocus: true,
                     fieldsCount: 6,
                     eachFieldPadding: const EdgeInsets.all(2),
-                    textStyle: TextStyle(
-                      fontSize: 28,
+                    textStyle: const TextStyle(
+                      fontSize: kLargeFont,
                       fontWeight: FontWeight.bold,
-                      color: Get.theme.primaryColor,
+                      color: kPrimaryColor,
                     ),
                     selectedFieldDecoration: BoxDecoration(
                       border: Border.all(
-                        color: const Color(0xff8F9BB3),
+                        color: kLightColor100,
                         width: 1,
                         style: BorderStyle.solid,
                       ),
@@ -56,7 +56,7 @@ class OtpPage extends StatelessWidget {
                     ),
                     followingFieldDecoration: BoxDecoration(
                       border: Border.all(
-                        color: const Color(0xff8F9BB3),
+                        color: kLightColor100,
                         width: 1,
                         style: BorderStyle.solid,
                       ),
@@ -74,7 +74,7 @@ class OtpPage extends StatelessWidget {
                       c.otpCode = value;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kBigPadding),
                   Obx(() {
                     return Column(
                       children: [
@@ -82,9 +82,7 @@ class OtpPage extends StatelessWidget {
                           Utility.showOtpCountdown(
                             Get.find<AuthController>().otpTimeoutDuration(),
                           ),
-                          style: TextStyle(
-                            color: Get.theme.primaryColor,
-                          ),
+                          style: const TextStyle(color: kPrimaryColor),
                         ),
                         TextButton(
                           onPressed: Get.find<AuthController>().timerStarted()
@@ -100,7 +98,7 @@ class OtpPage extends StatelessWidget {
             ),
             bottomSheet: Container(
               color: Get.theme.scaffoldBackgroundColor,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(kMediumPadding),
               child: SizedBox(
                 width: double.infinity,
                 height: 45,

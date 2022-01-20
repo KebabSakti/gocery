@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/auth/presentation/getx/controller/phone_page_controller.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -17,26 +18,26 @@ class PhonePage extends StatelessWidget {
               elevation: 0,
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 16, bottom: 61),
+              padding: const EdgeInsets.all(kMediumPadding),
               child: Column(
                 children: [
                   Text(
                     'Masukkan No Hp',
-                    style: Get.theme.textTheme.headline4,
+                    style: Get.theme.textTheme.headline1,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kBigPadding),
                   SizedBox(
                     width: Get.size.width / 1.3,
                     child: Text(
                       'Kami akan mengirimkan kode OTP ke no anda',
                       textAlign: TextAlign.center,
-                      style: Get.theme.textTheme.headline6,
+                      style: Get.theme.textTheme.headline2,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kBigPadding),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: kMediumPadding),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: const Color(0xff8F9BB3),
@@ -47,7 +48,6 @@ class PhonePage extends StatelessWidget {
                       autoFocus: true,
                       countries: const ['ID'],
                       spaceBetweenSelectorAndTextField: 0,
-                      textStyle: const TextStyle(fontSize: 18),
                       errorMessage: 'No hp tidak valid',
                       selectorConfig: const SelectorConfig(
                         setSelectorButtonAsPrefixIcon: true,
@@ -69,7 +69,7 @@ class PhonePage extends StatelessWidget {
             ),
             bottomSheet: Container(
               color: Get.theme.scaffoldBackgroundColor,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(kMediumPadding),
               child: SizedBox(
                 width: double.infinity,
                 height: 45,

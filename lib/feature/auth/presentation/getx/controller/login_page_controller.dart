@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gocery/core/config/app_route.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/core/service/storage/storage.dart';
 import 'package:gocery/core/utility/mdialog.dart';
@@ -20,15 +20,15 @@ class LoginPageController extends GetxController {
   final passwordField = TextEditingController();
 
   void forgotPasswordPressed() {
-    Get.toNamed(AppRoute.kForgotPasswordPage);
+    Get.toNamed(kForgotPasswordPage);
   }
 
   void phoneLoginPressed() {
-    Get.toNamed(AppRoute.kPhonePage);
+    Get.toNamed(kPhonePage);
   }
 
   void registerPressed() {
-    Get.toNamed(AppRoute.kRegisterPage);
+    Get.toNamed(kRegisterPage);
   }
 
   void emailLoginPressed() async {
@@ -58,9 +58,9 @@ class LoginPageController extends GetxController {
 
   void googleLoginPressed() async {
     try {
-      await _loginUsecase.googleLogin();
+      // await _loginUsecase.googleLogin();
 
-      Get.offAllNamed(AppRoute.kHomePage);
+      Get.offAllNamed(kAppPage, arguments: 0);
     } on Failure catch (e) {
       MToast.show(e.message);
     }

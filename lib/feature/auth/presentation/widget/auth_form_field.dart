@@ -26,7 +26,6 @@ class AuthFormField extends StatelessWidget {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       obscureText: obscureText,
-      style: const TextStyle(fontSize: 18),
       validator: validator,
       decoration: InputDecoration(
         hintText: hintText,
