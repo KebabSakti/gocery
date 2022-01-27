@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 //NETWORK
-const String kProtocol = 'https';
-const String kBaseUrl = 'api-nodejs-todolist.herokuapp.com';
+const String kProtocol = 'http';
+const String kBaseUrl = '192.168.3.153:1001';
 const String kProxyUrl = '192.168.3.153:8000';
 const bool kNetworkLog = true;
 const bool kProxy = true;

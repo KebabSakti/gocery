@@ -45,7 +45,7 @@ class Utility {
     String m = '00';
     String s = '00';
 
-    if (seconds > 59) {
+    if (seconds > 60) {
       m = Duration(seconds: seconds).inMinutes.toString().padLeft(2, '0');
       s = Duration(seconds: seconds).inSeconds.toString().padLeft(2, '0');
     } else {

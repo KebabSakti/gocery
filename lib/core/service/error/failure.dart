@@ -5,7 +5,7 @@ class Failure implements Exception {
   final dynamic error;
 
   Failure(this.errorMessage, {this.error}) {
-    debugPrint(error.toString());
+    debugPrint('\x1B[32m$error\x1B[0m');
   }
 
   String get message => errorMessage;

@@ -2,19 +2,25 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
 import 'package:gocery/feature/app/presentation/page/app_page.dart';
-import 'package:gocery/feature/auth/presentation/getx/dependency/auth_dependency.dart';
-import 'package:gocery/feature/auth/presentation/page/forgot_password_page.dart';
-import 'package:gocery/feature/auth/presentation/page/login_page.dart';
-import 'package:gocery/feature/auth/presentation/page/otp_page.dart';
-import 'package:gocery/feature/auth/presentation/page/phone_page.dart';
-import 'package:gocery/feature/auth/presentation/page/register_page.dart';
+import 'package:gocery/feature/authentication/presentation/getx/controller/forgot_password_page_controller.dart';
+import 'package:gocery/feature/authentication/presentation/getx/controller/login_page_controller.dart';
+import 'package:gocery/feature/authentication/presentation/getx/controller/otp_page_controller.dart';
+import 'package:gocery/feature/authentication/presentation/getx/controller/phone_page_controller.dart';
+import 'package:gocery/feature/authentication/presentation/getx/controller/register_page_controller.dart';
+import 'package:gocery/feature/authentication/presentation/page/forgot_password_page.dart';
+import 'package:gocery/feature/authentication/presentation/page/login_page.dart';
+import 'package:gocery/feature/authentication/presentation/page/otp_page.dart';
+import 'package:gocery/feature/authentication/presentation/page/phone_page.dart';
+import 'package:gocery/feature/authentication/presentation/page/register_page.dart';
 import 'package:gocery/feature/chat/presentation/page/chat_detail_page.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/checkout_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/delivery_address_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/page/checkout_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/delivery_address_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/order_complete_page.dart';
+import 'package:gocery/feature/intro/presentation/getx/intro_page_controller.dart';
 import 'package:gocery/feature/intro/presentation/page/intro_page.dart';
+import 'package:gocery/feature/landing/presentation/getx/landing_page_controller.dart';
 import 'package:gocery/feature/landing/presentation/page/landing_page.dart';
 import 'package:gocery/feature/order/presentation/getx/controller/order_detail_page_controller.dart';
 import 'package:gocery/feature/order/presentation/page/order_detail_page.dart';
@@ -28,32 +34,54 @@ import 'package:gocery/feature/voucher/presentation/page/voucher_page.dart';
 
 class AppRoute {
   static final routes = [
-    GetPage(name: kIntroPage, page: () => const IntroPage()),
-    GetPage(name: kLandingPage, page: () => const LandingPage()),
+    GetPage(
+      name: kIntroPage,
+      page: () => const IntroPage(),
+      binding: BindingsBuilder(() {
+        Get.put(IntroPageController());
+      }),
+    ),
+    GetPage(
+      name: kLandingPage,
+      page: () => const LandingPage(),
+      binding: BindingsBuilder(() {
+        Get.put(LandingPageController());
+      }),
+    ),
     GetPage(
       name: kLoginPage,
-      binding: AuthDependency(),
       page: () => const LoginPage(),
+      binding: BindingsBuilder(() {
+        Get.put(LoginPageController());
+      }),
     ),
     GetPage(
       name: kForgotPasswordPage,
-      binding: AuthDependency(),
       page: () => const ForgotPasswordPage(),
+      binding: BindingsBuilder(() {
+        Get.put(ForgotPasswordPageController());
+      }),
     ),
     GetPage(
       name: kOtpPage,
-      binding: AuthDependency(),
       page: () => const OtpPage(),
+      binding: BindingsBuilder(() {
+        Get.put(OtpPageController());
+      }),
     ),
     GetPage(
       name: kRegisterPage,
-      binding: AuthDependency(),
       page: () => const RegisterPage(),
+      binding: BindingsBuilder(() {
+        Get.put(RegisterPageController());
+      }),
     ),
     GetPage(
       name: kPhonePage,
-      binding: AuthDependency(),
       page: () => const PhonePage(),
+      binding: BindingsBuilder(() {
+        Get.put(PhonePageController());
+      }),
     ),
     GetPage(
       name: kAppPage,
