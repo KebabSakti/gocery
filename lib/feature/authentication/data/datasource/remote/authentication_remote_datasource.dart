@@ -48,16 +48,23 @@ class AuthenticationBaseDatasource implements AuthenticationRepository {
   Future<void> saveAuthToken({required String token}) async {
     await _secureStorage.write(key: 'token', value: token);
   }
+
+  @override
+  Future<void> deleteAuthToken() async {
+    await _secureStorage.delete(key: 'token');
+  }
 }
 
 class AuthenticationFirebaseDatasource
     implements AuthenticationFirebaseRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FacebookAuth _facebookAuth = FacebookAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Future<OAuthCredential?> facebookLogin() async {
-    final LoginResult loginResult = await FacebookAuth.instance
-        .login(loginBehavior: LoginBehavior.nativeWithFallback);
+    final LoginResult loginResult = await _facebookAuth.login(
+        loginBehavior: LoginBehavior.nativeWithFallback);
 
     if (loginResult.accessToken != null) {
       final OAuthCredential _facebookAuthCredential =
@@ -120,5 +127,12 @@ class AuthenticationFirebaseDatasource
   void authStateChangeListener(
       {required void Function(User? user) onAuthStateChange}) {
     _firebaseAuth.authStateChanges().listen(onAuthStateChange);
+  }
+
+  @override
+  Future<void> logout() async {
+    await _facebookAuth.logOut();
+    await _googleSignIn.signOut();
+    await _firebaseAuth.signOut();
   }
 }

@@ -18,7 +18,7 @@ class LoginPage extends GetView<LoginPageController> {
             padding: const EdgeInsets.all(kMediumPadding),
             alignment: Alignment.center,
             constraints: BoxConstraints(
-              minHeight: Get.size.height - 24,
+              minHeight: Get.size.height - 30,
               maxHeight: double.infinity,
               minWidth: double.infinity,
             ),

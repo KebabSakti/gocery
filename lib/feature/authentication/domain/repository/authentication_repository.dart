@@ -11,6 +11,8 @@ abstract class AuthenticationRepository {
   Future<void> revoke();
 
   Future<void> saveAuthToken({required String token});
+
+  Future<void> deleteAuthToken();
 }
 
 abstract class AuthenticationFirebaseRepository {
@@ -31,6 +33,8 @@ abstract class AuthenticationFirebaseRepository {
 
   Future<UserCredential> registerUserFirebase(
       {required AuthenticationRegisterParam param});
+
+  Future<void> logout();
 
   void authStateChangeListener(
       {required void Function(User? user) onAuthStateChange});

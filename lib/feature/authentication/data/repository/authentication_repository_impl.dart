@@ -35,6 +35,11 @@ class AuthenticationRepositoryImpl
   }
 
   @override
+  Future<void> deleteAuthToken() async {
+    await base.deleteAuthToken();
+  }
+
+  @override
   Future<OAuthCredential?> facebookLogin() async {
     return await firebase.facebookLogin();
   }
@@ -77,5 +82,10 @@ class AuthenticationRepositoryImpl
   void authStateChangeListener(
       {required void Function(User? user) onAuthStateChange}) {
     firebase.authStateChangeListener(onAuthStateChange: onAuthStateChange);
+  }
+
+  @override
+  Future<void> logout() async {
+    await firebase.logout();
   }
 }
