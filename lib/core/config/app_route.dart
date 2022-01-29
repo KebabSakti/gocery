@@ -8,7 +8,7 @@ import 'package:gocery/feature/authentication/presentation/getx/controller/otp_p
 import 'package:gocery/feature/authentication/presentation/getx/controller/phone_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/register_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/page/forgot_password_page.dart';
-import 'package:gocery/feature/authentication/presentation/page/login_page.dart';
+import 'package:gocery/feature/authentication/presentation/page/login_page_alt.dart';
 import 'package:gocery/feature/authentication/presentation/page/otp_page.dart';
 import 'package:gocery/feature/authentication/presentation/page/phone_page.dart';
 import 'package:gocery/feature/authentication/presentation/page/register_page.dart';
@@ -50,7 +50,7 @@ class AppRoute {
     ),
     GetPage(
       name: kLoginPage,
-      page: () => const LoginPage(),
+      page: () => const LoginPageAlt(),
       binding: BindingsBuilder(() {
         Get.put(LoginPageController());
       }),
