@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/register_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/widget/auth_form_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -42,6 +43,7 @@ class RegisterPage extends GetView<RegisterPageController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AuthFormField(
+                      controller: controller.nameField,
                       hintText: 'Nama',
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
@@ -55,6 +57,7 @@ class RegisterPage extends GetView<RegisterPageController> {
                     ),
                     const SizedBox(height: 20),
                     AuthFormField(
+                      controller: controller.emailField,
                       hintText: 'Email',
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
@@ -68,6 +71,7 @@ class RegisterPage extends GetView<RegisterPageController> {
                     ),
                     const SizedBox(height: 20),
                     AuthFormField(
+                      controller: controller.passwordField,
                       hintText: 'Password',
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
@@ -82,9 +86,10 @@ class RegisterPage extends GetView<RegisterPageController> {
                     ),
                     const SizedBox(height: 20),
                     InternationalPhoneNumberInput(
+                      textFieldController: controller.phoneField,
                       countries: const ['ID'],
                       spaceBetweenSelectorAndTextField: 0,
-                      textStyle: const TextStyle(fontSize: 18),
+                      textStyle: const TextStyle(fontSize: kMediumFont),
                       errorMessage: 'No hp tidak valid',
                       selectorConfig: const SelectorConfig(
                         setSelectorButtonAsPrefixIcon: true,

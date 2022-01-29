@@ -1,7 +1,8 @@
 import 'package:gocery/core/param/auth_phone_login_param.dart';
+import 'package:gocery/core/param/auth_register_param.dart';
 
 abstract class AuthRepository {
-  Future<void> registerUserFirebase();
+  Future<void> registerUser({required AuthRegisterParam param});
 
   Future<void> facebookLogin();
 

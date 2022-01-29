@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
+import 'package:gocery/core/param/auth_register_param.dart';
+import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/feature/authentication/data/datasource/local/auth_local_datasource.dart';
 import 'package:gocery/feature/authentication/data/datasource/remote/auth_remote_datasource.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
 import 'package:gocery/feature/authentication/domain/repository/auth_repository.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
@@ -21,9 +23,20 @@ class AuthRepositoryImpl implements AuthRepository {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
-  Future<void> registerUserFirebase() async {
-    // TODO: implement registerUserFirebase
-    throw UnimplementedError();
+  Future<void> registerUser({required AuthRegisterParam param}) async {
+    UserCredential userCredential =
+        await _firebaseAuth.createUserWithEmailAndPassword(
+      email: param.email!,
+      password: param.password!,
+    );
+
+    AuthenticationModel authenticationModel = await remoteDatasource.register(
+      param: param.copyWith(
+        token: await userCredential.user?.getIdToken(),
+      ),
+    );
+
+    localDatasource.saveAuthToken(token: authenticationModel.token!);
   }
 
   @override
@@ -41,20 +54,36 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> googleLogin() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    final googleAuthCredential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      if (googleAuth == null) {
+        throw Exception();
+      }
 
-    final UserCredential userCredential =
-        await _signinWithCredential(googleAuthCredential);
+      if (googleAuth.accessToken == null && googleAuth.idToken == null) {
+        throw Exception();
+      }
 
-    await _grantAccess(userCredential: userCredential);
+      if (googleAuth.accessToken!.isEmpty && googleAuth.idToken!.isEmpty) {
+        throw Exception();
+      }
+
+      final googleAuthCredential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await _signinWithCredential(googleAuthCredential);
+
+      await _grantAccess(userCredential: userCredential);
+    } catch (_) {
+      throw Failure('');
+    }
   }
 
   @override

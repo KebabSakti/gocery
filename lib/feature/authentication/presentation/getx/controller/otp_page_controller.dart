@@ -5,14 +5,13 @@ import 'package:gocery/core/param/auth_phone_login_param.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
-import 'package:gocery/feature/authentication/data/model/authentication_phone_login_param.dart';
 import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/login_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/timer_countdown_controller.dart';
 
 class OtpPageController extends GetxController {
   final _authenticationUsecase = AuthenticationUsecase();
-  final _argument = Get.arguments as AuthenticationPhoneLoginParam;
+  final _argument = Get.arguments as AuthPhoneLoginParam;
   final _timerCountdown = TimerCountdownController();
   final _loginPageController = Get.find<LoginPageController>();
 

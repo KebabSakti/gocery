@@ -1,4 +1,4 @@
-import 'package:gocery/feature/authentication/data/model/authentication_register_param.dart';
+import 'package:gocery/core/param/auth_register_param.dart';
 import 'package:gocery/feature/authentication/domain/repository/auth_repository.dart';
 
 class RegisterUser {
@@ -6,5 +6,7 @@ class RegisterUser {
 
   final AuthRepository repository;
 
-  Future<void> call({required AuthenticationRegisterParam param}) async {}
+  Future<void> call({required AuthRegisterParam param}) async {
+    await repository.registerUser(param: param);
+  }
 }

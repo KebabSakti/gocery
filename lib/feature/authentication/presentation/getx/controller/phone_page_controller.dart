@@ -5,7 +5,6 @@ import 'package:gocery/core/param/auth_phone_login_param.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
-import 'package:gocery/feature/authentication/data/model/authentication_phone_login_param.dart';
 import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
 
 class PhonePageController extends GetxController {
@@ -53,7 +52,7 @@ class PhonePageController extends GetxController {
           MDialog.close();
 
           Get.toNamed(kOtpPage,
-              arguments: AuthenticationPhoneLoginParam(
+              arguments: AuthPhoneLoginParam(
                 phoneNumber: phone,
                 resendToken: resendToken,
                 verificationId: verificationId,
