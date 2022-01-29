@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/core/param/auth_phone_login_param.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
@@ -25,40 +26,40 @@ class PhonePageController extends GetxController {
       MDialog.loading();
 
       await _authenticationUsecase.phoneLogin(
-          param: AuthenticationPhoneLoginParam(phoneNumber: phone),
-          verificationFailed: (Exception e) {
-            MDialog.close();
+        param: AuthPhoneLoginParam(phoneNumber: phone),
+        successCallback: () {
+          MDialog.close();
 
-            if (e is FirebaseAuthException) {
-              switch (e.code) {
-                case 'invalid-phone-number':
-                  MToast.show('Nomor hp tidak valid');
-                  break;
+          Get.offAllNamed(kAppPage);
+        },
+        verificationFailed: (Exception e) {
+          MDialog.close();
 
-                default:
-                  MToast.show(
-                      'Terjadi kesalahan, harap coba beberapa saat lagi');
-                  break;
-              }
-            } else {
-              MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
+          if (e is FirebaseAuthException) {
+            switch (e.code) {
+              case 'invalid-phone-number':
+                MToast.show('Nomor hp tidak valid');
+                break;
+
+              default:
+                MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
+                break;
             }
-          },
-          completeCallback: () {
-            MDialog.close();
+          } else {
+            MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
+          }
+        },
+        codeSent: (verificationId, resendToken) {
+          MDialog.close();
 
-            Get.offAllNamed(kAppPage);
-          },
-          codeSent: (String verificationId, int? resendToken) async {
-            MDialog.close();
-
-            Get.toNamed(kOtpPage,
-                arguments: AuthenticationPhoneLoginParam(
-                  phoneNumber: phone,
-                  resendToken: resendToken,
-                  verificationId: verificationId,
-                ));
-          });
+          Get.toNamed(kOtpPage,
+              arguments: AuthenticationPhoneLoginParam(
+                phoneNumber: phone,
+                resendToken: resendToken,
+                verificationId: verificationId,
+              ));
+        },
+      );
     } on Failure catch (e) {
       MDialog.close();
 

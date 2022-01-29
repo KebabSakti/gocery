@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_register_param.dart';
+import 'package:gocery/feature/authentication/domain/entity/authentication_entity.dart';
 
 abstract class AuthenticationRepository {
   Future<AuthenticationModel> access({required String token});
@@ -18,7 +19,7 @@ abstract class AuthenticationRepository {
 abstract class AuthenticationFirebaseRepository {
   Future<UserCredential> signinWithCredential(AuthCredential credential);
 
-  Future<OAuthCredential?> facebookLogin();
+  Future<AuthenticationEntity?> facebookLogin();
 
   Future<OAuthCredential?> googleLogin();
 

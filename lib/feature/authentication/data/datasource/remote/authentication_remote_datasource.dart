@@ -6,6 +6,7 @@ import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/core/service/storage/storage.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_register_param.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
+import 'package:gocery/feature/authentication/domain/entity/authentication_entity.dart';
 import 'package:gocery/feature/authentication/domain/repository/authentication_repository.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -62,17 +63,7 @@ class AuthenticationFirebaseDatasource
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
-  Future<OAuthCredential?> facebookLogin() async {
-    final LoginResult loginResult = await _facebookAuth.login(
-        loginBehavior: LoginBehavior.nativeWithFallback);
-
-    if (loginResult.accessToken != null) {
-      final OAuthCredential _facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.token);
-
-      return _facebookAuthCredential;
-    }
-
+  Future<AuthenticationEntity?> facebookLogin() async {
     return null;
   }
 
@@ -134,5 +125,10 @@ class AuthenticationFirebaseDatasource
     await _facebookAuth.logOut();
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
+  }
+
+  Future<UserCredential> _signinWithCredential(
+      AuthCredential credential) async {
+    return await _firebaseAuth.signInWithCredential(credential);
   }
 }
