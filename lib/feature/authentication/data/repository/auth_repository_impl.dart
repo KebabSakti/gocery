@@ -100,6 +100,8 @@ class AuthRepositoryImpl implements AuthRepository {
     await _facebookAuth.logOut();
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
+    await remoteDatasource.revoke();
+    await localDatasource.deleteAuthToken();
   }
 
   Future<UserCredential> _signinWithCredential(

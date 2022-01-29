@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/utility/mdialog.dart';
+import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _authUsecase = AuthenticationUsecase();
+
     return SafeArea(
       child: ListView(
         children: [
@@ -128,7 +132,11 @@ class ProfilePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () {
+                onTap: () async {
+                  MDialog.loading();
+
+                  await _authUsecase.logout();
+
                   Get.offAllNamed(kIntroPage);
                 },
                 child: Ink(
