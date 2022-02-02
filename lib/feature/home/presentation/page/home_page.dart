@@ -6,7 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
+import 'package:gocery/core/widget/small_refresh_button.dart';
+import 'package:gocery/feature/banner/domain/entity/banner_entity.dart';
+import 'package:gocery/feature/category/domain/entity/category_entity.dart';
+import 'package:gocery/feature/home/presentation/getx/controller/home_page_controller.dart';
 import 'package:gocery/feature/product/data/model/product_model.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
@@ -19,6 +24,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  final _contoller = Get.put(HomePageController());
+
   @override
   bool get wantKeepAlive => true;
 
@@ -26,65 +33,6 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    List<CategoryModel> _categories = [
-      CategoryModel(
-          name: 'Semua',
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1601044196/mock/groceries.svg'),
-      CategoryModel(
-          name: 'Gas',
-          color: 0xFF884DFF,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1609097688/mock/gas-bottle-fullsize.svg'),
-      CategoryModel(
-          name: 'Sembako',
-          color: 0xFF0095FF,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512528/ayo%20mobile/flour.svg'),
-      CategoryModel(
-          name: 'Daging',
-          color: 0xFFEE6352,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512527/ayo%20mobile/steak.svg'),
-      CategoryModel(
-          name: 'Bumbu',
-          color: 0xFFFF8900,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512529/ayo%20mobile/pepper.svg'),
-      CategoryModel(
-          name: 'Ikan',
-          color: 0xFFFFCF00,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512527/ayo%20mobile/fish.svg'),
-      CategoryModel(
-          name: 'Cake',
-          color: 0xFFB83B5E,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512529/ayo%20mobile/cupcake.svg'),
-      CategoryModel(
-          name: 'Sayur',
-          color: 0xFF83F084,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512530/ayo%20mobile/salad.svg'),
-      CategoryModel(
-          name: 'Alat Dapur',
-          color: 0xFF53CDD8,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512529/ayo%20mobile/knives.svg'),
-      CategoryModel(
-          name: 'Buah',
-          color: 0xFF59CD90,
-          image:
-              'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512527/ayo%20mobile/apple.svg'),
-    ];
-    List<String> _banners = [
-      'https://image.freepik.com/free-vector/realistic-sale-background-with-ripped-paper_52683-55790.jpg',
-      'https://image.freepik.com/free-vector/gradient-colored-sale-background_52683-68460.jpg',
-      'https://image.freepik.com/free-vector/realistic-3d-sale-background_52683-63257.jpg',
-      'https://image.freepik.com/free-vector/gradient-colorful-sale-background_52683-56915.jpg',
-      'https://image.freepik.com/free-vector/gradient-super-sale-background_52683-62918.jpg',
-      'https://image.freepik.com/free-vector/flat-design-black-friday-sale-with-megaphone_52683-47165.jpg',
-    ];
     List<String> _products = List.generate(
         20,
         (index) =>
@@ -108,21 +56,41 @@ class _HomePageState extends State<HomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Halo, Leonardo',
+                    'Mau belanja apa bunda?',
                     style: Get.textTheme.headline3,
                   ),
-                  Row(
-                    children: [
-                      SvgPicture.asset(kCoinIcon, width: 18, height: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        '100',
-                        textAlign: TextAlign.center,
-                        style: Get.theme.textTheme.caption!
-                            .copyWith(color: Colors.amber),
-                      ),
-                    ],
-                  )
+                  Obx(() {
+                    final customer = _contoller.customerAccount();
+
+                    if (customer.status == Status.success) {
+                      return Row(
+                        children: [
+                          SvgPicture.asset(kCoinIcon, width: 18, height: 18),
+                          const SizedBox(width: 4),
+                          Text(
+                            customer.data!.pointModel!.point.toString(),
+                            textAlign: TextAlign.center,
+                            style: Get.theme.textTheme.caption!
+                                .copyWith(color: Colors.amber),
+                          ),
+                        ],
+                      );
+                    }
+
+                    if (customer.status == Status.error) {
+                      return SmallRefreshButton(
+                          label: 'Refresh Point',
+                          onTap: () {
+                            _contoller.customerData();
+                          });
+                    }
+
+                    return const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(),
+                    );
+                  })
                 ],
               ),
             ),
@@ -172,48 +140,103 @@ class _HomePageState extends State<HomePage>
             const SizedBox(height: kMediumPadding),
             SizedBox(
               height: 44,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: _categories.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: EdgeInsets.only(
-                      right: (index >= 0 && index < _categories.length - 1)
-                          ? kMediumPadding
-                          : 0),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        Get.toNamed(kProductPage);
-                      },
-                      borderRadius: BorderRadius.circular(10),
-                      child: Ink(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: _categories[index].color == null
-                              ? kPrimaryColor
-                              : Color(_categories[index].color!),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.network(
-                              _categories[index].image!,
-                              height: 20,
+              child: Obx(() {
+                final categoryState = _contoller.categoriesState();
+
+                if (categoryState.status == Status.success) {
+                  List<CategoryEntity> categories = categoryState.data!;
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: categoryState.data!.length,
+                    itemBuilder: (context, index) {
+                      CategoryEntity category = categories[index];
+
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            right: (index >= 0 && index < categories.length - 1)
+                                ? kMediumPadding
+                                : 0),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              Get.toNamed(kProductPage);
+                            },
+                            borderRadius: BorderRadius.circular(10),
+                            child: Ink(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: category.color == null
+                                    ? kPrimaryColor
+                                    : Color(int.parse(category.color!)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.network(
+                                    category.image!,
+                                    height: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    category.name!,
+                                    style: Get.textTheme.caption,
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(width: 10),
-                            Text(
-                              _categories[index].name!,
-                              style: Get.textTheme.caption,
-                            ),
-                          ],
+                          ),
                         ),
+                      );
+                    },
+                  );
+                }
+
+                if (categoryState.status == Status.error) {
+                  return ElevatedButton(
+                    onPressed: _contoller.categories,
+                    style: ElevatedButton.styleFrom(
+                      primary: kLightColor,
+                      onPrimary: kLightColor100,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        side: BorderSide(color: kPrimaryColor),
                       ),
                     ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(AppIcon.refreshleft,
+                            size: 14, color: kPrimaryColor),
+                        SizedBox(width: 2),
+                        Text(
+                          'Refresh Kategori',
+                          style: TextStyle(
+                              fontSize: kSmallFont, color: kPrimaryColor),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: 4,
+                  itemBuilder: (context, index) => Padding(
+                    padding: EdgeInsets.only(
+                        right:
+                            (index >= 0 && index < 4 - 1) ? kMediumPadding : 0),
+                    child: const ShimmerLoader(
+                      width: 100,
+                      radius: 10,
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
           ],
         ),
@@ -228,56 +251,84 @@ class _HomePageState extends State<HomePage>
             color: kLightColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Stack(
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: CarouselSlider(
-                  items: _banners.map<Widget>((e) {
-                    return CachedNetworkImage(
-                      imageUrl: e,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                      placeholder: (context, url) => const ShimmerLoader(),
-                    );
-                  }).toList(),
-                  options: CarouselOptions(
-                    viewportFraction: 1.0,
-                    height: double.infinity,
-                    autoPlay: true,
-                    enableInfiniteScroll: true,
-                    onPageChanged: (index, _) {},
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      children: List<Widget>.generate(
-                        _banners.length,
-                        (index) {
-                          return Container(
-                            width: 8.0,
-                            height: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 2.0),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: kLightColor,
-                            ),
-                          );
+          child: Obx(() {
+            final bannerState = _contoller.bannersState();
+
+            if (bannerState.status == Status.success) {
+              final List<BannerEntity> banners = bannerState.data!;
+
+              return Stack(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CarouselSlider(
+                      items: banners.map<Widget>((item) {
+                        return CachedNetworkImage(
+                          imageUrl: item.image!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          placeholder: (context, url) => const ShimmerLoader(),
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        viewportFraction: 1.0,
+                        height: double.infinity,
+                        autoPlay: true,
+                        enableInfiniteScroll: true,
+                        onPageChanged: (index, _) {
+                          _contoller.bannerActive(index);
                         },
                       ),
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Obx(() {
+                          return Row(
+                            children: List<Widget>.generate(
+                              banners.length,
+                              (index) {
+                                return Container(
+                                  width: 8.0,
+                                  height: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 2.0),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: index == _contoller.bannerActive()
+                                        ? kPrimaryColor
+                                        : kLightColor,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
                 ],
-              ),
-            ],
-          ),
+              );
+            }
+
+            if (bannerState.status == Status.error) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SmallRefreshButton(
+                    label: 'Refresh Banner',
+                    onTap: _contoller.banners,
+                  ),
+                ],
+              );
+            }
+
+            return const ShimmerLoader();
+          }),
         ),
       ),
       const SizedBox(height: kBigPadding),
@@ -419,61 +470,67 @@ class _HomePageState extends State<HomePage>
     var _cellHeight = 660 / 2;
     var _aspectRatio = _width / _cellHeight;
 
-    return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _widgets[index],
-              childCount: _widgets.length,
+    return RefreshIndicator(
+      onRefresh: () async {
+        _contoller.init();
+      },
+      child: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _widgets[index],
+                childCount: _widgets.length,
+              ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: kMediumPadding),
-            sliver: SliverStickyHeader(
-              header: Container(
-                height: 60,
-                color: kBackgroundColor,
-                child: ListView.builder(
-                  itemCount: 10,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(
-                        right: (index >= 0 && index < 9) ? kTinyPadding : 0),
-                    child: ChoiceChip(
-                      label: Text('Filter $index'),
-                      selected: index == 1 ? true : false,
-                      elevation: 0,
-                      shadowColor: Colors.transparent,
-                      backgroundColor: kLightColor,
-                      onSelected: (value) {},
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: kMediumPadding),
+              sliver: SliverStickyHeader(
+                header: Container(
+                  height: 60,
+                  color: kBackgroundColor,
+                  child: ListView.builder(
+                    itemCount: 10,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.only(
+                          right: (index >= 0 && index < 9) ? kTinyPadding : 0),
+                      child: ChoiceChip(
+                        label: Text('Filter $index'),
+                        selected: index == 1 ? true : false,
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        backgroundColor: kLightColor,
+                        onSelected: (value) {},
+                      ),
                     ),
                   ),
                 ),
-              ),
-              sliver: SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: _crossAxisCount,
-                  crossAxisSpacing: _crossAxisSpacing,
-                  mainAxisSpacing: _mainAxisSpacing,
-                  childAspectRatio: _aspectRatio,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return ProductItem(
-                      product: ProductModel(image: _products[index]),
-                      onProductTap: () {},
-                      onFavouriteTap: () {},
-                      onBuyTap: () {},
-                    );
-                  },
-                  childCount: _products.length,
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _crossAxisCount,
+                    crossAxisSpacing: _crossAxisSpacing,
+                    mainAxisSpacing: _mainAxisSpacing,
+                    childAspectRatio: _aspectRatio,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return ProductItem(
+                        product: ProductModel(image: _products[index]),
+                        onProductTap: () {},
+                        onFavouriteTap: () {},
+                        onBuyTap: () {},
+                      );
+                    },
+                    childCount: _products.length,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: kMediumPadding)),
-        ],
+            const SliverPadding(
+                padding: EdgeInsets.only(bottom: kMediumPadding)),
+          ],
+        ),
       ),
     );
   }

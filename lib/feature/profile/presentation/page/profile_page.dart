@@ -137,7 +137,7 @@ class ProfilePage extends StatelessWidget {
 
                   await _authUsecase.logout();
 
-                  Get.offAllNamed(kIntroPage);
+                  Get.offAllNamed(kLoginPage);
                 },
                 child: Ink(
                   decoration: BoxDecoration(

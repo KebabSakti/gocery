@@ -18,4 +18,6 @@ abstract class AuthRepository {
   Future<void> otpLogin({required AuthPhoneLoginParam param});
 
   Future<void> logout();
+
+  void authState({required void Function(bool status) userIsLoggedIn});
 }

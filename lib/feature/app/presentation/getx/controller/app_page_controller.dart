@@ -48,7 +48,7 @@ class AppPageController extends GetxController {
   void onInit() async {
     ever(activePage, (int index) => pageController.jumpToPage(index));
 
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 100));
 
     activePage(Get.arguments);
 

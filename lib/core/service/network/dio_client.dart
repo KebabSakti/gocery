@@ -10,10 +10,9 @@ import 'package:gocery/core/service/storage/storage.dart';
 class DioClient implements Network {
   static final dio.Dio _dio = dio.Dio();
 
+  //do client network config, async, await, init, bearer token etc in here
   @override
   Future<Network> init() async {
-    //do client network config, async, await, init, etc in here
-
     //access secure local storage for authorization token
     final SecureStorageImpl _sBox = Get.find();
 

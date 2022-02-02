@@ -1,13 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:gocery/core/service/error/failure.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
 import 'package:gocery/core/param/auth_register_param.dart';
-import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/feature/authentication/data/datasource/local/auth_local_datasource.dart';
 import 'package:gocery/feature/authentication/data/datasource/remote/auth_remote_datasource.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
 import 'package:gocery/feature/authentication/domain/repository/auth_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
@@ -43,47 +45,39 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> facebookLogin() async {
     final LoginResult loginResult = await _facebookAuth.login();
 
+    if (loginResult.accessToken == null) {
+      throw Exception();
+    }
+
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    final UserCredential userCredential =
+    final UserCredential? userCredential =
         await _signinWithCredential(facebookAuthCredential);
 
-    await _grantAccess(userCredential: userCredential);
+    await _grantAccess(userCredential: userCredential!);
   }
 
   @override
   Future<void> googleLogin() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
-      if (googleAuth == null) {
-        throw Exception();
-      }
-
-      if (googleAuth.accessToken == null && googleAuth.idToken == null) {
-        throw Exception();
-      }
-
-      if (googleAuth.accessToken!.isEmpty && googleAuth.idToken!.isEmpty) {
-        throw Exception();
-      }
-
-      final googleAuthCredential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential =
-          await _signinWithCredential(googleAuthCredential);
-
-      await _grantAccess(userCredential: userCredential);
-    } catch (_) {
-      throw Failure('');
+    if (googleAuth == null) {
+      throw Exception();
     }
+
+    final googleAuthCredential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final UserCredential? userCredential =
+        await _signinWithCredential(googleAuthCredential);
+
+    await _grantAccess(userCredential: userCredential!);
   }
 
   @override
@@ -98,10 +92,10 @@ class AuthRepositoryImpl implements AuthRepository {
       forceResendingToken: param.resendToken,
       codeAutoRetrievalTimeout: (String verificationId) {},
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
-        final UserCredential userCredential =
+        final UserCredential? userCredential =
             await _signinWithCredential(phoneAuthCredential);
 
-        await _grantAccess(userCredential: userCredential);
+        await _grantAccess(userCredential: userCredential!);
 
         successCallback();
       },
@@ -118,10 +112,10 @@ class AuthRepositoryImpl implements AuthRepository {
       smsCode: param.otpCode!,
     );
 
-    final UserCredential userCredential =
+    final UserCredential? userCredential =
         await _signinWithCredential(phoneAuthCredential);
 
-    await _grantAccess(userCredential: userCredential);
+    await _grantAccess(userCredential: userCredential!);
   }
 
   @override
@@ -133,15 +127,66 @@ class AuthRepositoryImpl implements AuthRepository {
     await localDatasource.deleteAuthToken();
   }
 
-  Future<UserCredential> _signinWithCredential(
+  Future<UserCredential?> _signinWithCredential(
       AuthCredential credential) async {
-    return await _firebaseAuth.signInWithCredential(credential);
+    try {
+      return await _firebaseAuth.signInWithCredential(credential);
+    } catch (e, t) {
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'user-disabled':
+            throw Failure('Akun anda di block, hubungi cs kami untuk info',
+                error: e);
+
+          case 'invalid-verification-code':
+            throw Failure('Kode OTP yang anda masukkan salah', error: e);
+
+          case 'invalid-phone-number':
+            throw Failure('Nomor hp tidak valid', error: e);
+
+          default:
+            await Sentry.captureException(e, stackTrace: t);
+
+            throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
+                error: e);
+        }
+      } else {
+        await Sentry.captureException(e, stackTrace: t);
+
+        throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
+            error: e);
+      }
+    }
   }
 
   Future<void> _grantAccess({required UserCredential userCredential}) async {
-    final AuthenticationModel model = await remoteDatasource.access(
-        token: await userCredential.user!.getIdToken());
+    try {
+      final AuthenticationModel model = await remoteDatasource.access(
+          token: await userCredential.user!.getIdToken());
 
-    await localDatasource.saveAuthToken(token: model.token!);
+      await localDatasource.saveAuthToken(token: model.token!);
+    } catch (e, _) {
+      if (e is DioError) {
+        if (e.response == null) {
+          throw Failure(
+              'Koneksi internet bermasalah, cobalah beberapa saat lagi',
+              error: e);
+        }
+
+        throw Failure(e.message, error: e);
+      } else {
+        throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
+            error: e);
+      }
+    }
+  }
+
+  @override
+  void authState({required void Function(bool status) userIsLoggedIn}) {
+    // _firebaseAuth.authStateChanges().listen((User? user) {
+    //   userIsLoggedIn(user != null);
+    // });
+
+    userIsLoggedIn(_firebaseAuth.currentUser != null);
   }
 }

@@ -60,7 +60,6 @@ class LoginPageAlt extends GetView<LoginPageController> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: InternationalPhoneNumberInput(
-                        autoFocus: true,
                         countries: const ['ID'],
                         spaceBetweenSelectorAndTextField: 0,
                         errorMessage: 'No hp tidak valid',

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
@@ -47,16 +46,8 @@ class LoginPageController extends GetxController {
         verificationFailed: (Exception e) {
           MDialog.close();
 
-          if (e is FirebaseAuthException) {
-            switch (e.code) {
-              case 'invalid-phone-number':
-                MToast.show('Nomor hp tidak valid');
-                break;
-
-              default:
-                MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
-                break;
-            }
+          if (e is Failure) {
+            MToast.show(e.message);
           } else {
             MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
           }
@@ -87,21 +78,29 @@ class LoginPageController extends GetxController {
 
   void facebookLoginPressed() async {
     try {
+      MDialog.loading(dismiss: false);
+
       await _authenticationUsecase.facebookLogin();
 
       _toHome();
-    } on Failure catch (e) {
-      MToast.show(e.message);
+    } catch (e) {
+      MDialog.close();
     }
   }
 
   void googleLoginPressed() async {
     try {
+      MDialog.loading(dismiss: false);
+
       await _authenticationUsecase.googleLogin();
 
       _toHome();
-    } on Failure catch (e) {
-      MToast.show(e.message);
+    } catch (e) {
+      MDialog.close();
+
+      if (e is Failure) {
+        MToast.show(e.message);
+      }
     }
   }
 

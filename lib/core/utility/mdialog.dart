@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class MDialog {
-  static loading({String text = 'Loading..'}) {
+  static loading({String text = 'Loading..', bool dismiss = true}) {
     Get.dialog(
       Center(
         child: Padding(
@@ -23,6 +23,7 @@ class MDialog {
           ),
         ),
       ),
+      barrierDismissible: dismiss,
     );
   }
 

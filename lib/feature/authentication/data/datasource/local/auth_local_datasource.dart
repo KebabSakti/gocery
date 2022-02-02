@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:gocery/core/service/storage/storage.dart';
 
 abstract class AuthLocalDatasource {
@@ -8,15 +7,17 @@ abstract class AuthLocalDatasource {
 }
 
 class AuthLocalDatasourceImpl implements AuthLocalDatasource {
-  final SecureStorageImpl _secureStorage = Get.find();
+  AuthLocalDatasourceImpl({required this.storage});
+
+  final Storage storage;
 
   @override
   Future<void> saveAuthToken({required String token}) async {
-    await _secureStorage.write(key: 'token', value: token);
+    await storage.write(key: 'token', value: token);
   }
 
   @override
   Future<void> deleteAuthToken() async {
-    await _secureStorage.delete(key: 'token');
+    await storage.delete(key: 'token');
   }
 }

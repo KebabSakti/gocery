@@ -1,26 +1,61 @@
 import 'package:get/get.dart';
 import 'package:gocery/core/service/network/dio_client.dart';
 import 'package:gocery/core/service/network/network.dart';
-import 'package:gocery/core/service/storage/get_storage_client.dart';
 import 'package:gocery/core/service/storage/secure_storage_client.dart';
 import 'package:gocery/core/service/storage/storage.dart';
 import 'package:gocery/feature/authentication/data/datasource/local/auth_local_datasource.dart';
 import 'package:gocery/feature/authentication/data/datasource/remote/auth_remote_datasource.dart';
 import 'package:gocery/feature/authentication/data/repository/auth_repository_impl.dart';
+import 'package:gocery/feature/banner/data/datasource/remote/banner_remote_datasource.dart';
+import 'package:gocery/feature/banner/data/repository/banner_repository_impl.dart';
+import 'package:gocery/feature/category/data/datasource/remote/category_remote_datasource.dart';
+import 'package:gocery/feature/category/data/repository/category_repository_impl.dart';
+import 'package:gocery/feature/customer/data/datasource/remote/customer_remote_datasource.dart';
+import 'package:gocery/feature/customer/data/repository/customer_repository_impl.dart';
 
 class Dependency extends Bindings {
   @override
   void dependencies() {
-    //SERVICE
+    //EXTERNAL SERVICE
     Get.lazyPut(() => SecureStorageImpl(SecureStorageClient()), fenix: true);
-    Get.lazyPut(() => LocalStorageImpl(GetStorageClient()), fenix: true);
     Get.lazyPut(() => NetworkImpl(DioClient()), fenix: true);
 
     //AUTHENTICATION
     Get.lazyPut(
         () => AuthRepositoryImpl(
-              remoteDatasource: AuthRemoteDatasourceImpl(),
-              localDatasource: AuthLocalDatasourceImpl(),
+              remoteDatasource: AuthRemoteDatasourceImpl(
+                client: Get.find<NetworkImpl>(),
+              ),
+              localDatasource: AuthLocalDatasourceImpl(
+                storage: Get.find<SecureStorageImpl>(),
+              ),
+            ),
+        fenix: true);
+
+    //CUSTOMER ACCOUNT
+    Get.lazyPut(
+        () => CustomerRepositoryImpl(
+              remoteDatasource: CustomerRemoteDatasource(
+                client: Get.find<NetworkImpl>(),
+              ),
+            ),
+        fenix: true);
+
+    //CATEGORY
+    Get.lazyPut(
+        () => CategoryRepositoryImpl(
+              remoteDatasource: CategoryRemoteDatasourceImpl(
+                client: Get.find<NetworkImpl>(),
+              ),
+            ),
+        fenix: true);
+
+    //BANNER
+    Get.lazyPut(
+        () => BannerRepositoryImpl(
+              remoteDatasource: BannerRemoteDatasourceImpl(
+                client: Get.find<NetworkImpl>(),
+              ),
             ),
         fenix: true);
   }

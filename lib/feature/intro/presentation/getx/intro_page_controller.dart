@@ -1,14 +1,27 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
 
 class IntroPageController extends GetxController {
-  Future _init() async {
-    await Future.delayed(const Duration(seconds: 1));
+  final _authenticationUsecase = AuthenticationUsecase();
 
+  Future _init() async {
     await _cacheAsset();
 
-    Get.offAllNamed(kLandingPage);
+    _authState();
+  }
+
+  void _authState() {
+    _authenticationUsecase.listener(
+      userIsLoggedIn: (status) {
+        if (status) {
+          Get.offAllNamed(kAppPage);
+        } else {
+          Get.offAllNamed(kLandingPage);
+        }
+      },
+    );
   }
 
   Future _cacheAsset() async {

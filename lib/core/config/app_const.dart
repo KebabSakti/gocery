@@ -4,30 +4,39 @@ import 'dart:ui';
 const String kProtocol = 'http';
 const String kBaseUrl = '192.168.3.153:1001';
 const String kProxyUrl = '192.168.3.153:8000';
-const bool kNetworkLog = true;
+const bool kNetworkLog = false;
 const bool kProxy = true;
 const int kNetworkConnectTimeout = 60000;
 const int kNetworkReceiveTimeout = 60000;
 
+//ROUTE NAME
+const String kIntroPage = '/';
+const String kLandingPage = '/landing';
+const String kLoginPage = '/login';
+const String kForgotPasswordPage = '/forgot_password';
+const String kOtpPage = '/otp';
+const String kRegisterPage = '/register';
+const String kPhonePage = '/phone';
+const String kAppPage = '/app';
+const String kSearchPage = '/search';
+const String kProductDetailPage = '/product_detail';
+const String kProductPage = '/product';
+const String kCheckoutPage = '/checkout';
+const String kOrderCompletePage = '/order_complete';
+const String kDeliveryAddressPage = '/delivery_address';
+const String kVoucherPage = '/voucher';
+const String kOrderDetailPage = '/order_detail';
+const String kChatDetailPage = '/chat_detail';
+const String kTrackingPage = '/tracking';
+
 //REST API
-const kIntroPage = '/';
-const kLandingPage = '/landing';
-const kLoginPage = '/login';
-const kForgotPasswordPage = '/forgot_password';
-const kOtpPage = '/otp';
-const kRegisterPage = '/register';
-const kPhonePage = '/phone';
-const kAppPage = '/app';
-const kSearchPage = '/search';
-const kProductDetailPage = '/product_detail';
-const kProductPage = '/product';
-const kCheckoutPage = '/checkout';
-const kOrderCompletePage = '/order_complete';
-const kDeliveryAddressPage = '/delivery_address';
-const kVoucherPage = '/voucher';
-const kOrderDetailPage = '/order_detail';
-const kChatDetailPage = '/chat_detail';
-const kTrackingPage = '/tracking';
+const String kAuthAccess = 'customer/auth/access';
+const String kAuthRegister = 'customer/auth/register';
+const String kAuthRevoke = 'customer/auth/revoke';
+const String kShowCustomerAccount = 'customer/user';
+const String kUpdateFcm = 'customer/user/fcm';
+const String kCategoryIndex = 'customer/categories';
+const String kBannerIndex = 'customer/banners';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';

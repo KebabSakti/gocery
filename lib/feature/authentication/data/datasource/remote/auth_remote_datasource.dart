@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/param/auth_register_param.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
@@ -13,12 +13,13 @@ abstract class AuthRemoteDatasource {
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
-  final NetworkImpl _client = Get.find();
+  AuthRemoteDatasourceImpl({required this.client});
+
+  final Network client;
 
   @override
   Future<AuthenticationModel> access({required String token}) async {
-    var _response =
-        await _client.post('customer/auth/access', data: {'token': token});
+    var _response = await client.post(kAuthAccess, data: {'token': token});
 
     AuthenticationModel _model =
         await compute(authenticationModelFromJson, _response.toString());
@@ -29,7 +30,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   @override
   Future<AuthenticationModel> register(
       {required AuthRegisterParam param}) async {
-    var _response = await _client.post('customer/auth/register', data: {
+    var _response = await client.post(kAuthRegister, data: {
       'name': param.name,
       'email': param.email,
       'phone': param.phone,
@@ -43,6 +44,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<void> revoke() async {
-    await _client.get('customer/auth/revoke');
+    await client.get(kAuthRevoke);
   }
 }

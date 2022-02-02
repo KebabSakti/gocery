@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
@@ -36,22 +35,7 @@ class OtpPageController extends GetxController {
     } catch (e) {
       MDialog.close();
 
-      if (e is FirebaseAuthException) {
-        switch (e.code) {
-          case 'user-disabled':
-            MToast.show(
-                'User anda terblokir, harap hubungi layanan kustomer kami');
-            break;
-
-          case 'invalid-verification-code':
-            MToast.show('Kode OTP yang anda masukkan salah');
-            break;
-
-          default:
-            MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
-            break;
-        }
-      } else if (e is Failure) {
+      if (e is Failure) {
         MToast.show(e.message);
       } else {
         MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
@@ -60,54 +44,40 @@ class OtpPageController extends GetxController {
   }
 
   void resendPressed() async {
-    try {
-      MDialog.loading();
+    MDialog.loading();
 
-      _countdownStart();
+    _countdownStart();
 
-      await _authenticationUsecase.phoneLogin(
-        param: AuthPhoneLoginParam(
-          phoneNumber: _argument.phoneNumber,
-          resendToken: _argument.resendToken,
-        ),
-        successCallback: () {
-          MDialog.close();
+    await _authenticationUsecase.phoneLogin(
+      param: AuthPhoneLoginParam(
+        phoneNumber: _argument.phoneNumber,
+        resendToken: _argument.resendToken,
+      ),
+      successCallback: () {
+        MDialog.close();
 
-          Get.offAllNamed(kAppPage);
-        },
-        verificationFailed: (Exception e) {
-          MDialog.close();
+        Get.offAllNamed(kAppPage);
+      },
+      verificationFailed: (Exception e) {
+        MDialog.close();
 
-          if (e is FirebaseAuthException) {
-            switch (e.code) {
-              case 'invalid-phone-number':
-                MToast.show('Nomor hp tidak valid');
-                break;
+        if (e is Failure) {
+          MToast.show(e.message);
+        } else {
+          MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
+        }
+      },
+      codeSent: (verificationId, resendToken) {
+        MDialog.close();
 
-              default:
-                MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
-                break;
-            }
-          } else {
-            MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
-          }
-        },
-        codeSent: (verificationId, resendToken) {
-          MDialog.close();
-
-          Get.toNamed(kOtpPage,
-              arguments: AuthPhoneLoginParam(
-                phoneNumber: _argument.phoneNumber,
-                resendToken: resendToken,
-                verificationId: verificationId,
-              ));
-        },
-      );
-    } on Failure catch (e) {
-      MDialog.close();
-
-      MToast.show(e.message);
-    }
+        Get.toNamed(kOtpPage,
+            arguments: AuthPhoneLoginParam(
+              phoneNumber: _argument.phoneNumber,
+              resendToken: resendToken,
+              verificationId: verificationId,
+            ));
+      },
+    );
   }
 
   void _countdownStart() {
