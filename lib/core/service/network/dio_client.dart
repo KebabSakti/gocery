@@ -27,12 +27,14 @@ class DioClient implements Network {
 
     //default header for all request
     _dio.options.headers = {
+      'accept': 'application/json',
       'content-type': 'application/json',
     };
 
     //add authorization token to header
     if (token != null) {
-      _dio.options.headers['authorization'] = 'Bearer $token';
+      _dio.options.headers = _dio.options.headers
+        ..putIfAbsent('authorization', () => 'Bearer $token');
     }
 
     if (kNetworkLog) {

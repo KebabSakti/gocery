@@ -68,7 +68,8 @@ class _HomePageState extends State<HomePage>
                           SvgPicture.asset(kCoinIcon, width: 18, height: 18),
                           const SizedBox(width: 4),
                           Text(
-                            customer.data!.pointModel!.point.toString(),
+                            customer.data!.customerPointEntity!.point
+                                .toString(),
                             textAlign: TextAlign.center,
                             style: Get.theme.textTheme.caption!
                                 .copyWith(color: Colors.amber),
@@ -81,7 +82,9 @@ class _HomePageState extends State<HomePage>
                       return SmallRefreshButton(
                           label: 'Refresh Point',
                           onTap: () {
-                            _contoller.customerData();
+                            _contoller.fcm();
+
+                            _contoller.customer();
                           });
                     }
 

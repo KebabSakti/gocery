@@ -19,10 +19,10 @@ void main() async {
   await SentryFlutter.init(
     (options) {
       options.dsn =
-          'https://12845349c05f934f409c1694f8d022cc85@o1130472.ingest.sentry.io/6174528';
+          'https://845349c05f934f409c1694f8d022cc85@o1130472.ingest.sentry.io/6174528';
       // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
       // We recommend adjusting this value in production.
-      options.tracesSampleRate = 1.0;
+      // options.tracesSampleRate = 1.0;
     },
     appRunner: () => runApp(const Gocery()),
   );

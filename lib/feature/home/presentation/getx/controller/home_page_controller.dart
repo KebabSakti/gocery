@@ -1,5 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
@@ -14,6 +12,10 @@ import 'package:gocery/feature/customer/data/repository/customer_repository_impl
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
 import 'package:gocery/feature/customer/domain/usecase/update_fcm.dart';
+import 'package:gocery/feature/product/data/model/product_paging_model.dart';
+import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
+import 'package:gocery/feature/product/domain/entity/product_paging_entity.dart';
+import 'package:gocery/feature/product/domain/usecase/index_product.dart';
 
 class HomePageController extends GetxController {
   final _updateCustomerFcmUsecase =
@@ -24,38 +26,36 @@ class HomePageController extends GetxController {
       IndexCategory(repository: Get.find<CategoryRepositoryImpl>());
   final _indexBanner =
       IndexBanner(repository: Get.find<BannerRepositoryImpl>());
+  final _indexProduct =
+      IndexProduct(repository: Get.find<ProductRepositoryImpl>());
 
   final bannerActive = 0.obs;
 
   final customerAccount = ResponseModel<CustomerAccountEntity>().obs;
   final categoriesState = ResponseModel<List<CategoryEntity>>().obs;
   final bannersState = ResponseModel<List<BannerEntity>>().obs;
+  final productState = ResponseModel<ProductPagingEntity>().obs;
 
-  Future<void> _updateFcm() async {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-
-    if (fcmToken != null) {
-      await _updateCustomerFcmUsecase(fcmToken: fcmToken);
+  Future<void> fcm() async {
+    try {
+      await _updateCustomerFcmUsecase();
+    } catch (e) {
+      customerAccount(
+          ResponseModel<CustomerAccountEntity>(status: Status.error));
     }
   }
 
-  Future<void> _showCustomer() async {
-    customerAccount(
-        ResponseModel<CustomerAccountEntity>(status: Status.loading));
-
-    await _showCustomerAccountUsecase().then((model) {
-      customerAccount(ResponseModel<CustomerAccountEntity>(
-        status: Status.success,
-        data: model,
-      ));
-    });
-  }
-
-  Future<void> customerData() async {
+  Future<void> customer() async {
     try {
-      await _updateFcm();
+      customerAccount(
+          ResponseModel<CustomerAccountEntity>(status: Status.loading));
 
-      await _showCustomer();
+      await _showCustomerAccountUsecase().then((model) {
+        customerAccount(ResponseModel<CustomerAccountEntity>(
+          status: Status.success,
+          data: model,
+        ));
+      });
     } catch (e) {
       MToast.show('Gagal memuat point');
 
@@ -88,8 +88,6 @@ class HomePageController extends GetxController {
         ));
       });
     } catch (e) {
-      debugPrint(e.toString());
-
       MToast.show('Gagal memuat kategori');
 
       categoriesState(
@@ -108,18 +106,35 @@ class HomePageController extends GetxController {
         ));
       });
     } catch (e) {
-      debugPrint(e.toString());
-
       MToast.show('Gagal memuat banner');
 
       bannersState(ResponseModel<List<BannerEntity>>(status: Status.error));
     }
   }
 
+  Future<void> products() async {
+    try {
+      productState(ResponseModel<ProductPagingModel>(status: Status.loading));
+
+      await _indexProduct().then((model) {
+        productState(ResponseModel<ProductPagingEntity>(
+          status: Status.success,
+          data: model,
+        ));
+      });
+    } catch (e) {
+      MToast.show('Gagal memuat produk');
+
+      productState(ResponseModel<ProductPagingModel>(status: Status.error));
+    }
+  }
+
   void init() async {
-    customerData();
+    fcm();
+    customer();
     categories();
     banners();
+    products();
   }
 
   @override

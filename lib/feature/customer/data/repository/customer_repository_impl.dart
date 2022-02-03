@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/feature/customer/data/datasource/remote/customer_remote_datasource.dart';
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
@@ -30,9 +31,13 @@ class CustomerRepositoryImpl implements CustomerRepository {
   }
 
   @override
-  Future<void> updateFcm({required String fcmToken}) async {
+  Future<void> updateFcm() async {
     try {
-      await remoteDatasource.updateFcm(fcmToken: fcmToken);
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        await remoteDatasource.updateFcm(fcmToken: fcmToken);
+      }
     } catch (e, _) {
       if (e is DioError) {
         if (e.response == null) {

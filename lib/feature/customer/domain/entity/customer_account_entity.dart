@@ -1,19 +1,19 @@
-import 'package:gocery/core/model/fcm_token_model.dart';
-import 'package:gocery/core/model/point_model.dart';
-import 'package:gocery/feature/customer/data/model/customer_profile_model.dart';
+import 'package:gocery/feature/customer/domain/entity/customer_fcm_entity.dart';
+import 'package:gocery/feature/customer/domain/entity/customer_point_entity.dart';
+import 'package:gocery/feature/customer/domain/entity/customer_profile_entity.dart';
 
 abstract class CustomerAccountEntity {
   CustomerAccountEntity({
     this.uid,
     this.username,
-    this.customerProfileModel,
-    this.pointModel,
-    this.fcmTokenModel,
+    this.customerProfileEntity,
+    this.customerPointEntity,
+    this.customerFcmEntity,
   });
 
   final String? uid;
   final String? username;
-  final CustomerProfileModel? customerProfileModel;
-  final PointModel? pointModel;
-  final FcmTokenModel? fcmTokenModel;
+  final CustomerProfileEntity? customerProfileEntity;
+  final CustomerPointEntity? customerPointEntity;
+  final CustomerFcmEntity? customerFcmEntity;
 }

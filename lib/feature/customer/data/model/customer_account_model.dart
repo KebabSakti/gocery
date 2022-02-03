@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:gocery/core/model/fcm_token_model.dart';
-import 'package:gocery/core/model/point_model.dart';
+import 'package:gocery/feature/customer/data/model/customer_fcm_model.dart';
+import 'package:gocery/feature/customer/data/model/customer_point_model.dart';
 import 'package:gocery/feature/customer/data/model/customer_profile_model.dart';
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 
@@ -16,51 +16,52 @@ class CustomerAccountModel extends CustomerAccountEntity {
     String? uid,
     String? username,
     CustomerProfileModel? customerProfileModel,
-    PointModel? pointModel,
-    FcmTokenModel? fcmTokenModel,
+    CustomerPointModel? customerPointModel,
+    CustomerFcmModel? customerFcmModel,
   }) : super(
           uid: uid,
           username: username,
-          customerProfileModel: customerProfileModel,
-          pointModel: pointModel,
-          fcmTokenModel: fcmTokenModel,
+          customerProfileEntity: customerProfileModel,
+          customerPointEntity: customerPointModel,
+          customerFcmEntity: customerFcmModel,
         );
 
   CustomerAccountModel copyWith({
     String? uid,
     String? username,
     CustomerProfileModel? customerProfileModel,
-    PointModel? pointModel,
-    FcmTokenModel? fcmTokenModel,
+    CustomerPointModel? customerPointModel,
+    CustomerFcmModel? customerFcmModel,
   }) =>
       CustomerAccountModel(
         uid: uid ?? this.uid,
         username: username ?? this.username,
-        customerProfileModel: customerProfileModel ?? this.customerProfileModel,
-        pointModel: pointModel ?? this.pointModel,
-        fcmTokenModel: fcmTokenModel ?? this.fcmTokenModel,
+        customerProfileModel: customerProfileModel ??
+            customerProfileEntity as CustomerProfileModel,
+        customerPointModel:
+            customerPointModel ?? customerPointEntity as CustomerPointModel,
+        customerFcmModel:
+            customerFcmModel ?? customerFcmEntity as CustomerFcmModel,
       );
 
   factory CustomerAccountModel.fromJson(Map<String, dynamic> json) =>
       CustomerAccountModel(
         uid: json["uid"],
         username: json["username"],
-        customerProfileModel: json["customer_profile_model"] == null
-            ? null
-            : CustomerProfileModel.fromJson(json["customer_profile_model"]),
-        pointModel: json["point_model"] == null
-            ? null
-            : PointModel.fromJson(json["point_model"]),
-        fcmTokenModel: json["fcm_token_model"] == null
-            ? null
-            : FcmTokenModel.fromJson(json["fcm_token_model"]),
+        customerProfileModel:
+            CustomerProfileModel.fromJson(json["customer_profile_model"]),
+        customerPointModel:
+            CustomerPointModel.fromJson(json["customer_point_model"]),
+        customerFcmModel: CustomerFcmModel.fromJson(json["customer_fcm_model"]),
       );
 
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "username": username,
-        "customer_profile_model": customerProfileModel?.toJson(),
-        "point_model": pointModel?.toJson(),
-        "fcm_token_model": fcmTokenModel?.toJson(),
+        "customer_profile_model":
+            (customerProfileEntity as CustomerProfileModel).toJson(),
+        "customer_point_model":
+            (customerPointEntity as CustomerPointModel).toJson(),
+        "customer_fcm_model": (customerFcmEntity as CustomerFcmModel).toJson(),
       };
 }

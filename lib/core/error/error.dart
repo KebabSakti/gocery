@@ -1,1 +1,0 @@
-class LoginProviderNotSelected implements Exception {}

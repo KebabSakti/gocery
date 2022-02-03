@@ -5,7 +5,7 @@ class UpdateFcm {
 
   final CustomerRepository repository;
 
-  Future<void> call({required String fcmToken}) async {
-    await repository.updateFcm(fcmToken: fcmToken);
+  Future<void> call() async {
+    await repository.updateFcm();
   }
 }

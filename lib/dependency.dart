@@ -12,6 +12,8 @@ import 'package:gocery/feature/category/data/datasource/remote/category_remote_d
 import 'package:gocery/feature/category/data/repository/category_repository_impl.dart';
 import 'package:gocery/feature/customer/data/datasource/remote/customer_remote_datasource.dart';
 import 'package:gocery/feature/customer/data/repository/customer_repository_impl.dart';
+import 'package:gocery/feature/product/data/datasource/remote/product_remote_datasource.dart';
+import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
 
 class Dependency extends Bindings {
   @override
@@ -35,7 +37,7 @@ class Dependency extends Bindings {
     //CUSTOMER ACCOUNT
     Get.lazyPut(
         () => CustomerRepositoryImpl(
-              remoteDatasource: CustomerRemoteDatasource(
+              remoteDatasource: CustomerRemoteDatasourceImpl(
                 client: Get.find<NetworkImpl>(),
               ),
             ),
@@ -54,6 +56,15 @@ class Dependency extends Bindings {
     Get.lazyPut(
         () => BannerRepositoryImpl(
               remoteDatasource: BannerRemoteDatasourceImpl(
+                client: Get.find<NetworkImpl>(),
+              ),
+            ),
+        fenix: true);
+
+    //PRODUCT
+    Get.lazyPut(
+        () => ProductRepositoryImpl(
+              remoteDatasource: ProductRemoteDatasourceImpl(
                 client: Get.find<NetworkImpl>(),
               ),
             ),
