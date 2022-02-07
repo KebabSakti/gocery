@@ -54,6 +54,11 @@ class IntroPageController extends GetxController {
         ExactAssetPicture(SvgPicture.svgStringDecoderBuilder, kOrderComplete),
         null,
       ),
+      precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoderBuilder, kScrollTopButtonIcon),
+        null,
+      ),
     ]);
   }
 

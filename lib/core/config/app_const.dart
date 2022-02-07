@@ -38,6 +38,7 @@ const String kUpdateFcm = 'customer/user/fcm';
 const String kCategoryIndex = 'customer/categories';
 const String kBannerIndex = 'customer/banners';
 const String kProductIndex = 'customer/products';
+const String kProductShow = 'customer/products';
 const String kBundleIndex = 'customer/bundles';
 
 //ASSETS
@@ -48,6 +49,7 @@ const String kFacebookLogo = 'asset/image/ui/facebook_clean.svg';
 const String kGoogleLogo = 'asset/image/ui/google_clean.svg';
 const String kCoinIcon = 'asset/image/ui/coin.svg';
 const String kOrderComplete = 'asset/image/ui/complete_clean.svg';
+const String kScrollTopButtonIcon = 'asset/image/ui/up.svg';
 const String kLandingOne = 'asset/image/content/landing_one.svg';
 const String kLandingTwo = 'asset/image/content/landing_two.svg';
 

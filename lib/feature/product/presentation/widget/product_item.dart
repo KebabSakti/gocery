@@ -6,7 +6,6 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
-import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 
 class ProductItem extends StatelessWidget {
@@ -28,9 +27,7 @@ class ProductItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          Get.toNamed(kProductDetailPage);
-        },
+        onTap: onProductTap,
         borderRadius: BorderRadius.circular(10),
         child: Ink(
           width: (Get.size.width - 70) / 2,
@@ -71,7 +68,7 @@ class ProductItem extends StatelessWidget {
                                 child: (product.favourite!)
                                     ? const Icon(
                                         AppIcon.heartfill,
-                                        color: Colors.redAccent,
+                                        color: Colors.red,
                                         size: 20,
                                       )
                                     : const Icon(
@@ -164,9 +161,7 @@ class ProductItem extends StatelessWidget {
                       height: 30,
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Get.find<AppPageController>().addToCartPanel.open();
-                        },
+                        onPressed: onBuyTap,
                         child: const Text('Beli'),
                       ),
                     ),

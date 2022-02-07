@@ -1,6 +1,6 @@
 class IndexProductParamEntity {
   IndexProductParamEntity({
-    required this.page,
+    this.page,
     this.sorting,
     this.shipping,
     this.category,
@@ -8,7 +8,7 @@ class IndexProductParamEntity {
     this.name,
   });
 
-  final int page;
+  final int? page;
   final String? sorting;
   final String? shipping;
   final String? category;

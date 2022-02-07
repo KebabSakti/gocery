@@ -47,7 +47,10 @@ class BundleItem extends StatelessWidget {
                   right: (index >= 0 && index < 9) ? kMediumPadding : 0),
               child: ProductItem(
                 product: bundle.products![index],
-                onProductTap: () {},
+                onProductTap: () {
+                  Get.toNamed(kProductDetailPage,
+                      arguments: bundle.products![index]);
+                },
                 onFavouriteTap: () {},
                 onBuyTap: () {},
               ),

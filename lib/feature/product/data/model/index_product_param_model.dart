@@ -2,7 +2,7 @@ import 'package:gocery/feature/product/domain/entity/index_product_param_entity.
 
 class IndexProductParamModel extends IndexProductParamEntity {
   IndexProductParamModel({
-    required int page,
+    int? page,
     String? sorting,
     String? shipping,
     String? category,
@@ -18,7 +18,7 @@ class IndexProductParamModel extends IndexProductParamEntity {
         );
 
   IndexProductParamModel copyWith({
-    required int page,
+    int? page,
     String? sorting,
     String? shipping,
     String? category,
@@ -26,7 +26,7 @@ class IndexProductParamModel extends IndexProductParamEntity {
     String? name,
   }) =>
       IndexProductParamModel(
-        page: page,
+        page: page ?? this.page,
         sorting: sorting ?? this.sorting,
         shipping: shipping ?? this.shipping,
         category: category ?? this.category,
@@ -41,5 +41,5 @@ class IndexProductParamModel extends IndexProductParamEntity {
         'category': category,
         'bundle': bundle,
         'name': name,
-      }..removeWhere((key, value) => value == null);
+      }..removeWhere((key, value) => value == null || value == '');
 }

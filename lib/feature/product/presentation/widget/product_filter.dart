@@ -38,108 +38,148 @@ class ProductFilter extends GetView<ProductFilterController> {
           onPressed: () {},
         ),
         const SizedBox(width: kSmallPadding),
-        FilterChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Terjadwal'),
-          ),
-          selected: true,
-          elevation: 0,
-          labelStyle: const TextStyle(color: kPrimaryColor),
-          checkmarkColor: kPrimaryColor,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          selectedColor: kPrimaryColor.withOpacity(0.3),
-          onSelected: (value) {
-            controller.setValue('Terjadwal');
-          },
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Terjadwal'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().shipping == 'TERJADWAL',
+            onSelected: (value) {
+              final param = controller
+                  .filter()
+                  .copyWith(shipping: value ? 'TERJADWAL' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
         const SizedBox(width: kSmallPadding),
-        FilterChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Langsung'),
-          ),
-          selected: true,
-          elevation: 0,
-          labelStyle: const TextStyle(color: kPrimaryColor),
-          checkmarkColor: kPrimaryColor,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          selectedColor: kPrimaryColor.withOpacity(0.3),
-          onSelected: (value) {
-            controller.setValue('Langsung');
-          },
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Langsung'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().shipping == 'LANGSUNG',
+            onSelected: (value) {
+              final param = controller
+                  .filter()
+                  .copyWith(shipping: value ? 'LANGSUNG' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
         const SizedBox(width: kSmallPadding),
-        ChoiceChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Terlaris'),
-          ),
-          selected: false,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          onSelected: (value) {
-            controller.setValue('Terlaris');
-          },
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Terlaris'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().sorting == 'sold',
+            onSelected: (value) {
+              final param =
+                  controller.filter().copyWith(sorting: value ? 'sold' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
         const SizedBox(width: kSmallPadding),
-        ChoiceChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Termurah'),
-          ),
-          selected: false,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          onSelected: (value) {},
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Termurah'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().sorting == 'price',
+            onSelected: (value) {
+              final param =
+                  controller.filter().copyWith(sorting: value ? 'price' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
         const SizedBox(width: kSmallPadding),
-        ChoiceChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Diskon'),
-          ),
-          selected: false,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          onSelected: (value) {},
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Diskon'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().sorting == 'discount',
+            onSelected: (value) {
+              final param = controller
+                  .filter()
+                  .copyWith(sorting: value ? 'discount' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
         const SizedBox(width: kSmallPadding),
-        ChoiceChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Banyak Point'),
-          ),
-          selected: false,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          onSelected: (value) {},
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Banyak Point'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().sorting == 'point',
+            onSelected: (value) {
+              final param =
+                  controller.filter().copyWith(sorting: value ? 'point' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
         const SizedBox(width: kSmallPadding),
-        ChoiceChip(
-          label: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Text('Lagi Trending'),
-          ),
-          selected: true,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          selectedShadowColor: Colors.transparent,
-          backgroundColor: kLightColor,
-          onSelected: (value) {},
-        ),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Lagi Trending'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().sorting == 'view',
+            onSelected: (value) {
+              final param =
+                  controller.filter().copyWith(sorting: value ? 'view' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
       ],
     );
   }

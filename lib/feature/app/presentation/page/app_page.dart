@@ -80,7 +80,7 @@ Widget _addToCartPanel({required AppPageController controller}) {
   return SlidingUpPanel(
     controller: controller.addToCartPanel,
     minHeight: 0,
-    maxHeight: 285,
+    maxHeight: 265,
     backdropEnabled: true,
     backdropColor: kDarkColor,
     backdropTapClosesPanel: true,
@@ -217,7 +217,7 @@ Widget _addToCartPanel({required AppPageController controller}) {
                         ),
                       ],
                     ),
-                    const SizedBox(height: kBigPadding),
+                    const Spacer(),
                     SizedBox(
                       width: double.infinity,
                       height: 45,

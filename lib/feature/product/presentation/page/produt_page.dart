@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
-import 'package:gocery/feature/home/presentation/page/home_page.dart';
+import 'package:gocery/feature/category/data/model/category_model.dart';
 import 'package:gocery/feature/product/data/model/product_model.dart';
 import 'package:gocery/feature/product/presentation/getx/controller/product_page_controller.dart';
 import 'package:gocery/feature/product/presentation/widget/product_filter.dart';
@@ -20,47 +20,47 @@ class ProductPage extends GetView<ProductPageController> {
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1601044196/mock/groceries.svg'),
       CategoryModel(
           name: 'Gas',
-          color: 0xFF884DFF,
+          color: '0xFF884DFF',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1609097688/mock/gas-bottle-fullsize.svg'),
       CategoryModel(
           name: 'Sembako',
-          color: 0xFF0095FF,
+          color: '0xFF0095FF',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512528/ayo%20mobile/flour.svg'),
       CategoryModel(
           name: 'Daging',
-          color: 0xFFEE6352,
+          color: '0xFFEE6352',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512527/ayo%20mobile/steak.svg'),
       CategoryModel(
           name: 'Bumbu',
-          color: 0xFFFF8900,
+          color: '0xFFFF8900',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512529/ayo%20mobile/pepper.svg'),
       CategoryModel(
           name: 'Ikan',
-          color: 0xFFFFCF00,
+          color: '0xFFFFCF00',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512527/ayo%20mobile/fish.svg'),
       CategoryModel(
           name: 'Cake',
-          color: 0xFFB83B5E,
+          color: '0xFFB83B5E',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512529/ayo%20mobile/cupcake.svg'),
       CategoryModel(
           name: 'Sayur',
-          color: 0xFF83F084,
+          color: '0xFF83F084',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512530/ayo%20mobile/salad.svg'),
       CategoryModel(
           name: 'Alat Dapur',
-          color: 0xFF53CDD8,
+          color: '0xFF53CDD8',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512529/ayo%20mobile/knives.svg'),
       CategoryModel(
           name: 'Buah',
-          color: 0xFF59CD90,
+          color: '0xFF59CD90',
           image:
               'https://res.cloudinary.com/vjtechsolution/image/upload/v1630512527/ayo%20mobile/apple.svg'),
     ];

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:gocery/feature/product/data/model/product_statistic_model.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 
-ProductModel authModelFromJson(String str) =>
+ProductModel productModelFromJson(String str) =>
     ProductModel.fromJson(json.decode(str));
 
 String productModelToJson(ProductModel data) => json.encode(data.toJson());
