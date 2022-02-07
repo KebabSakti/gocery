@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 abstract class RequestInterface {
-  Future<dynamic> get(String path, {Map<String, String?>? query});
+  Future<dynamic> get(String path, {Map<String, dynamic>? query});
 
   Future<dynamic> post(String path, {required Map<String, String?>? data});
 }
@@ -30,8 +30,9 @@ class NetworkImpl implements Network {
   }
 
   @override
-  Future get(String path, {Map<String, String?>? query}) async {
-    return await init().then((instance) async => await instance.get(path));
+  Future get(String path, {Map<String, dynamic>? query}) async {
+    return await init()
+        .then((instance) async => await instance.get(path, query: query));
   }
 
   @override

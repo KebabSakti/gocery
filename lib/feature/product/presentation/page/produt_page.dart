@@ -4,9 +4,11 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/feature/home/presentation/page/home_page.dart';
 import 'package:gocery/feature/product/data/model/product_model.dart';
+import 'package:gocery/feature/product/presentation/getx/controller/product_page_controller.dart';
+import 'package:gocery/feature/product/presentation/widget/product_filter.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends GetView<ProductPageController> {
   const ProductPage({Key? key}) : super(key: key);
 
   @override
@@ -94,28 +96,11 @@ class ProductPage extends StatelessWidget {
           children: _categories.map((e) {
             return Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kMediumPadding, vertical: kMediumPadding),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: kMediumPadding),
                   child: SizedBox(
-                    height: 35,
-                    child: ListView.builder(
-                      itemCount: 10,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.only(
-                            right:
-                                (index >= 0 && index < 9) ? kTinyPadding : 0),
-                        child: ChoiceChip(
-                          label: Text('Filter $index'),
-                          selected: index == 1 ? true : false,
-                          elevation: 0,
-                          shadowColor: Colors.transparent,
-                          backgroundColor: kLightColor,
-                          onSelected: (value) {},
-                        ),
-                      ),
-                    ),
+                    height: 60,
+                    child: ProductFilter(controllerKey: 'ProductPage'),
                   ),
                 ),
                 Expanded(child: _tabItem()),
@@ -129,10 +114,18 @@ class ProductPage extends StatelessWidget {
 }
 
 Widget _tabItem() {
-  List<String> _products = List.generate(
+  List<ProductModel> _products = List.generate(
       20,
-      (index) =>
-          'https://loremflickr.com/350/350/vegetable,fruit?random=$index');
+      (index) => ProductModel(
+            image:
+                'https://loremflickr.com/350/350/vegetable,fruit?random=$index',
+            name: 'Ayam Segar',
+            point: index,
+            price: '2000',
+            finalPrice: '1000',
+            shipping: 'LANGSUNG',
+            favourite: false,
+          ));
 
   var _crossAxisSpacing = kMediumPadding;
   var _mainAxisSpacing = kMediumPadding;
@@ -155,7 +148,7 @@ Widget _tabItem() {
     itemCount: _products.length,
     itemBuilder: (context, index) {
       return ProductItem(
-        product: ProductModel(image: _products[index]),
+        product: _products[index],
         onProductTap: () {},
         onFavouriteTap: () {},
         onBuyTap: () {},

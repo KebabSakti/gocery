@@ -58,7 +58,7 @@ class DioClient implements Network {
   }
 
   @override
-  Future get(String path, {Map<String, String?>? query}) async {
+  Future get(String path, {Map<String, dynamic>? query}) async {
     return await _dio.get(path, queryParameters: query);
   }
 

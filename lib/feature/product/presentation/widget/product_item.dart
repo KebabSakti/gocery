@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
@@ -67,11 +68,17 @@ class ProductItem extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(12),
-                                child: const Icon(
-                                  AppIcon.heart,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                                child: (product.favourite!)
+                                    ? const Icon(
+                                        AppIcon.heartfill,
+                                        color: Colors.redAccent,
+                                        size: 20,
+                                      )
+                                    : const Icon(
+                                        AppIcon.heart,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
                                 onTap: onFavouriteTap,
                               ),
                             ),
@@ -86,11 +93,13 @@ class ProductItem extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.8),
+                              color: (product.shipping! == 'TERJADWAL')
+                                  ? Colors.blue.withOpacity(0.8)
+                                  : kPrimaryColor.withOpacity(0.8),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              'TERJADWAL',
+                              product.shipping!,
                               style: Get.textTheme.overline,
                             ),
                           ),
@@ -107,7 +116,7 @@ class ProductItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Pisang impor manis banget',
+                      product.name!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -119,7 +128,7 @@ class ProductItem extends StatelessWidget {
                         SvgPicture.asset(kCoinIcon, width: 15, height: 15),
                         const SizedBox(width: 4),
                         Text(
-                          '1',
+                          '${product.point}',
                           textAlign: TextAlign.center,
                           style: Get.theme.textTheme.caption!
                               .copyWith(color: Colors.amber),
@@ -129,7 +138,7 @@ class ProductItem extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          'Harga per 1 kg',
+                          'Harga per ${product.unitCount} ${product.unit}',
                           textAlign: TextAlign.center,
                           style: Get.theme.textTheme.bodyText2!.copyWith(
                             fontSize: kSmallFont,
@@ -137,7 +146,7 @@ class ProductItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Rp 36.000',
+                          Utility.currency(product.price!),
                           style: Get.theme.textTheme.bodyText2?.copyWith(
                             decoration: TextDecoration.lineThrough,
                             fontSize: kSmallFont,
@@ -145,7 +154,7 @@ class ProductItem extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Rp 30.000',
+                          Utility.currency(product.finalPrice!),
                           style: Get.theme.textTheme.bodyText1!
                               .copyWith(color: kPrimaryColor),
                         ),

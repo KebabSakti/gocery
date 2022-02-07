@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/banner/data/repository/banner_repository_impl.dart';
 import 'package:gocery/feature/banner/domain/entity/banner_entity.dart';
 import 'package:gocery/feature/banner/domain/usecase/index_banner.dart';
+import 'package:gocery/feature/bundle/data/repository/bundle_repository_impl.dart';
+import 'package:gocery/feature/bundle/domain/entity/bundle_entity.dart';
+import 'package:gocery/feature/bundle/domain/usecase/index_bundle.dart';
 import 'package:gocery/feature/category/data/model/category_model.dart';
 import 'package:gocery/feature/category/data/repository/category_repository_impl.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
@@ -12,12 +16,16 @@ import 'package:gocery/feature/customer/data/repository/customer_repository_impl
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
 import 'package:gocery/feature/customer/domain/usecase/update_fcm.dart';
-import 'package:gocery/feature/product/data/model/product_paging_model.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
+import 'package:gocery/feature/product/domain/entity/index_product_param_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_paging_entity.dart';
 import 'package:gocery/feature/product/domain/usecase/index_product.dart';
+import 'package:gocery/feature/product/presentation/getx/controller/product_filter_controller.dart';
 
 class HomePageController extends GetxController {
+  final productFilterController =
+      Get.put(ProductFilterController(), tag: 'HomePage');
+
   final _updateCustomerFcmUsecase =
       UpdateFcm(repository: Get.find<CustomerRepositoryImpl>());
   final _showCustomerAccountUsecase =
@@ -28,13 +36,16 @@ class HomePageController extends GetxController {
       IndexBanner(repository: Get.find<BannerRepositoryImpl>());
   final _indexProduct =
       IndexProduct(repository: Get.find<ProductRepositoryImpl>());
+  final _indexBundle =
+      IndexBundle(repository: Get.find<BundleRepositoryImpl>());
 
   final bannerActive = 0.obs;
 
   final customerAccount = ResponseModel<CustomerAccountEntity>().obs;
   final categoriesState = ResponseModel<List<CategoryEntity>>().obs;
   final bannersState = ResponseModel<List<BannerEntity>>().obs;
-  final productState = ResponseModel<ProductPagingEntity>().obs;
+  final producPopulartState = ResponseModel<ProductPagingEntity>().obs;
+  final bundlesState = ResponseModel<List<BundleEntity>>().obs;
 
   Future<void> fcm() async {
     try {
@@ -112,20 +123,41 @@ class HomePageController extends GetxController {
     }
   }
 
-  Future<void> products() async {
+  Future<void> productsPopular() async {
     try {
-      productState(ResponseModel<ProductPagingModel>(status: Status.loading));
+      producPopulartState(
+          ResponseModel<ProductPagingEntity>(status: Status.loading));
 
-      await _indexProduct().then((model) {
-        productState(ResponseModel<ProductPagingEntity>(
+      await _indexProduct(
+        param: IndexProductParamEntity(page: 1, sorting: 'sold'),
+      ).then((model) {
+        producPopulartState(ResponseModel<ProductPagingEntity>(
           status: Status.success,
           data: model,
         ));
       });
     } catch (e) {
-      MToast.show('Gagal memuat produk');
+      MToast.show('Gagal memuat produk paling laku');
 
-      productState(ResponseModel<ProductPagingModel>(status: Status.error));
+      producPopulartState(
+          ResponseModel<ProductPagingEntity>(status: Status.error));
+    }
+  }
+
+  Future<void> bundles() async {
+    try {
+      bundlesState(ResponseModel<List<BundleEntity>>(status: Status.loading));
+
+      await _indexBundle().then((model) {
+        bundlesState(ResponseModel<List<BundleEntity>>(
+          status: Status.success,
+          data: model,
+        ));
+      });
+    } catch (e) {
+      MToast.show('Gagal memuat bundle produk');
+
+      bundlesState(ResponseModel<List<BundleEntity>>(status: Status.error));
     }
   }
 
@@ -134,11 +166,16 @@ class HomePageController extends GetxController {
     customer();
     categories();
     banners();
-    products();
+    productsPopular();
+    bundles();
   }
 
   @override
   void onInit() {
+    debounce(productFilterController.mValue, (String value) {
+      debugPrint(value);
+    }, time: const Duration(milliseconds: 200));
+
     init();
 
     super.onInit();

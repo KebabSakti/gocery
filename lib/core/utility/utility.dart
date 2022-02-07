@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class Utility {
@@ -53,5 +54,20 @@ class Utility {
     }
 
     return '$m:$s';
+  }
+
+  static String currency(
+    String value, {
+    String locale = 'id_ID',
+    String name = 'Rp ',
+    int digit = 0,
+  }) {
+    NumberFormat numberFormat = NumberFormat.currency(
+      locale: locale,
+      name: name,
+      decimalDigits: digit,
+    );
+
+    return numberFormat.format(double.parse(value));
   }
 }

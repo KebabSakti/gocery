@@ -25,6 +25,7 @@ import 'package:gocery/feature/landing/presentation/page/landing_page.dart';
 import 'package:gocery/feature/order/presentation/getx/controller/order_detail_page_controller.dart';
 import 'package:gocery/feature/order/presentation/page/order_detail_page.dart';
 import 'package:gocery/feature/product/presentation/getx/controller/product_detail_page_controller.dart';
+import 'package:gocery/feature/product/presentation/getx/controller/product_page_controller.dart';
 import 'package:gocery/feature/product/presentation/page/product_detail_page.dart';
 import 'package:gocery/feature/product/presentation/page/produt_page.dart';
 import 'package:gocery/feature/search/presentation/page/search_page.dart';
@@ -37,58 +38,42 @@ class AppRoute {
     GetPage(
       name: kIntroPage,
       page: () => const IntroPage(),
-      binding: BindingsBuilder(() {
-        Get.put(IntroPageController());
-      }),
+      binding: BindingsBuilder.put(() => IntroPageController()),
     ),
     GetPage(
       name: kLandingPage,
       page: () => const LandingPage(),
-      binding: BindingsBuilder(() {
-        Get.put(LandingPageController());
-      }),
+      binding: BindingsBuilder.put(() => LandingPageController()),
     ),
     GetPage(
       name: kLoginPage,
       page: () => const LoginPageAlt(),
-      binding: BindingsBuilder(() {
-        Get.put(LoginPageController());
-      }),
+      binding: BindingsBuilder.put(() => LoginPageController()),
     ),
     GetPage(
       name: kForgotPasswordPage,
       page: () => const ForgotPasswordPage(),
-      binding: BindingsBuilder(() {
-        Get.put(ForgotPasswordPageController());
-      }),
+      binding: BindingsBuilder.put(() => ForgotPasswordPageController()),
     ),
     GetPage(
       name: kOtpPage,
       page: () => const OtpPage(),
-      binding: BindingsBuilder(() {
-        Get.put(OtpPageController());
-      }),
+      binding: BindingsBuilder.put(() => OtpPageController()),
     ),
     GetPage(
       name: kRegisterPage,
       page: () => const RegisterPage(),
-      binding: BindingsBuilder(() {
-        Get.put(RegisterPageController());
-      }),
+      binding: BindingsBuilder.put(() => RegisterPageController()),
     ),
     GetPage(
       name: kPhonePage,
       page: () => const PhonePage(),
-      binding: BindingsBuilder(() {
-        Get.put(PhonePageController());
-      }),
+      binding: BindingsBuilder.put(() => PhonePageController()),
     ),
     GetPage(
       name: kAppPage,
       page: () => const AppPage(),
-      binding: BindingsBuilder(() {
-        Get.put(AppPageController());
-      }),
+      binding: BindingsBuilder.put(() => AppPageController()),
     ),
     GetPage(
       name: kSearchPage,
@@ -97,20 +82,17 @@ class AppRoute {
     GetPage(
       name: kProductDetailPage,
       page: () => const ProductDetailPage(),
-      binding: BindingsBuilder(() {
-        Get.put(ProductDetailPageController());
-      }),
+      binding: BindingsBuilder.put(() => ProductDetailPageController()),
     ),
     GetPage(
       name: kProductPage,
       page: () => const ProductPage(),
+      binding: BindingsBuilder.put(() => ProductPageController()),
     ),
     GetPage(
       name: kCheckoutPage,
       page: () => const CheckoutPage(),
-      binding: BindingsBuilder(() {
-        Get.put(CheckoutPageController());
-      }),
+      binding: BindingsBuilder.put(() => CheckoutPageController()),
     ),
     GetPage(
       name: kOrderCompletePage,
@@ -119,9 +101,7 @@ class AppRoute {
     GetPage(
       name: kDeliveryAddressPage,
       page: () => const DeliveryAddressPage(),
-      binding: BindingsBuilder(() {
-        Get.put(DeliveryAddressPageController());
-      }),
+      binding: BindingsBuilder.put(() => DeliveryAddressPageController()),
     ),
     GetPage(
       name: kVoucherPage,
@@ -130,9 +110,7 @@ class AppRoute {
     GetPage(
       name: kOrderDetailPage,
       page: () => const OrderDetailPage(),
-      binding: BindingsBuilder(() {
-        Get.put(OrderDetailPageController());
-      }),
+      binding: BindingsBuilder.put(() => OrderDetailPageController()),
     ),
     GetPage(
       name: kChatDetailPage,
@@ -141,9 +119,7 @@ class AppRoute {
     GetPage(
       name: kTrackingPage,
       page: () => const TrackingPage(),
-      binding: BindingsBuilder(() {
-        Get.put(TrackingPageController());
-      }),
+      binding: BindingsBuilder.put(() => TrackingPageController()),
     ),
   ];
 }

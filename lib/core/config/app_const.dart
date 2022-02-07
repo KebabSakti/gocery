@@ -38,6 +38,7 @@ const String kUpdateFcm = 'customer/user/fcm';
 const String kCategoryIndex = 'customer/categories';
 const String kBannerIndex = 'customer/banners';
 const String kProductIndex = 'customer/products';
+const String kBundleIndex = 'customer/bundles';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';
