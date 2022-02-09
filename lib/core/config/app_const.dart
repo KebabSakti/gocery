@@ -39,6 +39,7 @@ const String kCategoryIndex = 'customer/categories';
 const String kBannerIndex = 'customer/banners';
 const String kProductIndex = 'customer/products';
 const String kProductShow = 'customer/products';
+const String kProductFavourite = 'customer/products/favourite';
 const String kBundleIndex = 'customer/bundles';
 
 //ASSETS

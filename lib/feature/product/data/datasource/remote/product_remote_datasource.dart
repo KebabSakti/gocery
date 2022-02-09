@@ -10,6 +10,8 @@ abstract class ProductRemoteDatasource {
       {required IndexProductParamModel param});
 
   Future<ProductModel> showProduct({required String uid});
+
+  Future<void> toggleProductFavourite({required String uid});
 }
 
 class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
@@ -39,5 +41,10 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
         await compute(productModelFromJson, response.toString());
 
     return model;
+  }
+
+  @override
+  Future<void> toggleProductFavourite({required String uid}) async {
+    await client.post(kProductFavourite, data: {'uid': uid});
   }
 }

@@ -183,10 +183,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   void authState({required void Function(bool status) userIsLoggedIn}) {
-    // _firebaseAuth.authStateChanges().listen((User? user) {
-    //   userIsLoggedIn(user != null);
-    // });
-
     userIsLoggedIn(_firebaseAuth.currentUser != null);
   }
 }

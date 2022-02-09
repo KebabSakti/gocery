@@ -8,6 +8,7 @@ import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_paging_entity.dart';
 import 'package:gocery/feature/product/domain/usecase/index_product.dart';
 import 'package:gocery/feature/product/domain/usecase/show_product.dart';
+import 'package:gocery/feature/product/domain/usecase/toggle_product_favourite.dart';
 
 class ProductDetailPageController extends GetxController {
   final ProductEntity productEntity = Get.arguments;
@@ -16,6 +17,8 @@ class ProductDetailPageController extends GetxController {
       ShowProduct(repository: Get.find<ProductRepositoryImpl>());
   final _indexProduct =
       IndexProduct(repository: Get.find<ProductRepositoryImpl>());
+  final _toggleProductFavourite =
+      ToggleFavouriteProduct(repository: Get.find<ProductRepositoryImpl>());
 
   final productState = ResponseModel<ProductEntity>().obs;
   final productsSimiliarState = ResponseModel<ProductPagingEntity>().obs;
@@ -59,6 +62,16 @@ class ProductDetailPageController extends GetxController {
 
       productsSimiliarState(
           ResponseModel<ProductPagingEntity>(status: Status.error));
+    }
+  }
+
+  Future<void> toggleProductFavourite({required String uid}) async {
+    try {
+      await _toggleProductFavourite(uid: uid).then((_) {
+        // final ProductEntity favouritedProduct = ProductModel();
+      });
+    } catch (e) {
+      MToast.show('Gagal menambah favorit produk');
     }
   }
 

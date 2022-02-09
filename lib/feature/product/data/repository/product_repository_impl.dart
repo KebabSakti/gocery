@@ -60,4 +60,24 @@ class ProductRepositoryImpl implements ProductRepository {
       }
     }
   }
+
+  @override
+  Future<void> toggleProductFavourite({required String uid}) async {
+    try {
+      await remoteDatasource.toggleProductFavourite(uid: uid);
+    } catch (e, _) {
+      if (e is DioError) {
+        if (e.response == null) {
+          throw Failure(
+              'Koneksi internet bermasalah, cobalah beberapa saat lagi',
+              error: e);
+        }
+
+        throw Failure(e.message, error: e);
+      } else {
+        throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
+            error: e);
+      }
+    }
+  }
 }

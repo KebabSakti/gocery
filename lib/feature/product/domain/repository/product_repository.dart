@@ -7,4 +7,6 @@ abstract class ProductRepository {
       {required IndexProductParamEntity param});
 
   Future<ProductEntity> showProduct({required String uid});
+
+  Future<void> toggleProductFavourite({required String uid});
 }
