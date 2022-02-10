@@ -62,9 +62,9 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<void> toggleProductFavourite({required String uid}) async {
+  Future<ProductEntity> toggleProductFavourite({required String uid}) async {
     try {
-      await remoteDatasource.toggleProductFavourite(uid: uid);
+      return await remoteDatasource.toggleProductFavourite(uid: uid);
     } catch (e, _) {
       if (e is DioError) {
         if (e.response == null) {

@@ -18,6 +18,7 @@ import 'package:gocery/feature/customer/data/repository/customer_repository_impl
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
 import 'package:gocery/feature/customer/domain/usecase/update_fcm.dart';
+import 'package:gocery/feature/home/presentation/getx/controller/banner_carousel_controller.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
 import 'package:gocery/feature/product/domain/entity/index_product_param_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
@@ -27,9 +28,13 @@ import 'package:gocery/feature/product/presentation/getx/controller/product_filt
 
 class HomePageController extends GetxController {
   HomePageController() {
+    Get.put(BannerCarouselController());
+
     scrollController = ScrollController();
+
     productFilterController =
         Get.put(ProductFilterController(), tag: 'HomePage');
+
     scrollTopButtonController = Get.put(
         ScrollTopButtonController(scrollController: scrollController),
         tag: 'HomePage');
@@ -52,7 +57,6 @@ class HomePageController extends GetxController {
   final _indexBundle =
       IndexBundle(repository: Get.find<BundleRepositoryImpl>());
 
-  final bannerActive = 0.obs;
   final paging = false.obs;
 
   final customerAccount = ResponseModel<CustomerAccountEntity>().obs;
@@ -63,7 +67,8 @@ class HomePageController extends GetxController {
   final productsState = ResponseModel<ProductPagingEntity>().obs;
 
   void toProductDetail({required ProductEntity productEntity}) async {
-    Get.toNamed(kProductDetailPage, arguments: productEntity);
+    Get.toNamed(kProductDetailPage,
+        arguments: productEntity, preventDuplicates: false);
   }
 
   Future<void> fcm() async {
@@ -103,8 +108,10 @@ class HomePageController extends GetxController {
         List<CategoryEntity> datas = models;
 
         //"ALL CATEGORY" OPTION
-        datas.add(
+        datas.insert(
+          0,
           CategoryModel(
+            uid: '',
             name: 'Semua',
             color: '0xff64BA02',
             image:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/bundle/domain/entity/bundle_entity.dart';
+import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
 class BundleItem extends StatelessWidget {
@@ -23,9 +24,15 @@ class BundleItem extends StatelessWidget {
               bundle.name!,
               style: Get.textTheme.headline3,
             ),
-            Text(
-              'Lihat Semua',
-              style: Get.textTheme.headline4,
+            GestureDetector(
+              child: Text(
+                'Lihat Semua',
+                style: Get.textTheme.headline4,
+              ),
+              onTap: () {
+                Get.toNamed(kProductPage,
+                    arguments: IndexProductParamModel(bundle: bundle.uid));
+              },
             )
           ],
         ),

@@ -8,5 +8,5 @@ abstract class ProductRepository {
 
   Future<ProductEntity> showProduct({required String uid});
 
-  Future<void> toggleProductFavourite({required String uid});
+  Future<ProductEntity> toggleProductFavourite({required String uid});
 }

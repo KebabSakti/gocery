@@ -8,6 +8,7 @@ import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
+import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/presentation/getx/controller/product_detail_page_controller.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
@@ -20,6 +21,7 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
       backgroundColor: kLightColor,
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
+        controller: controller.scrollController,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -132,7 +134,8 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
                                   style: Get.theme.textTheme.bodyText2
                                       ?.copyWith(
                                           decoration:
-                                              TextDecoration.lineThrough),
+                                              TextDecoration.lineThrough,
+                                          color: kErrorColor),
                                 ),
                               ],
                             ),
@@ -193,26 +196,40 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
                             const SizedBox(height: kBigPadding),
                             Row(
                               children: [
-                                ClipOval(
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: Ink(
-                                        child: Icon(
-                                          AppIcon.heartfill,
-                                          color: controller
-                                                  .productState()
-                                                  .data!
-                                                  .favourite!
-                                              ? Colors.red
-                                              : kLightColor50,
-                                          size: 40,
+                                (controller.favourite())
+                                    ? SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: Transform.scale(
+                                            scale: 0.7,
+                                            child:
+                                                const CircularProgressIndicator()))
+                                    : ClipOval(
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: () {
+                                              controller.productFavourite(
+                                                  uid: controller
+                                                      .productState()
+                                                      .data!
+                                                      .uid!);
+                                            },
+                                            child: Ink(
+                                              child: Icon(
+                                                AppIcon.heartfill,
+                                                color: controller
+                                                        .productState()
+                                                        .data!
+                                                        .favourite!
+                                                    ? Colors.red
+                                                    : kLightColor50,
+                                                size: 40,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                                 const SizedBox(width: kMediumPadding),
                                 Expanded(
                                   child: SizedBox(
@@ -309,9 +326,17 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
                                   'Produk Sejenis',
                                   style: Get.textTheme.headline3,
                                 ),
-                                Text(
-                                  'Lihat Semua',
-                                  style: Get.textTheme.headline4,
+                                GestureDetector(
+                                  child: Text(
+                                    'Lihat Semua',
+                                    style: Get.textTheme.headline4,
+                                  ),
+                                  onTap: () {
+                                    Get.toNamed(kProductPage,
+                                        arguments: IndexProductParamModel(
+                                            category: controller
+                                                .argument.categoryUid));
+                                  },
                                 )
                               ],
                             ),

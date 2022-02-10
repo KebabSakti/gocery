@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
@@ -53,35 +52,35 @@ class ProductItem extends StatelessWidget {
                         height: double.infinity,
                         placeholder: (context, url) => const ShimmerLoader(),
                       ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: SizedBox(
-                            width: 32,
-                            height: 32,
-                            child: Material(
-                              color: const Color(0xff121924).withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(12),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(12),
-                                child: (product.favourite!)
-                                    ? const Icon(
-                                        AppIcon.heartfill,
-                                        color: Colors.red,
-                                        size: 20,
-                                      )
-                                    : const Icon(
-                                        AppIcon.heart,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                onTap: onFavouriteTap,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Align(
+                      //   alignment: Alignment.topRight,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(4),
+                      //     child: SizedBox(
+                      //       width: 32,
+                      //       height: 32,
+                      //       child: Material(
+                      //         color: const Color(0xff121924).withOpacity(0.3),
+                      //         borderRadius: BorderRadius.circular(12),
+                      //         child: InkWell(
+                      //           borderRadius: BorderRadius.circular(12),
+                      //           child: (product.favourite!)
+                      //               ? const Icon(
+                      //                   AppIcon.heartfill,
+                      //                   color: Colors.red,
+                      //                   size: 20,
+                      //                 )
+                      //               : const Icon(
+                      //                   AppIcon.heart,
+                      //                   color: Colors.white,
+                      //                   size: 20,
+                      //                 ),
+                      //           onTap: onFavouriteTap,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(

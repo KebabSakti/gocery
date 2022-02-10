@@ -11,7 +11,7 @@ abstract class ProductRemoteDatasource {
 
   Future<ProductModel> showProduct({required String uid});
 
-  Future<void> toggleProductFavourite({required String uid});
+  Future<ProductModel> toggleProductFavourite({required String uid});
 }
 
 class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
@@ -44,7 +44,12 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDatasource {
   }
 
   @override
-  Future<void> toggleProductFavourite({required String uid}) async {
-    await client.post(kProductFavourite, data: {'uid': uid});
+  Future<ProductModel> toggleProductFavourite({required String uid}) async {
+    var response = await client.post(kProductFavourite, data: {'uid': uid});
+
+    ProductModel model =
+        await compute(productModelFromJson, response.toString());
+
+    return model;
   }
 }

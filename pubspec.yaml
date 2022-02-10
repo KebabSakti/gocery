@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get: ^4.5.1
+  get: ^4.6.1
   get_storage: ^2.0.3
   flutter_secure_storage: ^5.0.2
   flutter_svg: ^1.0.0

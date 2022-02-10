@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
@@ -11,7 +11,8 @@ import 'package:gocery/feature/product/domain/usecase/show_product.dart';
 import 'package:gocery/feature/product/domain/usecase/toggle_product_favourite.dart';
 
 class ProductDetailPageController extends GetxController {
-  final ProductEntity productEntity = Get.arguments;
+  final ProductEntity argument = Get.arguments;
+  final ScrollController scrollController = ScrollController();
 
   final _showProduct =
       ShowProduct(repository: Get.find<ProductRepositoryImpl>());
@@ -22,35 +23,44 @@ class ProductDetailPageController extends GetxController {
 
   final productState = ResponseModel<ProductEntity>().obs;
   final productsSimiliarState = ResponseModel<ProductPagingEntity>().obs;
+  final favourite = false.obs;
 
   void toProductDetail({required ProductEntity productEntity}) async {
-    Get.offNamed(kProductDetailPage,
-        preventDuplicates: false, arguments: productEntity);
+    scrollController.jumpTo(scrollController.position.minScrollExtent);
+
+    product(uid: productEntity.uid!);
+
+    productsSimiliar(uid: productEntity.categoryUid!);
   }
 
-  Future<void> product() async {
+  Future<void> product({required String uid}) async {
     try {
       productState(ResponseModel<ProductEntity>(status: Status.loading));
 
-      await _showProduct(uid: productEntity.uid!).then((model) {
+      favourite(true);
+
+      await _showProduct(uid: uid).then((model) {
         productState(
             ResponseModel<ProductEntity>(status: Status.success, data: model));
+
+        favourite(false);
       });
     } catch (e) {
       MToast.show('Gagal memuat detail produk');
 
       productState(ResponseModel<ProductEntity>(status: Status.error));
+
+      favourite(false);
     }
   }
 
-  Future<void> productsSimiliar() async {
+  Future<void> productsSimiliar({required String uid}) async {
     try {
       productsSimiliarState(
           ResponseModel<ProductPagingEntity>(status: Status.loading));
 
       await _indexProduct(
-        param: IndexProductParamEntity(
-            page: 1, category: productEntity.categoryUid),
+        param: IndexProductParamEntity(page: 1, category: uid),
       ).then((model) {
         productsSimiliarState(ResponseModel<ProductPagingEntity>(
           status: Status.success,
@@ -65,20 +75,29 @@ class ProductDetailPageController extends GetxController {
     }
   }
 
-  Future<void> toggleProductFavourite({required String uid}) async {
+  Future<void> productFavourite({required String uid}) async {
     try {
-      await _toggleProductFavourite(uid: uid).then((_) {
-        // final ProductEntity favouritedProduct = ProductModel();
+      favourite(true);
+
+      await _toggleProductFavourite(uid: uid).then((model) {
+        productState(
+            ResponseModel<ProductEntity>(status: Status.success, data: model));
+
+        favourite(false);
+
+        MToast.show('Berhasil update produk favorit');
       });
     } catch (e) {
       MToast.show('Gagal menambah favorit produk');
+
+      favourite(false);
     }
   }
 
   void init() async {
-    product();
+    product(uid: argument.uid!);
 
-    productsSimiliar();
+    productsSimiliar(uid: argument.categoryUid!);
   }
 
   @override

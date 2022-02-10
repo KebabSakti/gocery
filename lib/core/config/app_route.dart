@@ -86,8 +86,10 @@ class AppRoute {
     ),
     GetPage(
       name: kProductPage,
-      page: () => const ProductPage(),
-      binding: BindingsBuilder.put(() => ProductPageController()),
+      page: () => ProductPage(controller: Get.find<ProductPageController>()),
+      binding: BindingsBuilder(() {
+        Get.create(() => ProductPageController());
+      }),
     ),
     GetPage(
       name: kCheckoutPage,

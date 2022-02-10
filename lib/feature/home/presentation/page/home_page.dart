@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,7 +12,9 @@ import 'package:gocery/feature/banner/domain/entity/banner_entity.dart';
 import 'package:gocery/feature/bundle/domain/entity/bundle_entity.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
 import 'package:gocery/feature/home/presentation/getx/controller/home_page_controller.dart';
+import 'package:gocery/feature/home/presentation/widget/banner_carousel.dart';
 import 'package:gocery/feature/home/presentation/widget/bundle_item.dart';
+import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 import 'package:gocery/feature/product/presentation/widget/product_filter.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
@@ -183,7 +183,11 @@ class _HomePageState extends State<HomePage>
                                         color: Colors.transparent,
                                         child: InkWell(
                                           onTap: () {
-                                            Get.toNamed(kProductPage);
+                                            Get.toNamed(kProductPage,
+                                                arguments:
+                                                    IndexProductParamModel(
+                                                        category:
+                                                            category.uid));
                                           },
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -286,67 +290,7 @@ class _HomePageState extends State<HomePage>
                             final List<BannerEntity> banners =
                                 bannerState.data!;
 
-                            return Stack(
-                              children: <Widget>[
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CarouselSlider(
-                                    items: banners.map<Widget>((item) {
-                                      return CachedNetworkImage(
-                                        imageUrl: item.image!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        placeholder: (context, url) =>
-                                            const ShimmerLoader(),
-                                      );
-                                    }).toList(),
-                                    options: CarouselOptions(
-                                      viewportFraction: 1.0,
-                                      height: double.infinity,
-                                      autoPlay: true,
-                                      enableInfiniteScroll: true,
-                                      onPageChanged: (index, _) {
-                                        _contoller.bannerActive(index);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Obx(() {
-                                        return Row(
-                                          children: List<Widget>.generate(
-                                            banners.length,
-                                            (index) {
-                                              return Container(
-                                                width: 8.0,
-                                                height: 8.0,
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 10.0,
-                                                        horizontal: 2.0),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: index ==
-                                                          _contoller
-                                                              .bannerActive()
-                                                      ? kPrimaryColor
-                                                      : kLightColor,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      }),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
+                            return BannerCarousel(banners: banners);
                           }
 
                           if (bannerState.status == Status.error) {
@@ -378,9 +322,16 @@ class _HomePageState extends State<HomePage>
                                 'Paling Laku',
                                 style: Get.textTheme.headline3,
                               ),
-                              Text(
-                                'Lihat Semua',
-                                style: Get.textTheme.headline4,
+                              GestureDetector(
+                                child: Text(
+                                  'Lihat Semua',
+                                  style: Get.textTheme.headline4,
+                                ),
+                                onTap: () {
+                                  Get.toNamed(kProductPage,
+                                      arguments: IndexProductParamModel(
+                                          sorting: 'sold'));
+                                },
                               )
                             ],
                           ),
@@ -553,6 +504,25 @@ class _HomePageState extends State<HomePage>
                       color: kBackgroundColor,
                       child: const ProductFilter(controllerKey: 'HomePage'),
                     ),
+
+                    // return Container(
+                    //   height: 40,
+                    //   color: kBackgroundColor,
+                    //   margin: const EdgeInsets.symmetric(
+                    //       vertical: kMediumPadding),
+                    //   child: ListView.builder(
+                    //     scrollDirection: Axis.horizontal,
+                    //     itemCount: 5,
+                    //     itemBuilder: (context, index) => Padding(
+                    //       padding: EdgeInsets.only(
+                    //           right: (index >= 0 && index < 4)
+                    //               ? kMediumPadding
+                    //               : 0),
+                    //       child: const ShimmerLoader(width: 100, radius: 50),
+                    //     ),
+                    //   ),
+                    // );
+
                     sliver: Obx(() {
                       final productsState = _contoller.productsState();
 
