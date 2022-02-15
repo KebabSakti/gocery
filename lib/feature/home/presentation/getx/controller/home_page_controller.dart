@@ -57,18 +57,23 @@ class HomePageController extends GetxController {
   final _indexBundle =
       IndexBundle(repository: Get.find<BundleRepositoryImpl>());
 
+  final customerAccount =
+      ResponseModel<CustomerAccountEntity>(status: Status.loading).obs;
+  final categoriesState =
+      ResponseModel<List<CategoryEntity>>(status: Status.loading).obs;
+  final bannersState =
+      ResponseModel<List<BannerEntity>>(status: Status.loading).obs;
+  final producPopulartState =
+      ResponseModel<ProductPagingEntity>(status: Status.loading).obs;
+  final bundlesState =
+      ResponseModel<List<BundleEntity>>(status: Status.loading).obs;
+  final productsState =
+      ResponseModel<ProductPagingEntity>(status: Status.loading).obs;
+
   final paging = false.obs;
 
-  final customerAccount = ResponseModel<CustomerAccountEntity>().obs;
-  final categoriesState = ResponseModel<List<CategoryEntity>>().obs;
-  final bannersState = ResponseModel<List<BannerEntity>>().obs;
-  final producPopulartState = ResponseModel<ProductPagingEntity>().obs;
-  final bundlesState = ResponseModel<List<BundleEntity>>().obs;
-  final productsState = ResponseModel<ProductPagingEntity>().obs;
-
   void toProductDetail({required ProductEntity productEntity}) async {
-    Get.toNamed(kProductDetailPage,
-        arguments: productEntity, preventDuplicates: false);
+    Get.toNamed(kProductDetailPage, arguments: productEntity);
   }
 
   Future<void> fcm() async {
@@ -254,7 +259,7 @@ class HomePageController extends GetxController {
   }
 
   void init() async {
-    fcm();
+    await fcm();
     customer();
     categories();
     banners();

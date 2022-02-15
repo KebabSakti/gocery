@@ -9,14 +9,20 @@ import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
+import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 import 'package:gocery/feature/product/presentation/getx/controller/product_detail_page_controller.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
-class ProductDetailPage extends GetView<ProductDetailPageController> {
+class ProductDetailPage extends StatelessWidget {
   const ProductDetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String controllerTag = Utility.randomUid();
+
+    final controller =
+        Get.put(ProductDetailPageController(), tag: controllerTag);
+
     return Scaffold(
       backgroundColor: kLightColor,
       extendBodyBehindAppBar: true,
@@ -316,6 +322,9 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
 
                       if (controller.productsSimiliarState().status ==
                           Status.success) {
+                        final List<ProductEntity> productSimiliar =
+                            controller.productsSimiliarState().data!.data!;
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -332,10 +341,10 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
                                     style: Get.textTheme.headline4,
                                   ),
                                   onTap: () {
-                                    Get.toNamed(kProductPage,
-                                        arguments: IndexProductParamModel(
-                                            category: controller
-                                                .argument.categoryUid));
+                                    controller.toProductPage(
+                                        param: IndexProductParamModel(
+                                            category: productSimiliar[0]
+                                                .categoryUid));
                                   },
                                 )
                               ],
@@ -354,11 +363,7 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
                                   mainAxisSpacing: _mainAxisSpacing,
                                   childAspectRatio: _aspectRatio,
                                 ),
-                                itemCount: controller
-                                    .productsSimiliarState()
-                                    .data!
-                                    .data!
-                                    .length,
+                                itemCount: productSimiliar.length,
                                 itemBuilder: (context, index) {
                                   return Container(
                                     decoration: BoxDecoration(
@@ -366,16 +371,11 @@ class ProductDetailPage extends GetView<ProductDetailPageController> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: ProductItem(
-                                      product: controller
-                                          .productsSimiliarState()
-                                          .data!
-                                          .data![index],
+                                      product: productSimiliar[index],
                                       onProductTap: () {
                                         controller.toProductDetail(
-                                            productEntity: controller
-                                                .productsSimiliarState()
-                                                .data!
-                                                .data![index]);
+                                            productEntity:
+                                                productSimiliar[index]);
                                       },
                                       onFavouriteTap: () {},
                                       onBuyTap: () {},

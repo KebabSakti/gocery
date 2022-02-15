@@ -63,8 +63,9 @@ class DioClient implements Network {
   }
 
   @override
-  Future post(String path, {required Map<String, String?>? data}) async {
-    return await _dio.post(path, data: data);
+  Future post(String path,
+      {required dynamic data, Map<String, dynamic>? query}) async {
+    return await _dio.post(path, data: data, queryParameters: query);
   }
 
   @override
@@ -75,5 +76,16 @@ class DioClient implements Network {
   @override
   Future upload(String path, {required formData}) async {
     return await _dio.post(path, data: formData);
+  }
+
+  @override
+  Future delete(String path,
+      {required data, Map<String, dynamic>? query}) async {
+    return await _dio.delete(path, data: data, queryParameters: query);
+  }
+
+  @override
+  Future put(String path, {required data, Map<String, dynamic>? query}) async {
+    return await _dio.put(path, data: data, queryParameters: query);
   }
 }

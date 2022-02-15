@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
+import 'package:gocery/core/service/error/auth_exception.dart';
 import 'package:gocery/core/service/error/failure.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/timer_countdown_controller.dart';
 
@@ -27,11 +29,11 @@ class LoginPageController extends GetxController {
   void phoneLoginPressed() async {
     try {
       if (phoneField.isEmpty) {
-        throw Failure('No hp tidak boleh kosong');
+        throw InvalidPhoneNumber();
       }
 
       if (phoneField.length < 13) {
-        throw Failure('No hp tidak valid');
+        throw InvalidPhoneNumber();
       }
 
       MDialog.loading();
@@ -66,7 +68,7 @@ class LoginPageController extends GetxController {
     } on Failure catch (e) {
       MDialog.close();
 
-      MToast.show(e.message);
+      MToast.show(Utility.errorMessage(e));
     }
   }
 
@@ -85,6 +87,10 @@ class LoginPageController extends GetxController {
       _toHome();
     } catch (e) {
       MDialog.close();
+
+      if (e is! LoginProviderNotSelected) {
+        MToast.show(Utility.errorMessage(e));
+      }
     }
   }
 
@@ -98,8 +104,8 @@ class LoginPageController extends GetxController {
     } catch (e) {
       MDialog.close();
 
-      if (e is Failure) {
-        MToast.show(e.message);
+      if (e is! LoginProviderNotSelected) {
+        MToast.show(Utility.errorMessage(e));
       }
     }
   }

@@ -16,17 +16,18 @@ import 'package:gocery/feature/product/domain/usecase/index_product.dart';
 import 'package:gocery/feature/product/presentation/getx/controller/product_filter_controller.dart';
 
 class ProductPageController extends GetxController {
-  ProductPageController() {
+  ProductPageController({required this.controllerTag}) {
     scrollController = ScrollController();
 
     productFilterController =
-        Get.put(ProductFilterController(), tag: 'ProductPage');
+        Get.put(ProductFilterController(), tag: controllerTag);
 
     scrollTopButtonController = Get.put(
         ScrollTopButtonController(scrollController: scrollController),
-        tag: 'ProductPage');
+        tag: controllerTag);
   }
 
+  late final String controllerTag;
   late final ScrollController scrollController;
   late final ProductFilterController productFilterController;
   late final ScrollTopButtonController scrollTopButtonController;

@@ -180,6 +180,26 @@ class ProductFilter extends GetView<ProductFilterController> {
             },
           );
         }),
+        const SizedBox(width: kSmallPadding),
+        Obx(() {
+          return ChoiceChip(
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Text('Populer'),
+            ),
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            selectedShadowColor: Colors.transparent,
+            backgroundColor: kLightColor,
+            selected: controller.filter().sorting == 'search',
+            onSelected: (value) {
+              final param =
+                  controller.filter().copyWith(sorting: value ? 'search' : '');
+
+              controller.filter(param);
+            },
+          );
+        }),
       ],
     );
   }

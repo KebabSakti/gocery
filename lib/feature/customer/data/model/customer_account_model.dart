@@ -52,7 +52,9 @@ class CustomerAccountModel extends CustomerAccountEntity {
             CustomerProfileModel.fromJson(json["customer_profile_model"]),
         customerPointModel:
             CustomerPointModel.fromJson(json["customer_point_model"]),
-        customerFcmModel: CustomerFcmModel.fromJson(json["customer_fcm_model"]),
+        customerFcmModel: json["customer_fcm_model"] != null
+            ? CustomerFcmModel.fromJson(json["customer_fcm_model"])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {

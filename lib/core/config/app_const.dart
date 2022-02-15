@@ -39,8 +39,17 @@ const String kCategoryIndex = 'customer/categories';
 const String kBannerIndex = 'customer/banners';
 const String kProductIndex = 'customer/products';
 const String kProductShow = 'customer/products';
+const String kProductViewHistory = 'customer/products/histories';
 const String kProductFavourite = 'customer/products/favourite';
+const String kProductStatistic = 'customer/products/statistic';
 const String kBundleIndex = 'customer/bundles';
+const String kSearchIndex = 'customer/searches';
+const String kSearchSuggestion = 'customer/searches/suggestions';
+const String kSearchStore = 'customer/searches';
+const String kSearchDelete = 'customer/searches';
+const String kCartIndex = 'customer/carts';
+const String kCartUpdate = 'customer/carts';
+const String kCartClear = 'customer/carts';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';

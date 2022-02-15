@@ -24,8 +24,6 @@ import 'package:gocery/feature/landing/presentation/getx/landing_page_controller
 import 'package:gocery/feature/landing/presentation/page/landing_page.dart';
 import 'package:gocery/feature/order/presentation/getx/controller/order_detail_page_controller.dart';
 import 'package:gocery/feature/order/presentation/page/order_detail_page.dart';
-import 'package:gocery/feature/product/presentation/getx/controller/product_detail_page_controller.dart';
-import 'package:gocery/feature/product/presentation/getx/controller/product_page_controller.dart';
 import 'package:gocery/feature/product/presentation/page/product_detail_page.dart';
 import 'package:gocery/feature/product/presentation/page/produt_page.dart';
 import 'package:gocery/feature/search/presentation/page/search_page.dart';
@@ -82,14 +80,10 @@ class AppRoute {
     GetPage(
       name: kProductDetailPage,
       page: () => const ProductDetailPage(),
-      binding: BindingsBuilder.put(() => ProductDetailPageController()),
     ),
     GetPage(
       name: kProductPage,
-      page: () => ProductPage(controller: Get.find<ProductPageController>()),
-      binding: BindingsBuilder(() {
-        Get.create(() => ProductPageController());
-      }),
+      page: () => const ProductPage(),
     ),
     GetPage(
       name: kCheckoutPage,

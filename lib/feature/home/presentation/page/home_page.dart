@@ -28,7 +28,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
-  final _contoller = Get.put(HomePageController());
+  final controller = Get.put(HomePageController());
 
   @override
   bool get wantKeepAlive => true;
@@ -39,13 +39,13 @@ class _HomePageState extends State<HomePage>
 
     return RefreshIndicator(
       onRefresh: () async {
-        _contoller.init();
+        controller.init();
       },
       child: SafeArea(
         child: Stack(
           children: [
             CustomScrollView(
-              controller: _contoller.scrollController,
+              controller: controller.scrollController,
               slivers: [
                 SliverList(
                   delegate: SliverChildListDelegate([
@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage>
                                   style: Get.textTheme.headline3,
                                 ),
                                 Obx(() {
-                                  final customer = _contoller.customerAccount();
+                                  final customer = controller.customerAccount();
 
                                   if (customer.status == Status.success) {
                                     return Row(
@@ -95,9 +95,9 @@ class _HomePageState extends State<HomePage>
                                     return SmallRefreshButton(
                                         label: 'Refresh Point',
                                         onTap: () {
-                                          _contoller.fcm();
+                                          controller.fcm();
 
-                                          _contoller.customer();
+                                          controller.customer();
                                         });
                                   }
 
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage>
                             height: 44,
                             child: Obx(() {
                               final categoryState =
-                                  _contoller.categoriesState();
+                                  controller.categoriesState();
 
                               if (categoryState.status == Status.success) {
                                 List<CategoryEntity> categories =
@@ -225,7 +225,7 @@ class _HomePageState extends State<HomePage>
 
                               if (categoryState.status == Status.error) {
                                 return ElevatedButton(
-                                  onPressed: _contoller.categories,
+                                  onPressed: controller.categories,
                                   style: ElevatedButton.styleFrom(
                                     primary: kLightColor,
                                     onPrimary: kLightColor100,
@@ -284,7 +284,7 @@ class _HomePageState extends State<HomePage>
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Obx(() {
-                          final bannerState = _contoller.bannersState();
+                          final bannerState = controller.bannersState();
 
                           if (bannerState.status == Status.success) {
                             final List<BannerEntity> banners =
@@ -299,7 +299,7 @@ class _HomePageState extends State<HomePage>
                               children: [
                                 SmallRefreshButton(
                                   label: 'Refresh Banner',
-                                  onTap: _contoller.banners,
+                                  onTap: controller.banners,
                                 ),
                               ],
                             );
@@ -340,7 +340,7 @@ class _HomePageState extends State<HomePage>
                             height: 300,
                             child: Obx(() {
                               final productPopularState =
-                                  _contoller.producPopulartState();
+                                  controller.producPopulartState();
 
                               if (productPopularState.status ==
                                   Status.success) {
@@ -360,7 +360,7 @@ class _HomePageState extends State<HomePage>
                                       child: ProductItem(
                                         product: populars[index],
                                         onProductTap: () {
-                                          _contoller.toProductDetail(
+                                          controller.toProductDetail(
                                               productEntity: populars[index]);
                                         },
                                         onFavouriteTap: () {},
@@ -382,7 +382,7 @@ class _HomePageState extends State<HomePage>
                                     children: [
                                       SmallRefreshButton(
                                         label: 'Refresh Produk Paling Laku',
-                                        onTap: _contoller.productsPopular,
+                                        onTap: controller.productsPopular,
                                       ),
                                     ],
                                   ),
@@ -410,7 +410,7 @@ class _HomePageState extends State<HomePage>
                     ),
                     const SizedBox(height: kBigPadding),
                     Obx(() {
-                      final bundleState = _contoller.bundlesState();
+                      final bundleState = controller.bundlesState();
 
                       if (bundleState.status == Status.success) {
                         final List<BundleEntity> bundles = bundleState.data!;
@@ -446,7 +446,7 @@ class _HomePageState extends State<HomePage>
                               children: [
                                 SmallRefreshButton(
                                   label: 'Refresh Produk Bundle',
-                                  onTap: _contoller.bundles,
+                                  onTap: controller.bundles,
                                 ),
                               ],
                             ),
@@ -524,7 +524,7 @@ class _HomePageState extends State<HomePage>
                     // );
 
                     sliver: Obx(() {
-                      final productsState = _contoller.productsState();
+                      final productsState = controller.productsState();
 
                       var _crossAxisSpacing = kMediumPadding;
                       var _mainAxisSpacing = kMediumPadding;
@@ -553,7 +553,7 @@ class _HomePageState extends State<HomePage>
                               return ProductItem(
                                 product: products[index],
                                 onProductTap: () {
-                                  _contoller.toProductDetail(
+                                  controller.toProductDetail(
                                       productEntity: products[index]);
                                 },
                                 onFavouriteTap: () {},
@@ -579,8 +579,8 @@ class _HomePageState extends State<HomePage>
                                 SmallRefreshButton(
                                   label: 'Refresh Produk',
                                   onTap: () {
-                                    _contoller.products(
-                                        param: _contoller
+                                    controller.products(
+                                        param: controller
                                             .productFilterController
                                             .filter());
                                   },
@@ -611,7 +611,7 @@ class _HomePageState extends State<HomePage>
                 const SliverPadding(
                     padding: EdgeInsets.only(bottom: kMediumPadding)),
                 Obx(() {
-                  if (_contoller.paging()) {
+                  if (controller.paging()) {
                     return SliverPadding(
                       padding: const EdgeInsets.only(bottom: kMediumPadding),
                       sliver: SliverToBoxAdapter(

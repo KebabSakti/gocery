@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
 import 'package:gocery/feature/product/domain/entity/index_product_param_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_paging_entity.dart';
+import 'package:gocery/feature/product/domain/entity/product_statistic_param_entity.dart';
 import 'package:gocery/feature/product/domain/usecase/index_product.dart';
 import 'package:gocery/feature/product/domain/usecase/show_product.dart';
+import 'package:gocery/feature/product/domain/usecase/statistic_product.dart';
 import 'package:gocery/feature/product/domain/usecase/toggle_product_favourite.dart';
 
 class ProductDetailPageController extends GetxController {
-  final ProductEntity argument = Get.arguments;
   final ScrollController scrollController = ScrollController();
 
   final _showProduct =
@@ -20,17 +23,28 @@ class ProductDetailPageController extends GetxController {
       IndexProduct(repository: Get.find<ProductRepositoryImpl>());
   final _toggleProductFavourite =
       ToggleFavouriteProduct(repository: Get.find<ProductRepositoryImpl>());
+  final _statisticProduct =
+      StatisticProduct(repository: Get.find<ProductRepositoryImpl>());
 
   final productState = ResponseModel<ProductEntity>().obs;
   final productsSimiliarState = ResponseModel<ProductPagingEntity>().obs;
   final favourite = false.obs;
 
   void toProductDetail({required ProductEntity productEntity}) async {
-    scrollController.jumpTo(scrollController.position.minScrollExtent);
+    Get.offNamed(kProductDetailPage,
+        arguments: productEntity, preventDuplicates: false);
+  }
 
-    product(uid: productEntity.uid!);
+  void toProductPage({required IndexProductParamModel param}) async {
+    Get.toNamed(kProductPage, arguments: param);
+  }
 
-    productsSimiliar(uid: productEntity.categoryUid!);
+  Future<void> statistic({required ProductStatisticParamEntity param}) async {
+    try {
+      await _statisticProduct(param: param);
+    } catch (e) {
+      //
+    }
   }
 
   Future<void> product({required String uid}) async {
@@ -95,9 +109,17 @@ class ProductDetailPageController extends GetxController {
   }
 
   void init() async {
-    product(uid: argument.uid!);
+    if (Get.arguments != null) {
+      final ProductEntity argument = Get.arguments;
 
-    productsSimiliar(uid: argument.categoryUid!);
+      statistic(
+          param: ProductStatisticParamEntity(
+              productUid: argument.uid, target: 'view'));
+
+      product(uid: argument.uid!);
+
+      productsSimiliar(uid: argument.categoryUid!);
+    }
   }
 
   @override

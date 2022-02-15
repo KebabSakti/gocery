@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:gocery/core/service/error/auth_exception.dart';
+import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -69,5 +71,33 @@ class Utility {
     );
 
     return numberFormat.format(double.parse(value));
+  }
+
+  static String errorMessage(dynamic e) {
+    if (e is UserDisabled) {
+      return 'Akun anda tidak dapat digunakan, harap hubungi cs kami untuk info lebih lanjut';
+    }
+
+    if (e is InvalidOtpCode) {
+      return 'Kode OTP yang anda masukkan tidak valid';
+    }
+
+    if (e is InvalidPhoneNumber) {
+      return 'Nomor hp tidak valid';
+    }
+
+    if (e is Unauthenticated) {
+      return 'Harap login untuk melanjutkan';
+    }
+
+    if (e is NoInternet) {
+      return 'Cek kembali koneksi internet anda';
+    }
+
+    if (e is ServerError) {
+      return 'Server sedang mengalami gangguan, cobalah beberapa saat lagi';
+    }
+
+    return 'Terjadi kesalahan, harap coba beberapa saat lagi';
   }
 }

@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:gocery/core/service/error/failure.dart';
+import 'package:gocery/core/service/error/auth_exception.dart';
+import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
 import 'package:gocery/core/param/auth_register_param.dart';
@@ -9,7 +10,6 @@ import 'package:gocery/feature/authentication/data/datasource/local/auth_local_d
 import 'package:gocery/feature/authentication/data/datasource/remote/auth_remote_datasource.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
 import 'package:gocery/feature/authentication/domain/repository/auth_repository.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
@@ -46,7 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final LoginResult loginResult = await _facebookAuth.login();
 
     if (loginResult.accessToken == null) {
-      throw Exception();
+      throw LoginProviderNotSelected();
     }
 
     final OAuthCredential facebookAuthCredential =
@@ -66,7 +66,7 @@ class AuthRepositoryImpl implements AuthRepository {
         await googleUser?.authentication;
 
     if (googleAuth == null) {
-      throw Exception();
+      throw LoginProviderNotSelected();
     }
 
     final googleAuthCredential = GoogleAuthProvider.credential(
@@ -131,31 +131,33 @@ class AuthRepositoryImpl implements AuthRepository {
       AuthCredential credential) async {
     try {
       return await _firebaseAuth.signInWithCredential(credential);
-    } catch (e, t) {
-      if (e is FirebaseAuthException) {
-        switch (e.code) {
-          case 'user-disabled':
-            throw Failure('Akun anda di block, hubungi cs kami untuk info',
-                error: e);
+    } on FirebaseAuthException catch (exception, stackTrace) {
+      throw AuthException(exception, stackTrace);
 
-          case 'invalid-verification-code':
-            throw Failure('Kode OTP yang anda masukkan salah', error: e);
+      // if (e is FirebaseAuthException) {
+      //   switch (e.code) {
+      //     case 'user-disabled':
+      //       throw Failure('Akun anda di block, hubungi cs kami untuk info',
+      //           error: e);
 
-          case 'invalid-phone-number':
-            throw Failure('Nomor hp tidak valid', error: e);
+      //     case 'invalid-verification-code':
+      //       throw Failure('Kode OTP yang anda masukkan salah', error: e);
 
-          default:
-            await Sentry.captureException(e, stackTrace: t);
+      //     case 'invalid-phone-number':
+      //       throw Failure('Nomor hp tidak valid', error: e);
 
-            throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
-                error: e);
-        }
-      } else {
-        await Sentry.captureException(e, stackTrace: t);
+      //     default:
+      //       await Sentry.captureException(e, stackTrace: t);
 
-        throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
-            error: e);
-      }
+      //       throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
+      //           error: e);
+      //   }
+      // } else {
+      //   await Sentry.captureException(e, stackTrace: t);
+
+      //   throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
+      //       error: e);
+      // }
     }
   }
 
@@ -165,24 +167,22 @@ class AuthRepositoryImpl implements AuthRepository {
           token: await userCredential.user!.getIdToken());
 
       await localDatasource.saveAuthToken(token: model.token!);
-    } catch (e, _) {
-      if (e is DioError) {
-        if (e.response == null) {
-          throw Failure(
-              'Koneksi internet bermasalah, cobalah beberapa saat lagi',
-              error: e);
-        }
-
-        throw Failure(e.message, error: e);
-      } else {
-        throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
-            error: e);
-      }
+    } on DioError catch (exception, stackTrace) {
+      throw NetworkException(exception, stackTrace);
     }
   }
 
   @override
-  void authState({required void Function(bool status) userIsLoggedIn}) {
-    userIsLoggedIn(_firebaseAuth.currentUser != null);
+  void authState({required void Function(bool status) userIsLoggedIn}) async {
+    try {
+      final AuthenticationModel model = await remoteDatasource.access(
+          token: await _firebaseAuth.currentUser!.getIdToken());
+
+      await localDatasource.saveAuthToken(token: model.token!);
+
+      userIsLoggedIn(true);
+    } catch (e, _) {
+      userIsLoggedIn(false);
+    }
   }
 }

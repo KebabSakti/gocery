@@ -3,7 +3,14 @@ import 'package:get/get.dart';
 abstract class RequestInterface {
   Future<dynamic> get(String path, {Map<String, dynamic>? query});
 
-  Future<dynamic> post(String path, {required Map<String, String?>? data});
+  Future<dynamic> post(String path,
+      {required dynamic data, Map<String, dynamic>? query});
+
+  Future<dynamic> put(String path,
+      {required dynamic data, Map<String, dynamic>? query});
+
+  Future<dynamic> delete(String path,
+      {required dynamic data, Map<String, dynamic>? query});
 }
 
 abstract class UploadInterface {
@@ -36,9 +43,23 @@ class NetworkImpl implements Network {
   }
 
   @override
-  Future post(String path, {required Map<String, String?>? data}) async {
-    return await init()
-        .then((instance) async => await instance.post(path, data: data));
+  Future post(String path,
+      {required dynamic data, Map<String, dynamic>? query}) async {
+    return await init().then((instance) async =>
+        await instance.post(path, data: data, query: query));
+  }
+
+  @override
+  Future delete(String path,
+      {required data, Map<String, dynamic>? query}) async {
+    return await init().then((instance) async =>
+        await instance.delete(path, data: data, query: query));
+  }
+
+  @override
+  Future put(String path, {required data, Map<String, dynamic>? query}) async {
+    return await init().then(
+        (instance) async => await instance.put(path, data: data, query: query));
   }
 
   @override

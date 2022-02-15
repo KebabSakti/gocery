@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
+import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/app/presentation/widget/scroll_top_button.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
@@ -12,12 +13,16 @@ import 'package:gocery/feature/product/presentation/widget/product_filter.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
 class ProductPage extends StatelessWidget {
-  const ProductPage({Key? key, required this.controller}) : super(key: key);
-
-  final ProductPageController controller;
+  const ProductPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String controllerTag = Utility.randomUid();
+
+    final controller = Get.put(
+        ProductPageController(controllerTag: controllerTag),
+        tag: controllerTag);
+
     return Obx(() {
       final categoryState = controller.categoriesState();
 
@@ -65,11 +70,13 @@ class ProductPage extends StatelessWidget {
             ),
             body: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: kMediumPadding),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: kMediumPadding),
                   child: SizedBox(
                     height: 60,
-                    child: ProductFilter(controllerKey: 'ProductPage'),
+                    child:
+                        ProductFilter(controllerKey: controller.controllerTag),
                   ),
                 ),
                 Expanded(
@@ -152,10 +159,11 @@ class ProductPage extends StatelessWidget {
                           }),
                         ],
                       ),
-                      const Positioned(
+                      Positioned(
                           bottom: 10,
                           right: 10,
-                          child: ScrollTopButton(controllerKey: 'ProductPage')),
+                          child: ScrollTopButton(
+                              controllerKey: controller.controllerTag)),
                     ],
                   ),
                 ),
