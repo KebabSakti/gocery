@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage>
     return RefreshIndicator(
       onRefresh: () async {
         controller.init();
+        controller.cartController.getCartItems();
       },
       child: SafeArea(
         child: Stack(

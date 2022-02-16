@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/cart/data/datasource/cart_datasource.dart';
-import 'package:gocery/feature/cart/data/model/cart_item_paging_model.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
 
 class CartRemoteDatasource implements CartDatasource {
@@ -13,21 +14,20 @@ class CartRemoteDatasource implements CartDatasource {
   final Network client;
 
   @override
-  Future<CartItemPagingModel> getCartItems() async {
+  Future<List<CartItemModel>> getCartItems() async {
     try {
       final response = await client.get(kCartIndex);
 
-      final model =
-          await compute(cartItemPagingModelFromJson, response.toString());
+      final models = await compute(_cartItems, response.toString());
 
-      return model;
+      return models;
     } on DioError catch (exception, stackTrace) {
       throw NetworkException(exception, stackTrace);
     }
   }
 
   @override
-  Future<void> updateCarts({required List<CartItemModel> param}) async {
+  Future<void> updateCart({required List<CartItemModel> param}) async {
     try {
       await client.post(kCartUpdate,
           data: FormData.fromMap({
@@ -45,11 +45,20 @@ class CartRemoteDatasource implements CartDatasource {
   }
 
   @override
-  Future<void> clearCarts() async {
+  Future<void> clearCart() async {
     try {
       await client.delete(kCartClear, data: {});
     } on DioError catch (exception, stackTrace) {
       throw NetworkException(exception, stackTrace);
     }
+  }
+
+  List<CartItemModel> _cartItems(dynamic data) {
+    var parsed = jsonDecode(data);
+
+    List<CartItemModel> datas = List<CartItemModel>.from(
+        parsed.map((item) => CartItemModel.fromJson(item)));
+
+    return datas;
   }
 }

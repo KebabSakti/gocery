@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
+import 'package:gocery/feature/app/presentation/widget/icon_label.dart';
 import 'package:gocery/feature/cart/presentation/page/cart_page.dart';
 import 'package:gocery/feature/chat/presentation/page/chat_page.dart';
 import 'package:gocery/feature/home/presentation/page/home_page.dart';
@@ -41,24 +42,39 @@ class AppPage extends GetView<AppPageController> {
                 currentIndex: controller.activePage(),
                 showUnselectedLabels: true,
                 type: BottomNavigationBarType.fixed,
-                items: const [
-                  BottomNavigationBarItem(
+                items: [
+                  const BottomNavigationBarItem(
                     label: 'Home',
                     icon: Icon(AppIcon.home),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: 'Order',
                     icon: Icon(AppIcon.clipboard),
                   ),
                   BottomNavigationBarItem(
                     label: 'Keranjang',
-                    icon: Icon(AppIcon.shoppingcart),
+                    icon: Stack(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3),
+                          child: Icon(AppIcon.shoppingcart),
+                        ),
+                        Positioned(
+                          right: 1,
+                          child: Obx(() {
+                            return IconLabel(
+                              label: controller.cartController.qtyTotal(),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: 'Chat',
                     icon: Icon(AppIcon.chat),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: 'Profil',
                     icon: Icon(AppIcon.usercircle),
                   ),

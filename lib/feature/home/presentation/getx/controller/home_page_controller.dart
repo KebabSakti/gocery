@@ -10,6 +10,7 @@ import 'package:gocery/feature/banner/domain/usecase/index_banner.dart';
 import 'package:gocery/feature/bundle/data/repository/bundle_repository_impl.dart';
 import 'package:gocery/feature/bundle/domain/entity/bundle_entity.dart';
 import 'package:gocery/feature/bundle/domain/usecase/index_bundle.dart';
+import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:gocery/feature/category/data/model/category_model.dart';
 import 'package:gocery/feature/category/data/repository/category_repository_impl.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
@@ -43,6 +44,8 @@ class HomePageController extends GetxController {
   late final ScrollController scrollController;
   late final ProductFilterController productFilterController;
   late final ScrollTopButtonController scrollTopButtonController;
+
+  final cartController = Get.find<CartController>();
 
   final _updateCustomerFcmUsecase =
       UpdateFcm(repository: Get.find<CustomerRepositoryImpl>());
@@ -259,7 +262,7 @@ class HomePageController extends GetxController {
   }
 
   void init() async {
-    await fcm();
+    fcm();
     customer();
     categories();
     banners();

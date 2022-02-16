@@ -9,7 +9,7 @@ class ResponseModel<T> {
   final Status status;
   final T? data;
 
-  ResponseModel copyWith({
+  ResponseModel<T> copyWith({
     Status responseStatus = Status.empty,
     T? data,
   }) =>

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/model/response_model.dart';
+import 'package:gocery/core/utility/utility.dart';
+import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/cart/presentation/getx/controller/cart_page_controller.dart';
 
 class CartPage extends StatefulWidget {
@@ -25,168 +28,206 @@ class _CartPageState extends State<CartPage>
 
     return Scaffold(
       appBar: AppBar(title: const Text('Keranjang')),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(kMediumPadding),
-              itemCount: 10,
-              separatorBuilder: (context, index) => const Divider(
-                color: Colors.transparent,
-              ),
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: const EdgeInsets.all(kMediumPadding),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xffEBF0F9)),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              'https://loremflickr.com/350/350/vegetable,fruit?random=1',
-                          width: 70,
+      body: Obx(() {
+        final cartState = controller.cartController.cartItemState();
+
+        if (cartState.status == Status.success) {
+          final List<CartItemEntity> cartItems = cartState.data!;
+
+          if (cartItems.isNotEmpty) {
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(kMediumPadding),
+                    itemCount: cartItems.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      color: Colors.transparent,
+                    ),
+                    itemBuilder: (context, index) {
+                      final CartItemEntity cartItem = cartItems[index];
+
+                      return Container(
+                        padding: const EdgeInsets.all(kMediumPadding),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color(0xffEBF0F9)),
                         ),
-                      ),
-                      const SizedBox(width: kMediumPadding),
-                      Expanded(
-                        child: Column(
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Pisang impor manis banget superrrrr',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Get.theme.textTheme.bodyText1,
-                                  ),
-                                ),
-                                const SizedBox(width: kMediumPadding),
-                                const Icon(
-                                  AppIcon.closecircle,
-                                  color: Colors.red,
-                                ),
-                              ],
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: cartItem.productModel!.image!,
+                                width: 70,
+                              ),
                             ),
-                            const SizedBox(height: kTinyPadding),
-                            Text(
-                              'Harga per 1 kg',
-                              style: Get.theme.textTheme.bodyText2!
-                                  .copyWith(fontSize: kSmallFont),
-                            ),
-                            const SizedBox(height: kTinyPadding),
-                            Text(
-                              'Rp 30.000',
-                              style: Get.theme.textTheme.bodyText1!
-                                  .copyWith(color: kPrimaryColor),
-                            ),
-                            const SizedBox(height: kSmallPadding),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.withOpacity(0.8),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Text(
-                                    'TERJADWAL',
-                                    style: Get.textTheme.overline,
-                                  ),
-                                ),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: kPrimaryColor),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Row(
+                            const SizedBox(width: kMediumPadding),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(AppIcon.minus),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4),
+                                      Expanded(
                                         child: Text(
-                                          '999',
+                                          cartItem.productModel!.name!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                           style: Get.theme.textTheme.bodyText1,
                                         ),
                                       ),
-                                      const Icon(AppIcon.plus),
+                                      const SizedBox(width: kMediumPadding),
+                                      const Icon(
+                                        AppIcon.closecircle,
+                                        color: Colors.red,
+                                      ),
                                     ],
                                   ),
-                                )
-                              ],
+                                  const SizedBox(height: kTinyPadding),
+                                  Text(
+                                    'Harga per ${cartItem.itemQtyTotal} ${cartItem.productModel!.unit}',
+                                    style: Get.theme.textTheme.bodyText2!
+                                        .copyWith(fontSize: kSmallFont),
+                                  ),
+                                  const SizedBox(height: kTinyPadding),
+                                  Text(
+                                    Utility.currency(
+                                        cartItem.itemPriceTotal.toString()),
+                                    style: Get.theme.textTheme.bodyText1!
+                                        .copyWith(color: kPrimaryColor),
+                                  ),
+                                  const SizedBox(height: kSmallPadding),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue.withOpacity(0.8),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                        ),
+                                        child: Text(
+                                          '${cartItem.productModel!.shipping}',
+                                          style: Get.textTheme.overline,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: kPrimaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            GestureDetector(
+                                                onTap: () {},
+                                                child:
+                                                    const Icon(AppIcon.minus)),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 4),
+                                              child: Text(
+                                                '${cartItem.itemQtyTotal}',
+                                                style: Get
+                                                    .theme.textTheme.bodyText1,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  controller.incrementItem(
+                                                      param: cartItem);
+                                                },
+                                                child:
+                                                    const Icon(AppIcon.plus)),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Get.toNamed(kCheckoutPage);
-              },
-              child: Ink(
-                color: kPrimaryColor,
-                height: 56,
-                padding: const EdgeInsets.symmetric(horizontal: kMediumPadding),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Total',
-                          style: Get.theme.textTheme.caption,
-                        ),
-                        Text(
-                          'Rp 20.000',
-                          style: Get.theme.textTheme.caption,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          'Lanjut',
-                          style: Get.theme.textTheme.caption,
-                        ),
-                        const SizedBox(width: 6),
-                        const Icon(
-                          AppIcon.arrowright,
-                          color: kLightColor,
-                          size: 30,
-                        ),
-                      ],
-                    ),
-                  ],
                 ),
-              ),
-            ),
-          ),
-        ],
-      ),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed(kCheckoutPage);
+                    },
+                    child: Ink(
+                      color: kPrimaryColor,
+                      height: 56,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kMediumPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Total',
+                                style: Get.theme.textTheme.caption,
+                              ),
+                              Text(
+                                'Rp 20.000',
+                                style: Get.theme.textTheme.caption,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Lanjut',
+                                style: Get.theme.textTheme.caption,
+                              ),
+                              const SizedBox(width: 6),
+                              const Icon(
+                                AppIcon.arrowright,
+                                color: kLightColor,
+                                size: 30,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return _emptyCart();
+        }
+
+        return _emptyCart();
+      }),
     );
   }
+}
+
+Widget _emptyCart() {
+  return const SizedBox.shrink();
 }

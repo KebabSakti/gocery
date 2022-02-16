@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppPageController extends GetxController {
+  final cartController = Get.put(CartController());
+
   Timer? _timer;
 
   final PageController pageController = PageController();
@@ -44,13 +47,21 @@ class AppPageController extends GetxController {
     _timer = null;
   }
 
-  @override
-  void onInit() async {
+  void initListener() {
     ever(activePage, (int index) => pageController.jumpToPage(index));
+  }
 
+  void init() async {
     await Future.delayed(const Duration(milliseconds: 100));
 
     activePage(Get.arguments);
+  }
+
+  @override
+  void onInit() {
+    initListener();
+
+    init();
 
     super.onInit();
   }
