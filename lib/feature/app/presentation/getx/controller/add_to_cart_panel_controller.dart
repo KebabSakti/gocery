@@ -12,13 +12,11 @@ class AddToCartPanelController extends GetxController {
   final cartItem = CartItemEntity().obs;
 
   void showPanel({required ProductEntity param}) {
-    List<CartItemEntity> models = cartController.cartItemState().data!;
-    int index = models.indexWhere((element) => element.productUid == param.uid);
+    int index = cartController.getIndex(param: param);
 
-    if (index >= 0) {
-      cartItem(models[index]);
-    } else {
-      cartItem(CartItemEntity(
+    if (index < 0) {
+      cartController.incrementCartItem(
+          param: CartItemEntity(
         productUid: param.uid,
         itemQtyTotal: 1,
         itemPriceTotal: param.finalPrice,
@@ -26,6 +24,33 @@ class AddToCartPanelController extends GetxController {
       ));
     }
 
+    cartItem(_getCartItem(param: param));
+
     panelController.open();
+  }
+
+  void incrementItem({required CartItemEntity param}) {
+    cartController.incrementCartItem(param: param);
+
+    cartItem(_getCartItem(param: param.productModel!));
+  }
+
+  void decrementItem({required CartItemEntity param}) {
+    cartController.decrementCartItem(param: param);
+
+    int index = cartController.getIndex(param: param.productModel!);
+
+    if (index >= 0) {
+      cartItem(_getCartItem(param: param.productModel!));
+    } else {
+      panelController.close();
+    }
+  }
+
+  CartItemEntity _getCartItem({required ProductEntity param}) {
+    List<CartItemEntity> models = cartController.cartItemState().data!;
+    int index = cartController.getIndex(param: param);
+
+    return models[index];
   }
 }

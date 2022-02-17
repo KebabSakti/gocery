@@ -49,6 +49,7 @@ class _CartPageState extends State<CartPage>
                       final CartItemEntity cartItem = cartItems[index];
 
                       return Ink(
+                        key: ValueKey(cartItem.productUid),
                         padding: const EdgeInsets.all(kMediumPadding),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -84,7 +85,10 @@ class _CartPageState extends State<CartPage>
                                       ),
                                       const SizedBox(width: kMediumPadding),
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          controller.removeItem(
+                                              param: cartItem);
+                                        },
                                         padding: const EdgeInsets.all(0),
                                         constraints: const BoxConstraints(),
                                         icon: const Icon(

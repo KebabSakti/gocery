@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/bundle/domain/entity/bundle_entity.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
@@ -59,7 +60,10 @@ class BundleItem extends StatelessWidget {
                       arguments: bundle.products![index]);
                 },
                 onFavouriteTap: () {},
-                onBuyTap: () {},
+                onBuyTap: () {
+                  Get.find<AddToCartPanelController>()
+                      .showPanel(param: bundle.products![index]);
+                },
               ),
             ),
           ),

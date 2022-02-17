@@ -7,11 +7,9 @@ import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/core/widget/small_refresh_button.dart';
-import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/app/presentation/widget/scroll_top_button.dart';
 import 'package:gocery/feature/banner/domain/entity/banner_entity.dart';
 import 'package:gocery/feature/bundle/domain/entity/bundle_entity.dart';
-import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
 import 'package:gocery/feature/home/presentation/getx/controller/home_page_controller.dart';
 import 'package:gocery/feature/home/presentation/widget/banner_carousel.dart';
@@ -564,7 +562,10 @@ class _HomePageState extends State<HomePage>
                                       productEntity: products[index]);
                                 },
                                 onFavouriteTap: () {},
-                                onBuyTap: () {},
+                                onBuyTap: () {
+                                  controller.addToCartPanelController
+                                      .showPanel(param: products[index]);
+                                },
                               );
                             },
                             childCount: products.length,

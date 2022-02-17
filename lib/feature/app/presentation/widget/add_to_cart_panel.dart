@@ -5,7 +5,6 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
-import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AddToCartPanel extends GetWidget<AddToCartPanelController> {
@@ -16,7 +15,7 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
     return SlidingUpPanel(
       controller: controller.panelController,
       minHeight: 0,
-      maxHeight: 280,
+      maxHeight: 300,
       backdropEnabled: true,
       backdropColor: kDarkColor,
       backdropTapClosesPanel: true,
@@ -134,8 +133,7 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                           ),
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
+                                          padding: const EdgeInsets.all(6),
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: kPrimaryColor),
@@ -146,11 +144,9 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                             children: [
                                               IconButton(
                                                 onPressed: () {
-                                                  controller.cartController
-                                                      .decrementCartItem(
-                                                          param: controller
-                                                                  .cartItem()
-                                                              as CartItemModel);
+                                                  controller.decrementItem(
+                                                      param: controller
+                                                          .cartItem());
                                                 },
                                                 padding:
                                                     const EdgeInsets.all(0),
@@ -170,10 +166,9 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                               ),
                                               IconButton(
                                                 onPressed: () {
-                                                  controller.cartController
-                                                      .incrementCartItem(
-                                                          param: controller
-                                                              .cartItem());
+                                                  controller.incrementItem(
+                                                      param: controller
+                                                          .cartItem());
                                                 },
                                                 padding:
                                                     const EdgeInsets.all(0),

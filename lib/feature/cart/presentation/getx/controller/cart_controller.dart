@@ -7,6 +7,7 @@ import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/cart/domain/usecase/get_cart_items.dart';
 import 'package:gocery/feature/cart/domain/usecase/update_cart.dart';
 import 'package:gocery/feature/product/data/model/product_model.dart';
+import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 
 class CartController extends GetxController {
   final _getCartItems = GetCartItem(repository: Get.find<CartRepositoryImpl>());
@@ -47,9 +48,10 @@ class CartController extends GetxController {
     List<CartItemEntity> models = cartItemState().data!;
 
     if (qty > 0) {
-      if (models.isNotEmpty) {
-        int index = models
-            .indexWhere((element) => element.productUid == param.productUid);
+      int index = models
+          .indexWhere((element) => element.productUid == param.productUid);
+
+      if (index >= 0) {
         double itemPriceTotal =
             qty * double.parse(param.productModel!.finalPrice!);
 
@@ -74,7 +76,7 @@ class CartController extends GetxController {
         ));
       }
     } else {
-      models.removeWhere((element) => element.uid == param.uid);
+      models.removeWhere((element) => element.productUid == param.productUid);
     }
 
     cartItemState(cartItemState().copyWith(data: models));
@@ -92,9 +94,20 @@ class CartController extends GetxController {
     }
   }
 
+  void removeCartItem({required CartItemEntity param}) {
+    setItemQty(param: param, qty: 0);
+  }
+
   void clearCart() {
     cartItemState(
         ResponseModel<List<CartItemEntity>>(status: Status.empty, data: []));
+  }
+
+  int getIndex({required ProductEntity param}) {
+    List<CartItemEntity> models = cartItemState().data!;
+    int index = models.indexWhere((element) => element.productUid == param.uid);
+
+    return index;
   }
 
   int _calculateTotalQty({required List<CartItemEntity> param}) {

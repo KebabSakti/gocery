@@ -14,4 +14,8 @@ class CartPageController extends GetxController {
   void decrementItem({required CartItemEntity param}) {
     cartController.decrementCartItem(param: param);
   }
+
+  void removeItem({required CartItemEntity param}) {
+    cartController.removeCartItem(param: param);
+  }
 }
