@@ -1,6 +1,6 @@
 import 'package:gocery/feature/product/domain/entity/product_statistic_entity.dart';
 
-abstract class ProductEntity {
+class ProductEntity {
   ProductEntity({
     this.categoryUid,
     this.uid,

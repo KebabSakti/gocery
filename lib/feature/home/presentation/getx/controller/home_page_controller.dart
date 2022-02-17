@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/scroll_top_button_controller.dart';
 import 'package:gocery/feature/banner/data/repository/banner_repository_impl.dart';
 import 'package:gocery/feature/banner/domain/entity/banner_entity.dart';
@@ -46,6 +47,7 @@ class HomePageController extends GetxController {
   late final ScrollTopButtonController scrollTopButtonController;
 
   final cartController = Get.find<CartController>();
+  final addToCartPanelController = Get.find<AddToCartPanelController>();
 
   final _updateCustomerFcmUsecase =
       UpdateFcm(repository: Get.find<CustomerRepositoryImpl>());

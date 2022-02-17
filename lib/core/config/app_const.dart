@@ -58,6 +58,7 @@ const String kGoceryLogoSide = 'asset/image/ui/gocery_logo_side_clean.svg';
 const String kFacebookLogo = 'asset/image/ui/facebook_clean.svg';
 const String kGoogleLogo = 'asset/image/ui/google_clean.svg';
 const String kCoinIcon = 'asset/image/ui/coin.svg';
+const String kEmptyCart = 'asset/image/ui/empty_cart_small.svg';
 const String kOrderComplete = 'asset/image/ui/complete_clean.svg';
 const String kScrollTopButtonIcon = 'asset/image/ui/up.svg';
 const String kLandingOne = 'asset/image/content/landing_one.svg';

@@ -2,19 +2,19 @@ enum Status { empty, loading, success, error }
 
 class ResponseModel<T> {
   ResponseModel({
-    this.status = Status.empty,
+    this.status,
     this.data,
   });
 
-  final Status status;
+  final Status? status;
   final T? data;
 
   ResponseModel<T> copyWith({
-    Status responseStatus = Status.empty,
+    Status? status,
     T? data,
   }) =>
       ResponseModel(
-        status: responseStatus,
+        status: status ?? this.status,
         data: data ?? this.data,
       );
 }

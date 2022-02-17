@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppPageController extends GetxController {
   final cartController = Get.put(CartController());
+  final addToCartPanelController = Get.put(AddToCartPanelController());
 
   Timer? _timer;
 
@@ -17,8 +19,8 @@ class AppPageController extends GetxController {
   final activePage = 0.obs;
 
   Future<bool> onBackButtonPressed() async {
-    if (addToCartPanel.isPanelOpen) {
-      addToCartPanel.close();
+    if (addToCartPanelController.panelController.isPanelOpen) {
+      addToCartPanelController.panelController.close();
     } else {
       if (_timer == null) {
         MToast.show('Tekan sekali lagi untuk keluar');

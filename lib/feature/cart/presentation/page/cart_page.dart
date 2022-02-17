@@ -48,7 +48,7 @@ class _CartPageState extends State<CartPage>
                     itemBuilder: (context, index) {
                       final CartItemEntity cartItem = cartItems[index];
 
-                      return Container(
+                      return Ink(
                         padding: const EdgeInsets.all(kMediumPadding),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -83,9 +83,14 @@ class _CartPageState extends State<CartPage>
                                         ),
                                       ),
                                       const SizedBox(width: kMediumPadding),
-                                      const Icon(
-                                        AppIcon.closecircle,
-                                        color: Colors.red,
+                                      IconButton(
+                                        onPressed: () {},
+                                        padding: const EdgeInsets.all(0),
+                                        constraints: const BoxConstraints(),
+                                        icon: const Icon(
+                                          AppIcon.closecircle,
+                                          color: Colors.red,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -123,8 +128,7 @@ class _CartPageState extends State<CartPage>
                                         ),
                                       ),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4),
+                                        padding: const EdgeInsets.all(6),
                                         decoration: BoxDecoration(
                                           border:
                                               Border.all(color: kPrimaryColor),
@@ -133,27 +137,36 @@ class _CartPageState extends State<CartPage>
                                         ),
                                         child: Row(
                                           children: [
-                                            GestureDetector(
-                                                onTap: () {},
-                                                child:
-                                                    const Icon(AppIcon.minus)),
+                                            IconButton(
+                                              onPressed: () {
+                                                controller.decrementItem(
+                                                    param: cartItem);
+                                              },
+                                              padding: const EdgeInsets.all(0),
+                                              constraints:
+                                                  const BoxConstraints(),
+                                              icon: const Icon(AppIcon.minus),
+                                            ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 4),
+                                                      horizontal: 10),
                                               child: Text(
                                                 '${cartItem.itemQtyTotal}',
                                                 style: Get
                                                     .theme.textTheme.bodyText1,
                                               ),
                                             ),
-                                            GestureDetector(
-                                                onTap: () {
-                                                  controller.incrementItem(
-                                                      param: cartItem);
-                                                },
-                                                child:
-                                                    const Icon(AppIcon.plus)),
+                                            IconButton(
+                                              onPressed: () {
+                                                controller.incrementItem(
+                                                    param: cartItem);
+                                              },
+                                              padding: const EdgeInsets.all(0),
+                                              constraints:
+                                                  const BoxConstraints(),
+                                              icon: const Icon(AppIcon.plus),
+                                            ),
                                           ],
                                         ),
                                       )
@@ -191,7 +204,9 @@ class _CartPageState extends State<CartPage>
                                 style: Get.theme.textTheme.caption,
                               ),
                               Text(
-                                'Rp 20.000',
+                                Utility.currency(controller.cartController
+                                    .priceTotal()
+                                    .toString()),
                                 style: Get.theme.textTheme.caption,
                               ),
                             ],
@@ -219,15 +234,52 @@ class _CartPageState extends State<CartPage>
             );
           }
 
-          return _emptyCart();
+          return _emptyCart(controller: controller);
         }
 
-        return _emptyCart();
+        return _emptyCart(controller: controller);
       }),
     );
   }
 }
 
-Widget _emptyCart() {
-  return const SizedBox.shrink();
+Widget _emptyCart({required CartPageController controller}) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(kBigPadding),
+          decoration: BoxDecoration(
+            color: kLightColor,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: const Icon(
+            AppIcon.shoppingcart,
+            size: 100,
+            color: kLightColor100,
+          ),
+        ),
+        const SizedBox(height: kBigPadding),
+        SizedBox(
+          width: 300,
+          child: Text(
+            'Yah, keranjang belanjanya masih kosong, yuk belanja dulu',
+            textAlign: TextAlign.center,
+            style: Get.theme.textTheme.headline2,
+          ),
+        ),
+        const SizedBox(height: kHugePadding),
+        SizedBox(
+          height: 40,
+          child: ElevatedButton(
+            onPressed: () {
+              controller.appPageController.activePage(0);
+            },
+            child: const Text('Mulai Belanja'),
+          ),
+        ),
+      ],
+    ),
+  );
 }

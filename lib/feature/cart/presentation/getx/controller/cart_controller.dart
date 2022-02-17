@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
 import 'package:gocery/feature/cart/data/repository/cart_repository_impl.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/cart/domain/usecase/get_cart_items.dart';
 import 'package:gocery/feature/cart/domain/usecase/update_cart.dart';
+import 'package:gocery/feature/product/data/model/product_model.dart';
 
 class CartController extends GetxController {
   final _getCartItems = GetCartItem(repository: Get.find<CartRepositoryImpl>());
@@ -18,18 +20,18 @@ class CartController extends GetxController {
 
   Future<void> getCartItems() async {
     try {
-      cartItemState(cartItemState().copyWith(responseStatus: Status.loading));
+      cartItemState(cartItemState().copyWith(status: Status.loading));
 
       await _getCartItems().then((model) {
         cartItemState(cartItemState().copyWith(
-          responseStatus: Status.success,
+          status: Status.success,
           data: model,
         ));
       });
     } catch (e) {
       MToast.show('Gagal memuat item keranjang');
 
-      cartItemState(cartItemState().copyWith(responseStatus: Status.error));
+      cartItemState(cartItemState().copyWith(status: Status.error));
     }
   }
 
@@ -41,27 +43,53 @@ class CartController extends GetxController {
     }
   }
 
-  void setItemQty({required CartItemEntity param, required int value}) {
+  void setItemQty({required CartItemEntity param, required int qty}) {
     List<CartItemEntity> models = cartItemState().data!;
 
-    if (value > 0) {
+    if (qty > 0) {
       if (models.isNotEmpty) {
-        int index = models.indexWhere((element) => element.uid == param.uid);
+        int index = models
+            .indexWhere((element) => element.productUid == param.productUid);
         double itemPriceTotal =
-            value * double.parse(param.productModel!.finalPrice!);
+            qty * double.parse(param.productModel!.finalPrice!);
 
-        models[index] = models[index].copyWith(
-          itemQtyTotal: value,
+        models[index] = CartItemModel(
+          customerAccountUid: param.customerAccountUid,
+          productUid: param.productUid,
+          uid: param.uid,
+          note: param.note,
+          productModel: param.productModel as ProductModel,
+          itemQtyTotal: qty,
           itemPriceTotal: itemPriceTotal.toString(),
         );
       } else {
-        models.add(param);
+        models.add(CartItemModel(
+          customerAccountUid: param.customerAccountUid,
+          productUid: param.productUid,
+          uid: param.uid,
+          note: param.note,
+          productModel: param.productModel as ProductModel,
+          itemQtyTotal: param.itemQtyTotal,
+          itemPriceTotal: param.itemPriceTotal,
+        ));
       }
     } else {
       models.removeWhere((element) => element.uid == param.uid);
     }
 
     cartItemState(cartItemState().copyWith(data: models));
+  }
+
+  void incrementCartItem({required CartItemEntity param}) {
+    setItemQty(param: param, qty: param.itemQtyTotal! + 1);
+  }
+
+  void decrementCartItem({required CartItemEntity param}) {
+    if (param.itemQtyTotal! > 0) {
+      setItemQty(param: param, qty: param.itemQtyTotal! - 1);
+    } else {
+      setItemQty(param: param, qty: 0);
+    }
   }
 
   void clearCart() {
