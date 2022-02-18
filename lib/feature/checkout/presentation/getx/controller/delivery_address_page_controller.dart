@@ -30,6 +30,16 @@ class DeliveryAddressPageController extends GetxController {
     _deviceLocation();
   }
 
+  void onMapCameraMoveStarted() {
+    panelController.close();
+  }
+
+  void onMapCameraIdle() {
+    panelController.animatePanelToPosition(0.32);
+  }
+
+  void onMapCameraMove(CameraPosition cameraPosition) {}
+
   void _deviceLocation() async {
     Position _currentPosition = await Geolocator.getCurrentPosition();
 

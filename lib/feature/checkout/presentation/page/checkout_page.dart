@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/checkout_page_controller.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -579,7 +580,7 @@ Widget _body({required CheckoutPageController controller}) {
           ),
         ),
         const SizedBox(height: kMediumPadding),
-        Container(
+        Ink(
           decoration: BoxDecoration(
             color: kLightColor,
             borderRadius: BorderRadius.circular(10),
@@ -615,18 +616,13 @@ Widget _body({required CheckoutPageController controller}) {
                             style: Get.textTheme.overline,
                           ),
                         ),
-                        ClipOval(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {},
-                              child: Ink(
-                                child: const Icon(
-                                  AppIcon.infocircle,
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            ),
+                        IconButton(
+                          onPressed: () {},
+                          padding: const EdgeInsets.all(0),
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(
+                            AppIcon.infocircle,
+                            color: kPrimaryColor,
                           ),
                         ),
                       ],
@@ -679,18 +675,13 @@ Widget _body({required CheckoutPageController controller}) {
                             style: Get.textTheme.overline,
                           ),
                         ),
-                        ClipOval(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {},
-                              child: Ink(
-                                child: const Icon(
-                                  AppIcon.infocircle,
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            ),
+                        IconButton(
+                          onPressed: () {},
+                          padding: const EdgeInsets.all(0),
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(
+                            AppIcon.infocircle,
+                            color: kPrimaryColor,
                           ),
                         ),
                       ],
@@ -1053,48 +1044,55 @@ Widget _body({required CheckoutPageController controller}) {
       ],
     ),
     bottomSheet: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          Get.offAllNamed(kOrderCompletePage);
-        },
-        child: Ink(
-          color: kPrimaryColor,
-          height: 56,
-          padding: const EdgeInsets.symmetric(horizontal: kMediumPadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Total Bayar',
-                    style: Get.theme.textTheme.caption,
-                  ),
-                  Text(
-                    'Rp 120.000',
-                    style: Get.theme.textTheme.caption,
-                  ),
-                ],
+      color: kPrimaryColor,
+      child: Ink(
+        height: 56,
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kMediumPadding),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Bayar',
+                      style: Get.theme.textTheme.caption,
+                    ),
+                    Text(
+                      Utility.currency('120000'),
+                      style: Get.theme.textTheme.caption,
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Text(
-                    'Buat Pesanan',
-                    style: Get.theme.textTheme.caption,
-                  ),
-                  const SizedBox(width: 6),
-                  const Icon(
-                    AppIcon.arrowright,
-                    color: kLightColor,
-                    size: 30,
-                  ),
-                ],
+            ),
+            InkWell(
+              onTap: () {
+                Get.toNamed(kOrderCompletePage);
+              },
+              overlayColor: MaterialStateProperty.resolveWith(
+                  (states) => kPrimaryColor400),
+              child: Ink(
+                padding: const EdgeInsets.all(kMediumPadding),
+                child: Row(
+                  children: [
+                    Text(
+                      'Buat Pesanan',
+                      style: Get.theme.textTheme.caption,
+                    ),
+                    const SizedBox(width: 6),
+                    const Icon(
+                      AppIcon.arrowright,
+                      color: kLightColor,
+                      size: 30,
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     ),

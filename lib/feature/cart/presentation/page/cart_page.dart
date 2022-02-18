@@ -133,6 +133,7 @@ class _CartPageState extends State<CartPage>
                                       ),
                                       Container(
                                         padding: const EdgeInsets.all(6),
+                                        width: 100,
                                         decoration: BoxDecoration(
                                           border:
                                               Border.all(color: kPrimaryColor),
@@ -140,6 +141,8 @@ class _CartPageState extends State<CartPage>
                                               BorderRadius.circular(10),
                                         ),
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             IconButton(
                                               onPressed: () {
@@ -151,15 +154,10 @@ class _CartPageState extends State<CartPage>
                                                   const BoxConstraints(),
                                               icon: const Icon(AppIcon.minus),
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                              child: Text(
-                                                '${cartItem.itemQtyTotal}',
-                                                style: Get
-                                                    .theme.textTheme.bodyText1,
-                                              ),
+                                            Text(
+                                              '${cartItem.itemQtyTotal}',
+                                              style:
+                                                  Get.theme.textTheme.bodyText1,
                                             ),
                                             IconButton(
                                               onPressed: () {
@@ -186,51 +184,58 @@ class _CartPageState extends State<CartPage>
                   ),
                 ),
                 Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed(kCheckoutPage);
-                    },
-                    child: Ink(
-                      color: kPrimaryColor,
-                      height: 56,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: kMediumPadding),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Total',
-                                style: Get.theme.textTheme.caption,
-                              ),
-                              Text(
-                                Utility.currency(controller.cartController
-                                    .priceTotal()
-                                    .toString()),
-                                style: Get.theme.textTheme.caption,
-                              ),
-                            ],
+                  color: kPrimaryColor,
+                  child: Ink(
+                    height: 56,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kMediumPadding),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: Get.theme.textTheme.caption,
+                                ),
+                                Text(
+                                  Utility.currency(controller.cartController
+                                      .priceTotal()
+                                      .toString()),
+                                  style: Get.theme.textTheme.caption,
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Lanjut',
-                                style: Get.theme.textTheme.caption,
-                              ),
-                              const SizedBox(width: 6),
-                              const Icon(
-                                AppIcon.arrowright,
-                                color: kLightColor,
-                                size: 30,
-                              ),
-                            ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed(kCheckoutPage);
+                          },
+                          overlayColor: MaterialStateProperty.resolveWith(
+                              (states) => kPrimaryColor400),
+                          child: Ink(
+                            padding: const EdgeInsets.all(kMediumPadding),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Lanjut',
+                                  style: Get.theme.textTheme.caption,
+                                ),
+                                const SizedBox(width: 6),
+                                const Icon(
+                                  AppIcon.arrowright,
+                                  color: kLightColor,
+                                  size: 30,
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ),

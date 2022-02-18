@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:gocery/core/model/response_model.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
 import 'package:gocery/feature/cart/data/repository/cart_repository_impl.dart';
@@ -71,7 +72,7 @@ class CartController extends GetxController {
           uid: param.uid,
           note: param.note,
           productModel: param.productModel as ProductModel,
-          itemQtyTotal: param.itemQtyTotal,
+          itemQtyTotal: qty,
           itemPriceTotal: param.itemPriceTotal,
         ));
       }
@@ -83,7 +84,14 @@ class CartController extends GetxController {
   }
 
   void incrementCartItem({required CartItemEntity param}) {
-    setItemQty(param: param, qty: param.itemQtyTotal! + 1);
+    int qtyTotal = param.itemQtyTotal! + 1;
+
+    if (qtyTotal > param.productModel!.maxOrder! ||
+        qtyTotal > param.productModel!.stok!) {
+      throw MaxOrderLimit();
+    }
+
+    setItemQty(param: param, qty: qtyTotal);
   }
 
   void decrementCartItem({required CartItemEntity param}) {

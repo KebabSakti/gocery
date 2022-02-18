@@ -47,7 +47,9 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                controller.panelController.close();
+                              },
                               child: Ink(
                                 child: const Icon(
                                   AppIcon.close,
@@ -98,7 +100,7 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                     ),
                                     const SizedBox(height: kTinyPadding),
                                     Text(
-                                      'Harga per ${controller.cartItem().productModel!.unitCount} ${controller.cartItem().productModel!.unit}',
+                                      'Harga per ${controller.cartItem().itemQtyTotal} ${controller.cartItem().productModel!.unit}',
                                       style: Get.theme.textTheme.bodyText2!
                                           .copyWith(fontSize: kSmallFont),
                                     ),
@@ -106,8 +108,7 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                     Text(
                                       Utility.currency(controller
                                           .cartItem()
-                                          .productModel!
-                                          .finalPrice
+                                          .itemPriceTotal
                                           .toString()),
                                       style: Get.theme.textTheme.bodyText1!
                                           .copyWith(color: kPrimaryColor),
@@ -134,6 +135,7 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                         ),
                                         Container(
                                           padding: const EdgeInsets.all(6),
+                                          width: 100,
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: kPrimaryColor),
@@ -141,6 +143,8 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                                 BorderRadius.circular(10),
                                           ),
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               IconButton(
                                                 onPressed: () {
@@ -154,15 +158,10 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                                     const BoxConstraints(),
                                                 icon: const Icon(AppIcon.minus),
                                               ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10),
-                                                child: Text(
-                                                  '${controller.cartItem().itemQtyTotal}',
-                                                  style: Get.theme.textTheme
-                                                      .bodyText1,
-                                                ),
+                                              Text(
+                                                '${controller.cartItem().itemQtyTotal}',
+                                                style: Get
+                                                    .theme.textTheme.bodyText1,
                                               ),
                                               IconButton(
                                                 onPressed: () {

@@ -13,7 +13,7 @@ class OrderCompletePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.offAllNamed(kAppPage);
+        Get.offNamedUntil(kAppPage, ModalRoute.withName(kAppPage));
 
         return false;
       },

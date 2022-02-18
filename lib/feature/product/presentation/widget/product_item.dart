@@ -160,8 +160,10 @@ class ProductItem extends StatelessWidget {
                       height: 30,
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: onBuyTap,
-                        child: const Text('Beli'),
+                        onPressed: (product.stok == 0) ? null : onBuyTap,
+                        child: (product.stok == 0)
+                            ? const Text('Stok Kosong')
+                            : const Text('Beli'),
                       ),
                     ),
                   ],

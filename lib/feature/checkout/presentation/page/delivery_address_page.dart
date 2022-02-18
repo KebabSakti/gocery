@@ -16,68 +16,60 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        titleSpacing: 0,
-        title: Container(
-          height: 44,
-          width: double.infinity,
-          margin: const EdgeInsets.only(right: kBigPadding),
-          padding:
-              const EdgeInsets.only(left: kBigPadding, right: kSmallPadding),
-          decoration: BoxDecoration(
-            color: kLightColor,
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(1, 1), // changes position of shadow
-              ),
-            ],
-          ),
-          child: TextField(
-            controller: controller.searchField,
-            textInputAction: TextInputAction.search,
-            style: Get.textTheme.bodyText1,
-            decoration: InputDecoration(
-              hintText: 'Cari alamat di sini',
-              hintStyle: Get.theme.textTheme.bodyText2,
-              contentPadding: const EdgeInsets.only(right: 8, top: 4),
-              border: InputBorder.none,
-              errorBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              focusedErrorBorder: InputBorder.none,
-              suffixIconConstraints:
-                  const BoxConstraints(maxWidth: 32, maxHeight: 32),
-              suffixIcon: SizedBox(
-                width: 32,
-                height: 32,
-                child: Material(
-                  color: Get.theme.primaryColor,
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    child: const Icon(
-                      AppIcon.search,
-                      color: kLightColor,
-                      size: 20,
-                    ),
-                    onTap: () {},
-                  ),
+        leading: IconButton(
+          onPressed: () {},
+          icon: Ink(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: kLightColor,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(1, 1), // changes position of shadow
                 ),
+              ],
+            ),
+            child: const Icon(Icons.arrow_back_rounded),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: kMediumPadding, vertical: kTinyPadding),
+            child: Ink(
+              width: 40,
+              height: 50,
+              decoration: BoxDecoration(
+                color: kLightColor,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: const Offset(1, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.search_rounded),
               ),
             ),
           ),
-        ),
+        ],
       ),
       body: SlidingUpPanel(
         controller: controller.panelController,
-        parallaxEnabled: false,
-        parallaxOffset: 0.5,
-        minHeight: 110,
+        defaultPanelState: PanelState.CLOSED,
+        isDraggable: true,
+        minHeight: 25,
         maxHeight: 360,
+        snapPoint: 0.3,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -90,7 +82,22 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         header: _panelHeader(),
         panel: _panel(),
-        body: _panelBody(controller: controller),
+        body: Stack(
+          children: [
+            _panelBody(controller: controller),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -100,17 +107,14 @@ Widget _panelHeader() {
   return Container(
     width: Get.size.width,
     alignment: Alignment.center,
-    child: Icon(
-      Icons.drag_handle_rounded,
-      color: Colors.grey[400],
-      size: 30,
-    ),
+    child: Icon(Icons.drag_handle_rounded, color: Colors.grey[400]),
   );
 }
 
 Widget _panel() {
   return Padding(
-    padding: const EdgeInsets.all(kMediumPadding),
+    padding: const EdgeInsets.symmetric(
+        horizontal: kMediumPadding, vertical: kSmallPadding),
     child: Column(
       children: [
         const SizedBox(height: kBigPadding),
@@ -129,14 +133,27 @@ Widget _panel() {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: Text(
-                    'Perumahan Grand Tsamara, No 27 Pangkalan Gas 3 Kg dalam bumi sempaja griya mukti pm noor',
-                    style: Get.textTheme.bodyText1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Perumahan Grand Tsamara',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: kDarkColor,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'No 27 Pangkalan Gas 3 Kg dalam bumi sempaja griya mukti pm noor asd asdas dasdasd asd asd',
+                        style: Get.textTheme.bodyText1,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: kMediumPadding),
+            const SizedBox(height: kSmallPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -160,7 +177,7 @@ Widget _panel() {
                 ),
               ],
             ),
-            const SizedBox(height: kMediumPadding),
+            const SizedBox(height: kSmallPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -185,7 +202,7 @@ Widget _panel() {
                 ),
               ],
             ),
-            const SizedBox(height: kMediumPadding),
+            const SizedBox(height: kSmallPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -236,6 +253,9 @@ Widget _panelBody({required DeliveryAddressPageController controller}) {
         compassEnabled: false,
         myLocationButtonEnabled: false,
         myLocationEnabled: true,
+        onCameraMoveStarted: controller.onMapCameraMoveStarted,
+        onCameraIdle: controller.onMapCameraIdle,
+        onCameraMove: controller.onMapCameraMove,
         initialCameraPosition: controller.mapInitialCameraPosition(),
         onMapCreated: controller.onMapCreated,
       ),
@@ -298,5 +318,61 @@ Widget _panelBody({required DeliveryAddressPageController controller}) {
               );
       })
     ],
+  );
+}
+
+Widget _appBarTitle({required DeliveryAddressPageController controller}) {
+  return Container(
+    height: 44,
+    width: double.infinity,
+    margin: const EdgeInsets.only(right: kBigPadding),
+    padding: const EdgeInsets.only(left: kBigPadding, right: kSmallPadding),
+    decoration: BoxDecoration(
+      color: kLightColor,
+      borderRadius: BorderRadius.circular(25),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.1),
+          spreadRadius: 1,
+          blurRadius: 1,
+          offset: const Offset(1, 1), // changes position of shadow
+        ),
+      ],
+    ),
+    child: TextField(
+      controller: controller.searchField,
+      textInputAction: TextInputAction.search,
+      style: Get.textTheme.bodyText1,
+      decoration: InputDecoration(
+        hintText: 'Cari alamat di sini',
+        hintStyle: Get.theme.textTheme.bodyText2,
+        contentPadding: const EdgeInsets.only(right: 8, top: 4),
+        border: InputBorder.none,
+        errorBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        suffixIconConstraints:
+            const BoxConstraints(maxWidth: 32, maxHeight: 32),
+        suffixIcon: SizedBox(
+          width: 32,
+          height: 32,
+          child: Material(
+            color: Get.theme.primaryColor,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              child: const Icon(
+                AppIcon.search,
+                color: kLightColor,
+                size: 20,
+              ),
+              onTap: () {},
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 }

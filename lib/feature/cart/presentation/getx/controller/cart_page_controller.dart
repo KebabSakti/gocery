@@ -1,4 +1,7 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
+import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
@@ -8,7 +11,12 @@ class CartPageController extends GetxController {
   final cartController = Get.find<CartController>();
 
   void incrementItem({required CartItemEntity param}) {
-    cartController.incrementCartItem(param: param);
+    try {
+      cartController.incrementCartItem(param: param);
+    } on MaxOrderLimit catch (_) {
+      EasyDebounce.debounce(
+          'order_limit', const Duration(milliseconds: 500), _orderLimit);
+    }
   }
 
   void decrementItem({required CartItemEntity param}) {
@@ -17,5 +25,9 @@ class CartPageController extends GetxController {
 
   void removeItem({required CartItemEntity param}) {
     cartController.removeCartItem(param: param);
+  }
+
+  _orderLimit() {
+    MToast.show('Produk melebihi limit order');
   }
 }
