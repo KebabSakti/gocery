@@ -1,5 +1,6 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
@@ -25,6 +26,10 @@ class CartPageController extends GetxController {
 
   void removeItem({required CartItemEntity param}) {
     cartController.removeCartItem(param: param);
+  }
+
+  void toCheckoutPage({required List<CartItemEntity> param}) {
+    Get.toNamed(kCheckoutPage, arguments: param);
   }
 
   _orderLimit() {

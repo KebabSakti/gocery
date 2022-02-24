@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/scroll_top_button_controller.dart';
+import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:gocery/feature/category/data/model/category_model.dart';
 import 'package:gocery/feature/category/data/repository/category_repository_impl.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
@@ -25,12 +27,19 @@ class ProductPageController extends GetxController {
     scrollTopButtonController = Get.put(
         ScrollTopButtonController(scrollController: scrollController),
         tag: controllerTag);
+
+    cartController = Get.find<CartController>();
+
+    addToCartPanelController =
+        Get.put(AddToCartPanelController(), tag: controllerTag);
   }
 
   late final String controllerTag;
   late final ScrollController scrollController;
   late final ProductFilterController productFilterController;
   late final ScrollTopButtonController scrollTopButtonController;
+  late final CartController cartController;
+  late final AddToCartPanelController addToCartPanelController;
 
   final IndexProductParamModel? argument = Get.arguments;
 

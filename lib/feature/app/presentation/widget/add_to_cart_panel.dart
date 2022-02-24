@@ -7,8 +7,16 @@ import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class AddToCartPanel extends GetWidget<AddToCartPanelController> {
-  const AddToCartPanel({Key? key}) : super(key: key);
+class AddToCartPanel extends GetView<AddToCartPanelController> {
+  const AddToCartPanel({
+    Key? key,
+    required this.controllerKey,
+  }) : super(key: key);
+
+  final String controllerKey;
+
+  @override
+  String? get tag => controllerKey;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +132,13 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 6, vertical: 4),
                                           decoration: BoxDecoration(
-                                            color: Colors.blue.withOpacity(0.8),
+                                            color: (controller
+                                                        .cartItem()
+                                                        .productModel!
+                                                        .shipping ==
+                                                    'TERJADWAL')
+                                                ? Colors.blue
+                                                : kPrimaryColor,
                                             borderRadius:
                                                 BorderRadius.circular(6),
                                           ),
@@ -191,7 +205,8 @@ class AddToCartPanel extends GetWidget<AddToCartPanelController> {
                             height: 45,
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.toNamed(kCheckoutPage);
+                                controller.toCheckoutPage(
+                                    param: controller.cartItem());
                               },
                               child: const Text('Checkout Produk Ini'),
                             ),

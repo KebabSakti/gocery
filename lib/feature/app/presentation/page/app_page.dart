@@ -83,7 +83,7 @@ class AppPage extends GetView<AppPageController> {
               );
             }),
           ),
-          const AddToCartPanel(),
+          const AddToCartPanel(controllerKey: 'AppPage'),
         ],
       ),
     );

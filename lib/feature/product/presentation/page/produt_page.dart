@@ -5,6 +5,7 @@ import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
+import 'package:gocery/feature/app/presentation/widget/add_to_cart_panel.dart';
 import 'package:gocery/feature/app/presentation/widget/scroll_top_button.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
@@ -42,133 +43,144 @@ class ProductPage extends StatelessWidget {
         return DefaultTabController(
           length: categories.length,
           initialIndex: controller.activeTab(),
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Produk'),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Get.toNamed(kSearchPage);
-                  },
-                  icon: const Icon(AppIcon.search),
-                ),
-              ],
-              bottom: TabBar(
-                labelColor: kPrimaryColor,
-                unselectedLabelColor: kLightColor100,
-                labelStyle: Get.theme.textTheme.bodyText2,
-                unselectedLabelStyle: Get.theme.textTheme.bodyText2,
-                isScrollable: true,
-                tabs: categories.map((e) => Tab(text: e.name)).toList(),
-                onTap: (index) {
-                  controller.productFilterController.filter(controller
-                      .productFilterController
-                      .filter()
-                      .copyWith(category: categories[index].uid));
-                },
-              ),
-            ),
-            body: Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: kMediumPadding),
-                  child: SizedBox(
-                    height: 60,
-                    child:
-                        ProductFilter(controllerKey: controller.controllerTag),
+          child: Stack(
+            children: [
+              Scaffold(
+                appBar: AppBar(
+                  title: const Text('Produk'),
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        Get.toNamed(kSearchPage);
+                      },
+                      icon: const Icon(AppIcon.search),
+                    ),
+                  ],
+                  bottom: TabBar(
+                    labelColor: kPrimaryColor,
+                    unselectedLabelColor: kLightColor100,
+                    labelStyle: Get.theme.textTheme.bodyText2,
+                    unselectedLabelStyle: Get.theme.textTheme.bodyText2,
+                    isScrollable: true,
+                    tabs: categories.map((e) => Tab(text: e.name)).toList(),
+                    onTap: (index) {
+                      controller.productFilterController.filter(controller
+                          .productFilterController
+                          .filter()
+                          .copyWith(category: categories[index].uid));
+                    },
                   ),
                 ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      ListView(
-                        controller: controller.scrollController,
+                body: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: kMediumPadding),
+                      child: SizedBox(
+                        height: 60,
+                        child: ProductFilter(
+                            controllerKey: controller.controllerTag),
+                      ),
+                    ),
+                    Expanded(
+                      child: Stack(
                         children: [
-                          Obx(() {
-                            final productState = controller.productsState();
+                          ListView(
+                            controller: controller.scrollController,
+                            children: [
+                              Obx(() {
+                                final productState = controller.productsState();
 
-                            if (productState.status == Status.success) {
-                              final List<ProductEntity> products =
-                                  productState.data!.data!;
+                                if (productState.status == Status.success) {
+                                  final List<ProductEntity> products =
+                                      productState.data!.data!;
 
-                              return GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: const EdgeInsets.only(
-                                    left: kMediumPadding,
-                                    right: kMediumPadding,
-                                    bottom: kMediumPadding),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: _crossAxisCount,
-                                  crossAxisSpacing: _crossAxisSpacing,
-                                  mainAxisSpacing: _mainAxisSpacing,
-                                  childAspectRatio: _aspectRatio,
-                                ),
-                                itemCount: products.length,
-                                itemBuilder: (context, index) {
-                                  return ProductItem(
-                                    product: products[index],
-                                    onProductTap: () {
-                                      Get.toNamed(kProductDetailPage,
-                                          arguments: products[index]);
+                                  return GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding: const EdgeInsets.only(
+                                        left: kMediumPadding,
+                                        right: kMediumPadding,
+                                        bottom: kMediumPadding),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: _crossAxisCount,
+                                      crossAxisSpacing: _crossAxisSpacing,
+                                      mainAxisSpacing: _mainAxisSpacing,
+                                      childAspectRatio: _aspectRatio,
+                                    ),
+                                    itemCount: products.length,
+                                    itemBuilder: (context, index) {
+                                      return ProductItem(
+                                        product: products[index],
+                                        onProductTap: () {
+                                          Get.toNamed(kProductDetailPage,
+                                              arguments: products[index]);
+                                        },
+                                        onFavouriteTap: () {},
+                                        onBuyTap: () {
+                                          controller.addToCartPanelController
+                                              .showPanel(
+                                                  param: products[index]);
+                                        },
+                                      );
                                     },
-                                    onFavouriteTap: () {},
-                                    onBuyTap: () {},
                                   );
-                                },
-                              );
-                            }
+                                }
 
-                            return GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.only(
-                                  left: kMediumPadding,
-                                  right: kMediumPadding,
-                                  bottom: kMediumPadding),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: _crossAxisCount,
-                                crossAxisSpacing: _crossAxisSpacing,
-                                mainAxisSpacing: _mainAxisSpacing,
-                                childAspectRatio: _aspectRatio,
-                              ),
-                              itemCount: 6,
-                              itemBuilder: (context, index) {
-                                return const ShimmerLoader(radius: 10);
-                              },
-                            );
-                          }),
-                          Obx(() {
-                            if (controller.paging()) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: kMediumPadding),
-                                child: Center(
-                                  child: Transform.scale(
-                                    scale: 0.7,
-                                    child: const CircularProgressIndicator(),
+                                return GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: const EdgeInsets.only(
+                                      left: kMediumPadding,
+                                      right: kMediumPadding,
+                                      bottom: kMediumPadding),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: _crossAxisCount,
+                                    crossAxisSpacing: _crossAxisSpacing,
+                                    mainAxisSpacing: _mainAxisSpacing,
+                                    childAspectRatio: _aspectRatio,
                                   ),
-                                ),
-                              );
-                            }
+                                  itemCount: 6,
+                                  itemBuilder: (context, index) {
+                                    return const ShimmerLoader(radius: 10);
+                                  },
+                                );
+                              }),
+                              Obx(() {
+                                if (controller.paging()) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: kMediumPadding),
+                                    child: Center(
+                                      child: Transform.scale(
+                                        scale: 0.7,
+                                        child:
+                                            const CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  );
+                                }
 
-                            return const SizedBox.shrink();
-                          }),
+                                return const SizedBox.shrink();
+                              }),
+                            ],
+                          ),
+                          Positioned(
+                              bottom: 10,
+                              right: 10,
+                              child: ScrollTopButton(
+                                  controllerKey: controller.controllerTag)),
                         ],
                       ),
-                      Positioned(
-                          bottom: 10,
-                          right: 10,
-                          child: ScrollTopButton(
-                              controllerKey: controller.controllerTag)),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              AddToCartPanel(controllerKey: controllerTag),
+            ],
           ),
         );
       }

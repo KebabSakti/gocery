@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:gocery/core/service/error/auth_exception.dart';
 import 'package:gocery/core/service/error/network_exception.dart';
+import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -99,5 +100,29 @@ class Utility {
     }
 
     return 'Terjadi kesalahan, harap coba beberapa saat lagi';
+  }
+
+  static String getCartItemTypes({required List<CartItemEntity> param}) {
+    List<String> message = <String>[];
+
+    for (CartItemEntity e in param) {
+      String type = e.productModel!.type!;
+
+      if (type == 'GAS' || type == 'OTHER') {
+        if (!message.contains('GAS')) {
+          message.add('GAS');
+        }
+      }
+
+      if (type == 'GROCERY') {
+        if (!message.contains('GROCERY')) {
+          message.add('GROCERY');
+        }
+      }
+    }
+
+    // debugPrint('\x1B[32m$message\x1B[0m');
+
+    return message.join(',');
   }
 }

@@ -122,7 +122,11 @@ class _CartPageState extends State<CartPage>
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 6, vertical: 4),
                                         decoration: BoxDecoration(
-                                          color: Colors.blue.withOpacity(0.8),
+                                          color: (cartItem
+                                                      .productModel!.shipping ==
+                                                  'TERJADWAL')
+                                              ? Colors.blue
+                                              : kPrimaryColor,
                                           borderRadius:
                                               BorderRadius.circular(6),
                                         ),
@@ -213,7 +217,7 @@ class _CartPageState extends State<CartPage>
                         ),
                         InkWell(
                           onTap: () {
-                            Get.toNamed(kCheckoutPage);
+                            controller.toCheckoutPage(param: cartItems);
                           },
                           overlayColor: MaterialStateProperty.resolveWith(
                               (states) => kPrimaryColor400),
@@ -246,7 +250,9 @@ class _CartPageState extends State<CartPage>
           return _emptyCart(controller: controller);
         }
 
-        return _emptyCart(controller: controller);
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       }),
     );
   }

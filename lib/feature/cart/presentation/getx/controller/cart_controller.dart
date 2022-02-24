@@ -45,6 +45,13 @@ class CartController extends GetxController {
     }
   }
 
+  int getIndex({required ProductEntity param}) {
+    List<CartItemEntity> models = cartItemState().data!;
+    int index = models.indexWhere((element) => element.productUid == param.uid);
+
+    return index;
+  }
+
   void setItemQty({required CartItemEntity param, required int qty}) {
     List<CartItemEntity> models = cartItemState().data!;
 
@@ -109,13 +116,6 @@ class CartController extends GetxController {
   void clearCart() {
     cartItemState(
         ResponseModel<List<CartItemEntity>>(status: Status.empty, data: []));
-  }
-
-  int getIndex({required ProductEntity param}) {
-    List<CartItemEntity> models = cartItemState().data!;
-    int index = models.indexWhere((element) => element.productUid == param.uid);
-
-    return index;
   }
 
   int _calculateTotalQty({required List<CartItemEntity> param}) {

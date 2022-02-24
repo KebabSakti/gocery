@@ -8,8 +8,14 @@ import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppPageController extends GetxController {
-  final cartController = Get.put(CartController());
-  final addToCartPanelController = Get.put(AddToCartPanelController());
+  AppPageController() {
+    cartController = Get.put(CartController());
+    addToCartPanelController =
+        Get.put(AddToCartPanelController(), tag: 'AppPage');
+  }
+
+  late final CartController cartController;
+  late final AddToCartPanelController addToCartPanelController;
 
   Timer? _timer;
 

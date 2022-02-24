@@ -40,14 +40,18 @@ class HomePageController extends GetxController {
     scrollTopButtonController = Get.put(
         ScrollTopButtonController(scrollController: scrollController),
         tag: 'HomePage');
+
+    cartController = Get.find<CartController>();
+
+    addToCartPanelController =
+        Get.find<AddToCartPanelController>(tag: 'AppPage');
   }
 
   late final ScrollController scrollController;
   late final ProductFilterController productFilterController;
   late final ScrollTopButtonController scrollTopButtonController;
-
-  final cartController = Get.find<CartController>();
-  final addToCartPanelController = Get.find<AddToCartPanelController>();
+  late final CartController cartController;
+  late final AddToCartPanelController addToCartPanelController;
 
   final _updateCustomerFcmUsecase =
       UpdateFcm(repository: Get.find<CustomerRepositoryImpl>());

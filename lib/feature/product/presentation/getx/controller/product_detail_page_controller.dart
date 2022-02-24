@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
+import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
 import 'package:gocery/feature/product/domain/entity/index_product_param_entity.dart';
@@ -15,6 +17,17 @@ import 'package:gocery/feature/product/domain/usecase/statistic_product.dart';
 import 'package:gocery/feature/product/domain/usecase/toggle_product_favourite.dart';
 
 class ProductDetailPageController extends GetxController {
+  ProductDetailPageController({required this.controllerTag}) {
+    cartController = Get.find<CartController>();
+
+    addToCartPanelController =
+        Get.put(AddToCartPanelController(), tag: controllerTag);
+  }
+
+  late final String controllerTag;
+  late final CartController cartController;
+  late final AddToCartPanelController addToCartPanelController;
+
   final ScrollController scrollController = ScrollController();
 
   final _showProduct =
@@ -29,6 +42,16 @@ class ProductDetailPageController extends GetxController {
   final productState = ResponseModel<ProductEntity>().obs;
   final productsSimiliarState = ResponseModel<ProductPagingEntity>().obs;
   final favourite = false.obs;
+
+  Future<bool> onBackButtonPressed() async {
+    if (addToCartPanelController.panelController.isPanelOpen) {
+      addToCartPanelController.panelController.close();
+
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   void toProductDetail({required ProductEntity productEntity}) async {
     Get.offNamed(kProductDetailPage,

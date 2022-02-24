@@ -50,6 +50,8 @@ const String kSearchDelete = 'customer/searches';
 const String kCartIndex = 'customer/carts';
 const String kCartUpdate = 'customer/carts';
 const String kCartClear = 'customer/carts';
+const String kAddressLast = 'customer/orders/addresses';
+const String kOrderFee = 'customer/orders/fees';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';

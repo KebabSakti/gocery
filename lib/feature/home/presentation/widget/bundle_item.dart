@@ -61,7 +61,7 @@ class BundleItem extends StatelessWidget {
                 },
                 onFavouriteTap: () {},
                 onBuyTap: () {
-                  Get.find<AddToCartPanelController>()
+                  Get.find<AddToCartPanelController>(tag: 'AppPage')
                       .showPanel(param: bundle.products![index]);
                 },
               ),
