@@ -15,9 +15,11 @@ import 'package:gocery/feature/authentication/presentation/page/register_page.da
 import 'package:gocery/feature/chat/presentation/page/chat_detail_page.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/checkout_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/delivery_address_page_controller.dart';
+import 'package:gocery/feature/checkout/presentation/getx/controller/search_address_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/page/checkout_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/delivery_address_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/order_complete_page.dart';
+import 'package:gocery/feature/checkout/presentation/page/search_address_page.dart';
 import 'package:gocery/feature/intro/presentation/getx/intro_page_controller.dart';
 import 'package:gocery/feature/intro/presentation/page/intro_page.dart';
 import 'package:gocery/feature/landing/presentation/getx/landing_page_controller.dart';
@@ -98,6 +100,11 @@ class AppRoute {
       name: kDeliveryAddressPage,
       page: () => const DeliveryAddressPage(),
       binding: BindingsBuilder.put(() => DeliveryAddressPageController()),
+    ),
+    GetPage(
+      name: kSearchAddressPage,
+      page: () => const SearchAddressPage(),
+      binding: BindingsBuilder.put(() => SearchAddressPageController()),
     ),
     GetPage(
       name: kVoucherPage,

@@ -10,6 +10,7 @@ import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.da
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_address_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_model.dart';
+import 'package:gocery/feature/checkout/data/model/shipping_time_model.dart';
 
 class OrderRemoteDatasource implements OrderDatasource {
   OrderRemoteDatasource({required this.client});
@@ -50,6 +51,20 @@ class OrderRemoteDatasource implements OrderDatasource {
   }
 
   @override
+  Future<List<ShippingTimeModel>> getShippingTimes() async {
+    try {
+      final response = await client.get(kOrderTime);
+
+      final List<ShippingTimeModel> models =
+          await compute(_orderTimes, response.toString());
+
+      return models;
+    } on DioError catch (exception, stackTrace) {
+      throw NetworkException(exception, stackTrace);
+    }
+  }
+
+  @override
   Future<void> submitOrder({required OrderModel param}) async {
     // TODO: implement submitOrder
     throw UnimplementedError();
@@ -61,6 +76,15 @@ List<OrderShippingModel> _orderShippings(dynamic data) {
 
   List<OrderShippingModel> datas = List<OrderShippingModel>.from(
       parsed.map((item) => OrderShippingModel.fromJson(item)));
+
+  return datas;
+}
+
+List<ShippingTimeModel> _orderTimes(dynamic data) {
+  var parsed = jsonDecode(data);
+
+  List<ShippingTimeModel> datas = List<ShippingTimeModel>.from(
+      parsed.map((item) => ShippingTimeModel.fromJson(item)));
 
   return datas;
 }

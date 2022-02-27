@@ -4,6 +4,7 @@ import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entit
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/shipping_time_entity.dart';
 import 'package:gocery/feature/checkout/domain/repository/order_repository.dart';
 
 class OrderRepositoryImpl implements OrderRepository {
@@ -21,6 +22,11 @@ class OrderRepositoryImpl implements OrderRepository {
       {required OrderShippingParamEntity param}) async {
     return await datasource.getOrderShipping(
         param: OrderShippingParamModel.toEntity(param: param));
+  }
+
+  @override
+  Future<List<ShippingTimeEntity>> getShippingTimes() async {
+    return await datasource.getShippingTimes();
   }
 
   @override

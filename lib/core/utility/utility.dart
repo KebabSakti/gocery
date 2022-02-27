@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:geocoding/geocoding.dart';
 import 'package:gocery/core/service/error/auth_exception.dart';
 import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
@@ -124,5 +125,21 @@ class Utility {
     // debugPrint('\x1B[32m$message\x1B[0m');
 
     return message.join(',');
+  }
+
+  static String placemarkToString({required List<Placemark> placemark}) {
+    List<String> strings = [
+      placemark[0].street ?? '',
+      placemark[0].subLocality ?? '',
+      placemark[0].locality ?? '',
+      placemark[0].subAdministrativeArea ?? '',
+      placemark[0].administrativeArea ?? '',
+      placemark[0].postalCode ?? '',
+      placemark[0].country ?? '',
+    ];
+
+    String formatted = strings.join(', ');
+
+    return formatted;
   }
 }

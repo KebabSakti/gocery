@@ -4,6 +4,7 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/delivery_address_page_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
@@ -56,7 +57,9 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
                 ],
               ),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.toSearchAddressPage();
+                },
                 icon: const Icon(Icons.search_rounded),
               ),
             ),
@@ -68,8 +71,8 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
         defaultPanelState: PanelState.CLOSED,
         isDraggable: true,
         minHeight: 25,
-        maxHeight: 360,
-        snapPoint: 0.3,
+        maxHeight: 340,
+        snapPoint: 0.25,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -81,7 +84,7 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         header: _panelHeader(),
-        panel: _panel(),
+        panel: _panel(controller),
         body: Stack(
           children: [
             _panelBody(controller: controller),
@@ -104,7 +107,7 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.location_history,
-                      color: kPrimaryColor,
+                      color: Colors.blue,
                       size: 40,
                     ),
                   ),
@@ -116,12 +119,25 @@ class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
                         width: 4,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: kPrimaryColor,
+                          color: Colors.blue,
                           borderRadius: BorderRadius.circular(50),
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  Obx(() {
+                    if (controller.searchMode()) {
+                      return const Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 4),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  }),
                 ],
               ),
             ),
@@ -140,7 +156,7 @@ Widget _panelHeader() {
   );
 }
 
-Widget _panel() {
+Widget _panel(DeliveryAddressPageController controller) {
   return Padding(
     padding: const EdgeInsets.symmetric(
         horizontal: kMediumPadding, vertical: kSmallPadding),
@@ -162,23 +178,14 @@ Widget _panel() {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Perumahan Grand Tsamara',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: kDarkColor,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'No 27 Pangkalan Gas 3 Kg dalam bumi sempaja griya mukti pm noor asd asdas dasdasd asd asd',
-                        style: Get.textTheme.bodyText1,
-                      ),
-                    ],
-                  ),
+                  child: Obx(() {
+                    return Text(
+                      controller.addressEntity().address ?? 'Memuat alamat..',
+                      style: Get.textTheme.bodyText1!.copyWith(height: 1.3),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  }),
                 ),
               ],
             ),
@@ -195,14 +202,21 @@ Widget _panel() {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: TextField(
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                      hintText: 'Nama',
-                      hintStyle: Get.textTheme.bodyText2,
-                    ),
-                  ),
+                  child: Obx(() {
+                    return TextField(
+                      controller: TextEditingController()
+                        ..text = controller.addressEntity().name ?? '',
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        hintText: 'Nama',
+                        hintStyle: Get.textTheme.bodyText2,
+                      ),
+                      onChanged: (value) {
+                        controller.name = value;
+                      },
+                    );
+                  }),
                 ),
               ],
             ),
@@ -220,14 +234,23 @@ Widget _panel() {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: TextField(
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      hintText: 'No Hp',
-                      hintStyle: Get.textTheme.bodyText2,
-                    ),
-                  ),
+                  child: Obx(() {
+                    return InternationalPhoneNumberInput(
+                      textFieldController: TextEditingController()
+                        ..text = controller.addressEntity().phone ?? '',
+                      countries: const ['ID'],
+                      selectorConfig: const SelectorConfig(
+                        setSelectorButtonAsPrefixIcon: true,
+                      ),
+                      inputDecoration: InputDecoration(
+                        hintText: '812-5498-2664',
+                        hintStyle: Get.theme.textTheme.bodyText2,
+                      ),
+                      onInputChanged: (phone) {
+                        controller.phone = phone.phoneNumber ?? '';
+                      },
+                    );
+                  }),
                 ),
               ],
             ),
@@ -245,13 +268,20 @@ Widget _panel() {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: TextField(
-                    textInputAction: TextInputAction.done,
-                    decoration: InputDecoration(
-                      hintText: 'Catatan',
-                      hintStyle: Get.textTheme.bodyText2,
-                    ),
-                  ),
+                  child: Obx(() {
+                    return TextField(
+                      controller: TextEditingController()
+                        ..text = controller.addressEntity().note ?? '',
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        hintText: 'Catatan',
+                        hintStyle: Get.textTheme.bodyText2,
+                      ),
+                      onChanged: (value) {
+                        controller.note = value;
+                      },
+                    );
+                  }),
                 ),
               ],
             ),
@@ -260,7 +290,7 @@ Widget _panel() {
               width: double.infinity,
               height: 45,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: controller.saveDeliveryInfo,
                 child: const Text('Simpan'),
               ),
             ),
@@ -288,64 +318,64 @@ Widget _panelBody({required DeliveryAddressPageController controller}) {
         initialCameraPosition: controller.mapInitialCameraPosition(),
         onMapCreated: controller.onMapCreated,
       ),
-      Obx(() {
-        return (!controller.searchMode())
-            ? const SizedBox.shrink()
-            : Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(
-                    left: kMediumPadding, right: kMediumPadding, top: 80),
-                constraints: const BoxConstraints(maxHeight: 350),
-                decoration: BoxDecoration(
-                  color: kLightColor,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Builder(builder: (context) {
-                  return MediaQuery.removePadding(
-                    context: context,
-                    removeTop: true,
-                    child: ListView.separated(
-                      itemCount: 10,
-                      separatorBuilder: (context, index) =>
-                          const Divider(height: 1),
-                      itemBuilder: (context, index) {
-                        return Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {},
-                            child: Ink(
-                              padding: const EdgeInsets.all(kMediumPadding),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Jl. Dr. Sutomo',
-                                    style: Get.textTheme.bodyText1,
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Jl. Gerilya, Sungai Pinang Dalam, Kota Samarinda, Kalimantan Timur, Indonesia',
-                                    style: Get.textTheme.bodyText2,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-              );
-      })
+      // Obx(() {
+      //   return (!controller.searchMode())
+      //       ? const SizedBox.shrink()
+      //       : Container(
+      //           width: double.infinity,
+      //           margin: const EdgeInsets.only(
+      //               left: kMediumPadding, right: kMediumPadding, top: 80),
+      //           constraints: const BoxConstraints(maxHeight: 350),
+      //           decoration: BoxDecoration(
+      //             color: kLightColor,
+      //             borderRadius: BorderRadius.circular(8),
+      //             boxShadow: [
+      //               BoxShadow(
+      //                 color: Colors.grey.withOpacity(0.1),
+      //                 spreadRadius: 1,
+      //                 blurRadius: 1,
+      //                 offset: const Offset(1, 1), // changes position of shadow
+      //               ),
+      //             ],
+      //           ),
+      //           child: Builder(builder: (context) {
+      //             return MediaQuery.removePadding(
+      //               context: context,
+      //               removeTop: true,
+      //               child: ListView.separated(
+      //                 itemCount: 10,
+      //                 separatorBuilder: (context, index) =>
+      //                     const Divider(height: 1),
+      //                 itemBuilder: (context, index) {
+      //                   return Material(
+      //                     color: Colors.transparent,
+      //                     child: InkWell(
+      //                       onTap: () {},
+      //                       child: Ink(
+      //                         padding: const EdgeInsets.all(kMediumPadding),
+      //                         child: Column(
+      //                           crossAxisAlignment: CrossAxisAlignment.start,
+      //                           children: [
+      //                             Text(
+      //                               'Jl. Dr. Sutomo',
+      //                               style: Get.textTheme.bodyText1,
+      //                             ),
+      //                             const SizedBox(height: 2),
+      //                             Text(
+      //                               'Jl. Gerilya, Sungai Pinang Dalam, Kota Samarinda, Kalimantan Timur, Indonesia',
+      //                               style: Get.textTheme.bodyText2,
+      //                             ),
+      //                           ],
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   );
+      //                 },
+      //               ),
+      //             );
+      //           }),
+      //         );
+      // })
     ],
   );
 }

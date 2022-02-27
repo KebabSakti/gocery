@@ -5,13 +5,18 @@ import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/checkout/data/repository/order_repository_impl.dart';
-import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/shipping_time_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/voucher_entity.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_last_address.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_order_shipping.dart';
+import 'package:gocery/feature/checkout/domain/usecase/get_shipping_times.dart';
+import 'package:gocery/feature/customer/data/repository/customer_repository_impl.dart';
+import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
+import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -25,26 +30,45 @@ class CheckoutPageController extends GetxController {
       GetLastAddress(repository: Get.find<OrderRepositoryImpl>());
   final _getOrderShipping =
       GetOrderShipping(repository: Get.find<OrderRepositoryImpl>());
+  final _getCustomerAccount =
+      ShowCustomerAccount(repository: Get.find<CustomerRepositoryImpl>());
+  final _getShippingTimes =
+      GetShippingTimes(repository: Get.find<OrderRepositoryImpl>());
 
   final addressState =
       ResponseModel<ShippingAddressEntity>(status: Status.loading).obs;
   final orderShippingState =
       ResponseModel<List<OrderShippingEntity>>(status: Status.loading).obs;
+  final customerAccount =
+      ResponseModel<CustomerAccountEntity>(status: Status.loading).obs;
+  final shippingTimesState =
+      ResponseModel<List<ShippingTimeEntity>>(status: Status.loading).obs;
+  final Rx<PaymentChannelEntity?> paymentChannelState = null.obs;
+  final Rx<VoucherEntity?> voucherState = null.obs;
 
-  final orderSummaryState = OrderEntity().obs;
+  final priceTotal = 0.0.obs;
+  final shippingFee = 0.0.obs;
+  final appFee = 0.0.obs;
+  final voucher = 0.0.obs;
+  final point = 0.0.obs;
+  final payTotal = 0.0.obs;
 
-  Future<void> getLastAddress() async {
+  final checkbox = false.obs;
+
+  Future<void> setAddressState() async {
     try {
       addressState(
           ResponseModel<ShippingAddressEntity>(status: Status.loading));
 
       ShippingAddressEntity addressEntity = await _getLastAddress();
 
-      addressState(ResponseModel<ShippingAddressEntity>(
-          status: Status.success, data: addressEntity));
-
-      orderSummaryState(
-          orderSummaryState().copyWith(shippingAddressEntity: addressEntity));
+      if (addressEntity.latitude == '' || addressEntity.longitude == '') {
+        addressState(
+            ResponseModel<ShippingAddressEntity>(status: Status.empty));
+      } else {
+        addressState(ResponseModel<ShippingAddressEntity>(
+            status: Status.success, data: addressEntity));
+      }
     } catch (e) {
       MToast.show('Gagal memuat riwayat alamat');
 
@@ -52,21 +76,25 @@ class CheckoutPageController extends GetxController {
     }
   }
 
-  Future<void> getOrderShipping(
-      {required OrderShippingParamEntity param}) async {
+  Future<void> setOrderShippingState() async {
     try {
       orderShippingState(
           ResponseModel<List<OrderShippingEntity>>(status: Status.loading));
 
-      List<OrderShippingEntity> shippings =
-          await _getOrderShipping(param: param);
+      if (addressState().data == null) {
+        orderShippingState(
+            ResponseModel<List<OrderShippingEntity>>(status: Status.empty));
+      } else {
+        List<OrderShippingEntity> shippings = await _getOrderShipping(
+            param: OrderShippingParamEntity(
+          latitude: addressState().data!.latitude,
+          longitude: addressState().data!.longitude,
+          type: Utility.getCartItemTypes(param: cartItems),
+        ));
 
-      orderShippingState(ResponseModel<List<OrderShippingEntity>>(
-          status: Status.success, data: shippings));
-
-      orderSummaryState(orderSummaryState().copyWith(
-          orderShippingEntity: shippings,
-          shippingFee: _totalShipping(param: shippings).toString()));
+        orderShippingState(ResponseModel<List<OrderShippingEntity>>(
+            status: Status.success, data: shippings));
+      }
     } catch (e) {
       MToast.show('Gagal memuat detail pengiriman');
 
@@ -75,73 +103,135 @@ class CheckoutPageController extends GetxController {
     }
   }
 
-  void getCartItems({required List<CartItemEntity> param}) {
-    orderSummaryState(orderSummaryState().copyWith(
-        cartItemEntity: param,
-        priceTotal: _totalCartItem(param: param).toString()));
+  Future<void> setCustomerPoint() async {
+    try {
+      customerAccount(
+          ResponseModel<CustomerAccountEntity>(status: Status.loading));
+
+      await _getCustomerAccount().then((model) {
+        customerAccount(ResponseModel<CustomerAccountEntity>(
+          status: Status.success,
+          data: model,
+        ));
+      });
+    } catch (e) {
+      MToast.show('Gagal memuat point');
+
+      customerAccount(
+          ResponseModel<CustomerAccountEntity>(status: Status.error));
+    }
   }
 
-  void setPaymentChannel({required PaymentChannelEntity param}) {
-    orderSummaryState(orderSummaryState()
-        .copyWith(paymentChannelEntity: param, appFee: param.fee));
+  Future<void> setShippingTimesState() async {
+    try {
+      shippingTimesState(
+          ResponseModel<List<ShippingTimeEntity>>(status: Status.loading));
+
+      List<ShippingTimeEntity> models = await _getShippingTimes();
+
+      shippingTimesState(ResponseModel<List<ShippingTimeEntity>>(
+          status: Status.success, data: models));
+    } catch (e) {
+      MToast.show('Gagal memuat jam pengiriman');
+
+      shippingTimesState(
+          ResponseModel<List<ShippingTimeEntity>>(status: Status.error));
+    }
   }
 
-  void setOrderSummary() {
-    orderSummaryState(orderSummaryState().copyWith(
-      shippingAddressEntity: addressState().data,
-      orderShippingEntity: orderShippingState().data,
-    ));
+  void setCheckbox({bool? value}) {
+    if (value != null) {
+      checkbox(value);
+    }
   }
 
-  double _totalShipping({required List<OrderShippingEntity> param}) {
-    double total =
-        param.fold(0, (sum, item) => sum + double.parse(item.price!));
-
-    return total;
+  void setAddressNote({required String note}) {
+    addressState(
+      addressState().copyWith(data: addressState().data!.copyWith(note: note)),
+    );
   }
 
-  double _totalCartItem({required List<CartItemEntity> param}) {
-    double total =
-        param.fold(0, (sum, item) => sum + double.parse(item.itemPriceTotal!));
+  void openDeliveryTimerPanel() async {
+    setShippingTimesState();
 
-    return total;
+    deliveryTimePanel.open();
   }
 
-  double _appFee({required OrderEntity param}) {
-    if (param.paymentChannelEntity == null) {
-      return 0;
+  double _totalShipping() {
+    if (orderShippingState().data == null) {
+      return 0.0;
     }
 
-    if (param.paymentChannelEntity!.feeType == 'percentage') {}
+    double total = orderShippingState()
+        .data!
+        .fold(0, (sum, item) => sum + double.parse(item.price!));
 
-    return 0;
+    return total;
+  }
+
+  double _totalCartItem() {
+    double total = cartItems.fold(
+        0, (sum, item) => sum + double.parse(item.itemPriceTotal!));
+
+    return total;
+  }
+
+  double _totalAppFee() {
+    if (paymentChannelState() == null) {
+      return 0.0;
+    }
+
+    if (paymentChannelState()!.feeType == 'fix') {
+      return double.parse(paymentChannelState()!.fee!);
+    }
+
+    double total = (double.parse(paymentChannelState()!.fee!) / 100) *
+        (_totalCartItem() + _totalShipping());
+
+    return total;
   }
 
   double _totalVoucher() {
-    return 0;
+    if (voucherState() == null) {
+      return 0.0;
+    }
+
+    return double.parse(voucherState()!.amount!);
   }
 
   double _totalPoint() {
-    return 0;
+    if (customerAccount().data == null) {
+      return 0.0;
+    }
+
+    return double.parse(
+        customerAccount().data!.customerPointEntity!.point!.toString());
   }
 
-  double _totalPay({required OrderEntity param}) {
-    double carts = _totalCartItem(param: param.cartItemEntity!);
-    double shipping = _totalShipping(param: param.orderShippingEntity!);
-    double voucher = _totalVoucher();
-    double point = _totalPoint();
-    // double appFee =
+  void _calculateTotal() {
+    double pt = !checkbox() ? 0.0 : _totalPoint();
+    double pay = (_totalCartItem() + _totalShipping() + _totalAppFee()) -
+        (_totalVoucher() + pt);
 
-    double total = (carts + shipping) - (voucher + point);
+    priceTotal(_totalCartItem());
+    shippingFee(_totalShipping());
+    appFee(_totalAppFee());
+    voucher(_totalVoucher());
+    point(_totalPoint());
 
-    return total;
+    payTotal(pay);
   }
 
   void toDeliveryAddressPage() async {
     await Permission.location.request();
 
     if (await Permission.location.request().isGranted) {
-      await Get.toNamed(kDeliveryAddressPage);
+      var result = await Get.toNamed(kDeliveryAddressPage,
+          arguments: addressState().data);
+
+      if (result != null) {
+        addressState(addressState().copyWith(data: result));
+      }
     }
   }
 
@@ -162,22 +252,35 @@ class CheckoutPageController extends GetxController {
   }
 
   void initListener() {
-    ever(addressState, (ResponseModel<ShippingAddressEntity> model) {
-      if (model.data != null) {
-        getOrderShipping(
-            param: OrderShippingParamEntity(
-          latitude: model.data!.latitude,
-          longitude: model.data!.longitude,
-          type: Utility.getCartItemTypes(param: cartItems),
-        ));
-      }
+    ever(addressState, (_) {
+      setOrderShippingState();
+    });
+
+    ever(orderShippingState, (_) {
+      _calculateTotal();
+    });
+
+    ever(paymentChannelState, (_) {
+      _calculateTotal();
+    });
+
+    ever(voucherState, (_) {
+      _calculateTotal();
+    });
+
+    ever(customerAccount, (_) {
+      _calculateTotal();
+    });
+
+    ever(checkbox, (_) {
+      _calculateTotal();
     });
   }
 
-  void init() async {
-    getCartItems(param: cartItems);
+  void init() {
+    setAddressState();
 
-    getLastAddress();
+    setCustomerPoint();
   }
 
   @override

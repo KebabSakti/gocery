@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+//KEY
+const String kMapKey = 'AIzaSyB7doxfW-m-TpBRogzeX2EVyIL9RmGXar0';
+
 //NETWORK
 const String kProtocol = 'http';
 const String kBaseUrl = '192.168.3.153:1001';
@@ -24,6 +27,7 @@ const String kProductPage = '/product';
 const String kCheckoutPage = '/checkout';
 const String kOrderCompletePage = '/order_complete';
 const String kDeliveryAddressPage = '/delivery_address';
+const String kSearchAddressPage = '/search_address';
 const String kVoucherPage = '/voucher';
 const String kOrderDetailPage = '/order_detail';
 const String kChatDetailPage = '/chat_detail';
@@ -52,6 +56,7 @@ const String kCartUpdate = 'customer/carts';
 const String kCartClear = 'customer/carts';
 const String kAddressLast = 'customer/orders/addresses';
 const String kOrderFee = 'customer/orders/fees';
+const String kOrderTime = 'customer/orders/times';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';

@@ -5,6 +5,7 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/utility.dart';
+import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/cart/presentation/getx/controller/cart_page_controller.dart';
 
@@ -250,8 +251,16 @@ class _CartPageState extends State<CartPage>
           return _emptyCart(controller: controller);
         }
 
-        return const Center(
-          child: CircularProgressIndicator(),
+        return ListView.separated(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(kMediumPadding),
+          itemCount: 5,
+          separatorBuilder: (context, index) => const Divider(
+            color: Colors.transparent,
+          ),
+          itemBuilder: (context, index) {
+            return const ShimmerLoader(height: 150);
+          },
         );
       }),
     );

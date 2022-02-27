@@ -9,6 +9,7 @@ import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/shipping_time_entity.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/checkout_page_controller.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -35,322 +36,328 @@ Widget _body({required CheckoutPageController controller}) {
     appBar: AppBar(
       title: const Text('Konfirmasi Pesanan'),
     ),
-    body: Padding(
+    body: SingleChildScrollView(
       padding: const EdgeInsets.all(kMediumPadding),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(kMediumPadding),
-              decoration: BoxDecoration(
-                color: kLightColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: kLightColor50),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Alamat Pengantaran'),
-                      Row(
-                        children: [
-                          const Icon(AppIcon.editpencil,
-                              size: 15, color: kPrimaryColor),
-                          const SizedBox(width: 2),
-                          GestureDetector(
-                              onTap: controller.toDeliveryAddressPage,
-                              child:
-                                  Text('Edit', style: Get.textTheme.headline4)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: kMediumPadding),
-                  Obx(() {
-                    final addressState = controller.addressState();
-
-                    if (addressState.status == Status.success) {
-                      final ShippingAddressEntity addressEntity =
-                          addressState.data!;
-
-                      return Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                width: 30,
-                                child: Icon(
-                                  AppIcon.mapmarker,
-                                  color: kLightColor100,
-                                  size: 19,
-                                ),
-                              ),
-                              const SizedBox(width: kTinyPadding),
-                              Expanded(
-                                child: Text(
-                                  addressEntity.address!,
-                                  style: Get.textTheme.bodyText1,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: kSmallPadding),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                width: 30,
-                                child: Icon(
-                                  AppIcon.user,
-                                  color: kLightColor100,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: kTinyPadding),
-                              Expanded(
-                                child: Text(
-                                  addressEntity.name!,
-                                  style: Get.textTheme.bodyText1,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: kSmallPadding),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                width: 30,
-                                child: Icon(
-                                  AppIcon.phone,
-                                  color: kLightColor100,
-                                  size: 18,
-                                ),
-                              ),
-                              const SizedBox(width: kTinyPadding),
-                              Expanded(
-                                child: Text(
-                                  addressEntity.phone!,
-                                  style: Get.textTheme.bodyText1,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: kSmallPadding),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                width: 30,
-                                child: Icon(
-                                  AppIcon.note,
-                                  color: kLightColor100,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: kTinyPadding),
-                              Expanded(
-                                child: TextField(
-                                  controller: TextEditingController()
-                                    ..text = addressEntity.note ?? '',
-                                  decoration: InputDecoration(
-                                    hintText: 'Berikan catatan',
-                                    hintStyle: Get.textTheme.bodyText2,
-                                    isDense: true,
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    }
-
-                    if (addressState.status == Status.loading) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          ShimmerLoader(width: double.infinity, height: 16),
-                          SizedBox(height: kSmallPadding),
-                          ShimmerLoader(width: double.infinity, height: 16),
-                          SizedBox(height: kSmallPadding),
-                          ShimmerLoader(width: double.infinity, height: 16),
-                          SizedBox(height: kSmallPadding),
-                          ShimmerLoader(width: double.infinity, height: 16),
-                          SizedBox(height: kSmallPadding),
-                          ShimmerLoader(width: double.infinity, height: 16),
-                        ],
-                      );
-                    }
-
-                    return SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          primary: kLightColor,
-                          onPrimary: kLightColor100,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            side: BorderSide(color: kPrimaryColor),
-                          ),
-                        ),
-                        child: const Text(
-                          'Tambah Alamat',
-                          style: TextStyle(color: kPrimaryColor),
-                        ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(kMediumPadding),
+            decoration: BoxDecoration(
+              color: kLightColor,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: kLightColor50),
             ),
-            const SizedBox(height: kMediumPadding),
-            Ink(
-              decoration: BoxDecoration(
-                color: kLightColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: kLightColor50),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
-                        left: kMediumPadding,
-                        right: kMediumPadding,
-                        top: kMediumPadding),
-                    child: Text('Detail Pengiriman'),
-                  ),
-                  Obx(() {
-                    final orderShippingState = controller.orderShippingState();
-
-                    if (orderShippingState.status == Status.success) {
-                      final List<OrderShippingEntity> shippings =
-                          orderShippingState.data!;
-
-                      return ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        separatorBuilder: (context, index) =>
-                            const Divider(height: 1),
-                        itemCount: shippings.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(kMediumPadding),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Alamat Pengantaran'),
+                    Obx(() {
+                      return (controller.addressState().status ==
+                              Status.loading)
+                          ? const SizedBox.shrink()
+                          : Row(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: (shippings[index].shipping! ==
-                                                'TERJADWAL')
-                                            ? Colors.blue
-                                            : kPrimaryColor,
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        shippings[index].shipping!,
-                                        style: Get.textTheme.overline,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {},
-                                      padding: const EdgeInsets.all(0),
-                                      constraints: const BoxConstraints(),
-                                      icon: const Icon(
-                                        AppIcon.infocircle,
-                                        color: kPrimaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: kMediumPadding),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Jarak',
-                                        style: Get.textTheme.bodyText1),
-                                    Text(
-                                        '${shippings[index].distance} ${shippings[index].distanceUnit} ',
-                                        style: Get.textTheme.bodyText1),
-                                  ],
-                                ),
-                                const SizedBox(height: kSmallPadding),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Ongkir',
-                                        style: Get.textTheme.bodyText1),
-                                    Text(
-                                        Utility.currency(
-                                            shippings[index].price.toString()),
-                                        style: Get.textTheme.bodyText1),
-                                  ],
-                                ),
-                                const SizedBox(height: kSmallPadding),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Jam Kirim',
-                                        style: Get.textTheme.bodyText1),
-                                    (shippings[index].shipping == 'LANGSUNG')
-                                        ? Text('LANGSUNG',
-                                            style: Get.textTheme.bodyText1)
-                                        : Row(
-                                            children: [
-                                              Text('10:00 AM',
-                                                  style:
-                                                      Get.textTheme.bodyText1),
-                                              const SizedBox(width: 6),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  controller.deliveryTimePanel
-                                                      .open();
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    const Icon(
-                                                        AppIcon.editpencil,
-                                                        size: 15,
-                                                        color: kPrimaryColor),
-                                                    const SizedBox(width: 2),
-                                                    Text('Edit',
-                                                        style: Get.textTheme
-                                                            .headline4),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                  ],
-                                ),
+                                const Icon(AppIcon.editpencil,
+                                    size: 15, color: kPrimaryColor),
+                                const SizedBox(width: 2),
+                                GestureDetector(
+                                    onTap: controller.toDeliveryAddressPage,
+                                    child: Text('Edit',
+                                        style: Get.textTheme.headline4)),
                               ],
-                            ),
-                          );
-                        },
-                      );
-                    }
+                            );
+                    }),
+                  ],
+                ),
+                const SizedBox(height: kMediumPadding),
+                Obx(() {
+                  final addressState = controller.addressState();
 
+                  final ShippingAddressEntity? addressEntity =
+                      addressState.data;
+
+                  if (addressState.status == Status.loading) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        ShimmerLoader(width: double.infinity, height: 16),
+                        SizedBox(height: kSmallPadding),
+                        ShimmerLoader(width: double.infinity, height: 16),
+                        SizedBox(height: kSmallPadding),
+                        ShimmerLoader(width: double.infinity, height: 16),
+                        SizedBox(height: kSmallPadding),
+                        ShimmerLoader(width: double.infinity, height: 16),
+                        SizedBox(height: kSmallPadding),
+                        ShimmerLoader(width: double.infinity, height: 16),
+                      ],
+                    );
+                  }
+
+                  if (addressEntity != null) {
+                    return Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 30,
+                              child: Icon(
+                                AppIcon.mapmarker,
+                                color: kLightColor100,
+                                size: 19,
+                              ),
+                            ),
+                            const SizedBox(width: kTinyPadding),
+                            Expanded(
+                              child: Text(
+                                addressEntity.address!,
+                                style: Get.textTheme.bodyText1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSmallPadding),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 30,
+                              child: Icon(
+                                AppIcon.user,
+                                color: kLightColor100,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: kTinyPadding),
+                            Expanded(
+                              child: Text(
+                                addressEntity.name!,
+                                style: Get.textTheme.bodyText1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSmallPadding),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 30,
+                              child: Icon(
+                                AppIcon.phone,
+                                color: kLightColor100,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: kTinyPadding),
+                            Expanded(
+                              child: Text(
+                                addressEntity.phone!,
+                                style: Get.textTheme.bodyText1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSmallPadding),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 30,
+                              child: Icon(
+                                AppIcon.note,
+                                color: kLightColor100,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: kTinyPadding),
+                            Expanded(
+                              child: TextField(
+                                controller: TextEditingController()
+                                  ..text = addressEntity.note ?? '',
+                                decoration: InputDecoration(
+                                  hintText: 'Berikan catatan',
+                                  hintStyle: Get.textTheme.bodyText2,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  focusedErrorBorder: InputBorder.none,
+                                ),
+                                onSubmitted: (value) {
+                                  controller.setAddressNote(note: value);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+
+                  return SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        primary: kLightColor,
+                        onPrimary: kLightColor100,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          side: BorderSide(color: kPrimaryColor),
+                        ),
+                      ),
+                      child: const Text(
+                        'Tambah Alamat',
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+          const SizedBox(height: kMediumPadding),
+          Ink(
+            decoration: BoxDecoration(
+              color: kLightColor,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: kLightColor50),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(
+                      left: kMediumPadding,
+                      right: kMediumPadding,
+                      top: kMediumPadding),
+                  child: Text('Detail Pengiriman'),
+                ),
+                Obx(() {
+                  final orderShippingState = controller.orderShippingState();
+
+                  if (orderShippingState.status == Status.success) {
+                    final List<OrderShippingEntity> shippings =
+                        orderShippingState.data!;
+
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 1),
+                      itemCount: shippings.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(kMediumPadding),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: (shippings[index].shipping! ==
+                                              'TERJADWAL')
+                                          ? Colors.blue
+                                          : kPrimaryColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      shippings[index].shipping!,
+                                      style: Get.textTheme.overline,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    padding: const EdgeInsets.all(0),
+                                    constraints: const BoxConstraints(),
+                                    icon: const Icon(
+                                      AppIcon.infocircle,
+                                      color: kPrimaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: kMediumPadding),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Jarak', style: Get.textTheme.bodyText1),
+                                  Text(
+                                      '${shippings[index].distance} ${shippings[index].distanceUnit} ',
+                                      style: Get.textTheme.bodyText1),
+                                ],
+                              ),
+                              const SizedBox(height: kSmallPadding),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Ongkir',
+                                      style: Get.textTheme.bodyText1),
+                                  Text(
+                                      Utility.currency(
+                                          shippings[index].price.toString()),
+                                      style: Get.textTheme.bodyText1),
+                                ],
+                              ),
+                              const SizedBox(height: kSmallPadding),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Jam Kirim',
+                                      style: Get.textTheme.bodyText1),
+                                  (shippings[index].shipping == 'LANGSUNG')
+                                      ? Text('LANGSUNG',
+                                          style: Get.textTheme.bodyText1)
+                                      : Row(
+                                          children: [
+                                            Text(
+                                                shippings[index]
+                                                    .time
+                                                    .toString(),
+                                                style: Get.textTheme.bodyText1),
+                                            const SizedBox(width: 6),
+                                            GestureDetector(
+                                              onTap: controller
+                                                  .openDeliveryTimerPanel,
+                                              child: Row(
+                                                children: [
+                                                  const Icon(AppIcon.editpencil,
+                                                      size: 15,
+                                                      color: kPrimaryColor),
+                                                  const SizedBox(width: 2),
+                                                  Text('Edit',
+                                                      style: Get
+                                                          .textTheme.headline4),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+
+                  if (orderShippingState.status == Status.loading) {
                     return Padding(
                       padding: const EdgeInsets.all(kMediumPadding),
                       child: Column(
@@ -368,291 +375,350 @@ Widget _body({required CheckoutPageController controller}) {
                         ],
                       ),
                     );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: kMediumPadding),
-            Container(
-              decoration: BoxDecoration(
-                color: kLightColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: kLightColor50),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: kMediumPadding),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: kMediumPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Produk Yang Dipesan'),
-                        Text('${controller.cartItems.length} Item',
-                            style: Get.textTheme.bodyText1),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: kMediumPadding),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: kMediumPadding),
-                    child: _checkoutCartItem(
-                        cartItemEntity: controller.cartItems[0]),
-                  ),
-                  const SizedBox(height: kMediumPadding),
-                  (controller.cartItems.length == 1)
-                      ? const SizedBox.shrink()
-                      : ExpansionTile(
-                          title: const Text('Semua Item'),
-                          tilePadding: const EdgeInsets.symmetric(
-                              horizontal: kMediumPadding),
-                          children:
-                              controller.cartItems.asMap().entries.map((e) {
-                            if (e.key == 0) {
-                              return const SizedBox.shrink();
-                            }
+                  }
 
-                            return Padding(
-                              padding: const EdgeInsets.all(kMediumPadding),
-                              child: _checkoutCartItem(cartItemEntity: e.value),
-                            );
-                          }).toList(),
-                        ),
-                ],
-              ),
-            ),
-            const SizedBox(height: kMediumPadding),
-            Container(
-              decoration: BoxDecoration(
-                color: kLightColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: kLightColor50),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
+                  return Container(
                     padding: const EdgeInsets.all(kMediumPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                    width: double.infinity,
+                    child: Text('Alamat belum di tambahkan',
+                        style: Get.theme.textTheme.bodyText1),
+                  );
+                }),
+              ],
+            ),
+          ),
+          const SizedBox(height: kMediumPadding),
+          Container(
+            decoration: BoxDecoration(
+              color: kLightColor,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: kLightColor50),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: kMediumPadding),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: kMediumPadding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Produk Yang Dipesan'),
+                      Text('${controller.cartItems.length} Item',
+                          style: Get.textTheme.bodyText1),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: kMediumPadding),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: kMediumPadding),
+                  child: _checkoutCartItem(
+                      cartItemEntity: controller.cartItems[0]),
+                ),
+                const SizedBox(height: kMediumPadding),
+                (controller.cartItems.length == 1)
+                    ? const SizedBox.shrink()
+                    : ExpansionTile(
+                        title: const Text('Semua Item'),
+                        tilePadding: const EdgeInsets.symmetric(
+                            horizontal: kMediumPadding),
+                        children: controller.cartItems.asMap().entries.map((e) {
+                          if (e.key == 0) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Padding(
+                            padding: const EdgeInsets.all(kMediumPadding),
+                            child: _checkoutCartItem(cartItemEntity: e.value),
+                          );
+                        }).toList(),
+                      ),
+              ],
+            ),
+          ),
+          const SizedBox(height: kMediumPadding),
+          Container(
+            decoration: BoxDecoration(
+              color: kLightColor,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: kLightColor50),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(kMediumPadding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl:
+                            'https://res.cloudinary.com/vjtechsolution/image/upload/v1627400333/ayo%20mobile/cod_edit.png',
+                        height: 30,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          controller.paymentChannelPanel.open();
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(AppIcon.editpencil,
+                                size: 15, color: kPrimaryColor),
+                            const SizedBox(width: 2),
+                            Text('Edit', style: Get.textTheme.headline4),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.all(kMediumPadding),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(children: [
                         CachedNetworkImage(
                           imageUrl:
-                              'https://res.cloudinary.com/vjtechsolution/image/upload/v1627370426/ayo%20mobile/AnyConv.com__bniva.png',
-                          height: 30,
+                              'https://cdn-icons-png.flaticon.com/512/726/726476.png',
+                          height: 20,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            controller.paymentChannelPanel.open();
-                          },
-                          child: Row(
-                            children: [
-                              const Icon(AppIcon.editpencil,
-                                  size: 15, color: kPrimaryColor),
-                              const SizedBox(width: 2),
-                              Text('Edit', style: Get.textTheme.headline4),
-                            ],
-                          ),
+                        const SizedBox(width: kTinyPadding),
+                        Text(
+                          '1 Voucher Terpakai',
+                          style: Get.textTheme.bodyText1,
                         ),
-                      ],
-                    ),
+                      ]),
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(kVoucherPage);
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(AppIcon.editpencil,
+                                size: 15, color: kPrimaryColor),
+                            const SizedBox(width: 2),
+                            Text('Edit', style: Get.textTheme.headline4),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const Divider(height: 1),
-                  Padding(
-                    padding: const EdgeInsets.all(kMediumPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                'https://cdn-icons-png.flaticon.com/512/726/726476.png',
-                            height: 20,
-                          ),
-                          const SizedBox(width: kTinyPadding),
-                          Text(
-                            '1 Voucher Terpakai',
-                            style: Get.textTheme.bodyText1,
-                          ),
-                        ]),
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(kVoucherPage);
-                          },
-                          child: Row(
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.all(kMediumPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Rincian Biaya'),
+                      const SizedBox(height: kMediumPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total Belanja', style: Get.textTheme.bodyText1),
+                          Obx(() {
+                            return Text(
+                                Utility.currency(
+                                    controller.priceTotal().toString()),
+                                style: Get.textTheme.bodyText1);
+                          }),
+                        ],
+                      ),
+                      const SizedBox(height: kSmallPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total Ongkir', style: Get.textTheme.bodyText1),
+                          Obx(() {
+                            return Text(
+                                Utility.currency(
+                                    controller.shippingFee().toString()),
+                                style: Get.textTheme.bodyText1);
+                          }),
+                        ],
+                      ),
+                      const SizedBox(height: kSmallPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Biaya Admin', style: Get.textTheme.bodyText1),
+                          Obx(() {
+                            return Text(
+                                Utility.currency(
+                                    controller.appFee().toString()),
+                                style: Get.textTheme.bodyText1);
+                          }),
+                        ],
+                      ),
+                      const SizedBox(height: kSmallPadding),
+                      const Divider(height: 1),
+                      const SizedBox(height: kSmallPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Diskon Voucher',
+                              style: Get.textTheme.bodyText1),
+                          Obx(() {
+                            return Text(
+                                Utility.currency(
+                                    controller.voucher().toString()),
+                                style: Get.textTheme.bodyText1);
+                          }),
+                        ],
+                      ),
+                      const SizedBox(height: kSmallPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(AppIcon.editpencil,
-                                  size: 15, color: kPrimaryColor),
-                              const SizedBox(width: 2),
-                              Text('Edit', style: Get.textTheme.headline4),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 1),
-                  Padding(
-                    padding: const EdgeInsets.all(kMediumPadding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Rincian Biaya'),
-                        const SizedBox(height: kMediumPadding),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total Belanja',
-                                style: Get.textTheme.bodyText1),
-                            Text('Rp 100.000', style: Get.textTheme.bodyText1),
-                          ],
-                        ),
-                        const SizedBox(height: kSmallPadding),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total Ongkir',
-                                style: Get.textTheme.bodyText1),
-                            Text('Rp 12.000', style: Get.textTheme.bodyText1),
-                          ],
-                        ),
-                        const SizedBox(height: kSmallPadding),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Biaya Admin', style: Get.textTheme.bodyText1),
-                            Text('Rp 4.500', style: Get.textTheme.bodyText1),
-                          ],
-                        ),
-                        const SizedBox(height: kSmallPadding),
-                        const Divider(height: 1),
-                        const SizedBox(height: kSmallPadding),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Diskon Voucher',
-                                style: Get.textTheme.bodyText1),
-                            Text('- Rp 20.000', style: Get.textTheme.bodyText1),
-                          ],
-                        ),
-                        const SizedBox(height: kSmallPadding),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Potongan Poin',
-                                    style: Get.textTheme.bodyText1),
-                                const SizedBox(height: kTinyPadding),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 15,
-                                      height: 15,
-                                      child: Checkbox(
-                                        value: true,
-                                        visualDensity: VisualDensity.compact,
-                                        onChanged: (value) {},
+                              Text('Potongan Poin',
+                                  style: Get.textTheme.bodyText1),
+                              const SizedBox(height: kTinyPadding),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 15,
+                                        height: 15,
+                                        child: Obx(() {
+                                          return Checkbox(
+                                            value: controller.checkbox(),
+                                            // visualDensity:
+                                            //     VisualDensity.compact,
+                                            onChanged: controller.point() < 1000
+                                                ? null
+                                                : (value) {
+                                                    controller.setCheckbox(
+                                                        value: value);
+                                                  },
+                                          );
+                                        }),
                                       ),
-                                    ),
-                                    const SizedBox(width: kSmallPadding),
-                                    Text(
-                                      '1000',
+                                    ],
+                                  ),
+                                  const SizedBox(width: kSmallPadding),
+                                  Obx(() {
+                                    return Text(
+                                      Utility.currency(
+                                          controller.point().toString()),
                                       style: Get.textTheme.bodyText1!.copyWith(
                                         color: Colors.amber,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Text('- Rp 1.000', style: Get.textTheme.bodyText1),
-                          ],
-                        ),
-                        const SizedBox(height: kSmallPadding),
-                        const Divider(height: 1),
-                        const SizedBox(height: kSmallPadding),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total Bayar', style: Get.textTheme.bodyText1),
-                            Text(
-                              'Rp 120.000',
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Obx(() {
+                            return Text(
+                                !controller.checkbox()
+                                    ? 'Rp 0'
+                                    : Utility.currency(
+                                        controller.point().toString()),
+                                style: Get.textTheme.bodyText1);
+                          }),
+                        ],
+                      ),
+                      const SizedBox(height: kSmallPadding),
+                      const Divider(height: 1),
+                      const SizedBox(height: kSmallPadding),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total Bayar', style: Get.textTheme.bodyText1),
+                          Obx(() {
+                            return Text(
+                              Utility.currency(
+                                  controller.payTotal().toString()),
                               style: Get.textTheme.headline4!.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 56),
-          ],
-        ),
+          ),
+          const SizedBox(height: 56),
+        ],
       ),
     ),
-    bottomSheet: Material(
-      color: kPrimaryColor,
-      child: Ink(
-        height: 56,
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kMediumPadding),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Bayar',
-                      style: Get.theme.textTheme.caption,
-                    ),
-                    Text(
-                      Utility.currency('120000'),
-                      style: Get.theme.textTheme.caption,
-                    ),
-                  ],
+    bottomSheet: Obx(() {
+      return Material(
+        color: (controller.priceTotal() == 0 || controller.shippingFee() == 0)
+            ? Colors.grey
+            : kPrimaryColor,
+        child: Ink(
+          height: 56,
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: kMediumPadding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Total Bayar',
+                        style: Get.theme.textTheme.caption,
+                      ),
+                      Obx(() {
+                        return Text(
+                          Utility.currency(controller.payTotal().toString()),
+                          style: Get.theme.textTheme.caption,
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            InkWell(
-              onTap: () {
-                Get.toNamed(kOrderCompletePage);
-              },
-              overlayColor: MaterialStateProperty.resolveWith(
-                  (states) => kPrimaryColor400),
-              child: Ink(
-                padding: const EdgeInsets.all(kMediumPadding),
-                child: Row(
-                  children: [
-                    Text(
-                      'Buat Pesanan',
-                      style: Get.theme.textTheme.caption,
-                    ),
-                    const SizedBox(width: 6),
-                    const Icon(
-                      AppIcon.arrowright,
-                      color: kLightColor,
-                      size: 30,
-                    ),
-                  ],
+              InkWell(
+                onTap: (controller.priceTotal() == 0 ||
+                        controller.shippingFee() == 0)
+                    ? null
+                    : () {
+                        Get.toNamed(kOrderCompletePage);
+                      },
+                overlayColor: MaterialStateProperty.resolveWith(
+                    (states) => kPrimaryColor400),
+                child: Ink(
+                  padding: const EdgeInsets.all(kMediumPadding),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Buat Pesanan',
+                        style: Get.theme.textTheme.caption,
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(
+                        AppIcon.arrowright,
+                        color: kLightColor,
+                        size: 30,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
-      ),
-    ),
+      );
+    }),
   );
 }
 
@@ -687,7 +753,9 @@ Widget _deliveryTimePanel({required CheckoutPageController controller}) {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          controller.deliveryTimePanel.close();
+                        },
                         child: Ink(
                           child: const Icon(
                             AppIcon.close,
@@ -709,64 +777,88 @@ Widget _deliveryTimePanel({required CheckoutPageController controller}) {
             return Expanded(
               child: Column(
                 children: [
-                  Container(
-                    color: kBackgroundColor,
-                    padding: const EdgeInsets.all(kBigPadding),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Icon(
-                          AppIcon.infocircle,
-                          color: Colors.amber,
-                        ),
-                        SizedBox(width: kSmallPadding),
-                        Expanded(
-                          child: Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultricies leo sapien, non interdum ligula tempor et.'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   color: kBackgroundColor,
+                  //   padding: const EdgeInsets.all(kBigPadding),
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: const [
+                  //       Icon(
+                  //         AppIcon.infocircle,
+                  //         color: Colors.amber,
+                  //       ),
+                  //       SizedBox(width: kSmallPadding),
+                  //       Expanded(
+                  //         child: Text(
+                  //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultricies leo sapien, non interdum ligula tempor et.'),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   MediaQuery.removePadding(
                     context: context,
                     removeTop: true,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: 4,
-                      separatorBuilder: (context, index) =>
-                          const Divider(height: 1),
-                      itemBuilder: (context, index) {
-                        return Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: (index > 0) ? null : () {},
-                            child: Ink(
-                              padding: const EdgeInsets.all(kBigPadding),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${index}0:00 AM',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 30,
-                                      color: (index == 0)
-                                          ? kDarkColor
-                                          : Colors.grey[300],
-                                    ),
+                    child: Obx(() {
+                      final shippingTimesState =
+                          controller.shippingTimesState();
+
+                      if (shippingTimesState.status == Status.success) {
+                        final List<ShippingTimeEntity> shippingTimes =
+                            shippingTimesState.data!;
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: shippingTimes.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            return Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: (!shippingTimes[index].enable!)
+                                    ? null
+                                    : () {},
+                                child: Ink(
+                                  padding: const EdgeInsets.all(kBigPadding),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        shippingTimes[index].time!,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 30,
+                                          color: (!shippingTimes[index].enable!)
+                                              ? Colors.grey[300]
+                                              : kDarkColor,
+                                        ),
+                                      ),
+                                      // (index == 0)
+                                      //     ? const Icon(AppIcon.checkmarkcircle,
+                                      //         color: kPrimaryColor)
+                                      //     : const SizedBox.shrink(),
+                                    ],
                                   ),
-                                  (index == 0)
-                                      ? const Icon(AppIcon.checkmarkcircle,
-                                          color: kPrimaryColor)
-                                      : const SizedBox.shrink(),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         );
-                      },
-                    ),
+                      }
+
+                      return SizedBox(
+                        height: 400,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            CircularProgressIndicator(),
+                            SizedBox(height: kMediumPadding),
+                            Text('Memuat Jam Pengiriman'),
+                          ],
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),
