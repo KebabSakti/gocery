@@ -4,7 +4,6 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
-import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
 import 'package:gocery/feature/product/domain/entity/index_product_param_entity.dart';
@@ -18,15 +17,14 @@ import 'package:gocery/feature/product/domain/usecase/toggle_product_favourite.d
 
 class ProductDetailPageController extends GetxController {
   ProductDetailPageController({required this.controllerTag}) {
-    cartController = Get.find<CartController>();
-
     addToCartPanelController =
         Get.put(AddToCartPanelController(), tag: controllerTag);
   }
 
   late final String controllerTag;
-  late final CartController cartController;
   late final AddToCartPanelController addToCartPanelController;
+
+  final ProductEntity? argument = Get.arguments;
 
   final ScrollController scrollController = ScrollController();
 
@@ -132,16 +130,14 @@ class ProductDetailPageController extends GetxController {
   }
 
   void init() async {
-    if (Get.arguments != null) {
-      final ProductEntity argument = Get.arguments;
-
+    if (argument != null) {
       statistic(
           param: ProductStatisticParamEntity(
-              productUid: argument.uid, target: 'view'));
+              productUid: argument!.uid, target: 'view'));
 
-      product(uid: argument.uid!);
+      product(uid: argument!.uid!);
 
-      productsSimiliar(uid: argument.categoryUid!);
+      productsSimiliar(uid: argument!.categoryUid!);
     }
   }
 

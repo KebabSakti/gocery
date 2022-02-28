@@ -42,27 +42,25 @@ class SearchAddressPageController extends GetxController {
   }
 
   Future<void> selectAddress({required ShippingAddressEntity param}) async {
-    try {
-      MDialog.loading();
+    MDialog.loading();
 
-      final GoogleMapsGeocoding geocoding =
-          GoogleMapsGeocoding(apiKey: kMapKey);
+    final GoogleMapsGeocoding geocoding = GoogleMapsGeocoding(apiKey: kMapKey);
 
-      GeocodingResponse response =
-          await geocoding.searchByAddress(param.address!);
+    GeocodingResponse response =
+        await geocoding.searchByAddress(param.address!);
 
-      if (response.status == 'OK') {
-        var result = param.copyWith(
-          latitude: response.results[0].geometry.location.lat.toString(),
-          longitude: response.results[0].geometry.location.lng.toString(),
-        );
+    if (response.status == 'OK') {
+      var result = param.copyWith(
+        latitude: response.results[0].geometry.location.lat.toString(),
+        longitude: response.results[0].geometry.location.lng.toString(),
+      );
 
-        Get.back(result: result);
-      }
-    } catch (e) {
-      e;
+      Get.back(result: result, closeOverlays: true);
+    } else {
+      MToast.show(response.errorMessage ??
+          'Terjadi kesalahan, harap coba beberapa saat lagi');
 
-      MToast.close();
+      MDialog.close();
     }
   }
 

@@ -57,7 +57,7 @@ class AddToCartPanelController extends GetxController {
   }
 
   void toCheckoutPage({required CartItemEntity param}) {
-    Get.toNamed(kCheckoutPage, arguments: <CartItemEntity>[param]);
+    Get.toNamed(kCheckoutPage, arguments: [param]);
   }
 
   CartItemEntity _getCartItem({required ProductEntity param}) {

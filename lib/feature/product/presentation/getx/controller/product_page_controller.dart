@@ -4,7 +4,6 @@ import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/scroll_top_button_controller.dart';
-import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:gocery/feature/category/data/model/category_model.dart';
 import 'package:gocery/feature/category/data/repository/category_repository_impl.dart';
 import 'package:gocery/feature/category/domain/entity/category_entity.dart';
@@ -28,8 +27,6 @@ class ProductPageController extends GetxController {
         ScrollTopButtonController(scrollController: scrollController),
         tag: controllerTag);
 
-    cartController = Get.find<CartController>();
-
     addToCartPanelController =
         Get.put(AddToCartPanelController(), tag: controllerTag);
   }
@@ -38,7 +35,6 @@ class ProductPageController extends GetxController {
   late final ScrollController scrollController;
   late final ProductFilterController productFilterController;
   late final ScrollTopButtonController scrollTopButtonController;
-  late final CartController cartController;
   late final AddToCartPanelController addToCartPanelController;
 
   final IndexProductParamModel? argument = Get.arguments;
@@ -121,6 +117,16 @@ class ProductPageController extends GetxController {
       paging(false);
 
       productsState(ResponseModel<ProductPagingEntity>(status: Status.error));
+    }
+  }
+
+  Future<bool> onBackButtonPressed() async {
+    if (addToCartPanelController.panelController.isPanelOpen) {
+      addToCartPanelController.panelController.close();
+
+      return false;
+    } else {
+      return true;
     }
   }
 

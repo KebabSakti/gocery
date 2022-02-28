@@ -4,6 +4,7 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/data/repository/product_repository_impl.dart';
 import 'package:gocery/feature/product/domain/entity/index_product_param_entity.dart';
@@ -18,6 +19,14 @@ import 'package:gocery/feature/search/domain/usecase/index_search.dart';
 import 'package:gocery/feature/search/domain/usecase/suggestion_search.dart';
 
 class SearchPageController extends GetxController {
+  SearchPageController({required this.controllerTag}) {
+    addToCartPanelController =
+        Get.put(AddToCartPanelController(), tag: controllerTag);
+  }
+
+  late final String controllerTag;
+  late final AddToCartPanelController addToCartPanelController;
+
   final searchField = TextEditingController();
 
   final _indexSearch =
