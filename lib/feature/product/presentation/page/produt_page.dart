@@ -14,16 +14,17 @@ import 'package:gocery/feature/product/presentation/widget/product_filter.dart';
 import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 
 class ProductPage extends StatelessWidget {
-  const ProductPage({Key? key}) : super(key: key);
+  ProductPage({Key? key}) : super(key: key) {
+    controller = Get.put(ProductPageController(controllerTag: controllerTag),
+        tag: controllerTag);
+  }
+
+  final String controllerTag = Utility.randomUid();
+
+  late final ProductPageController controller;
 
   @override
   Widget build(BuildContext context) {
-    String controllerTag = Utility.randomUid();
-
-    final controller = Get.put(
-        ProductPageController(controllerTag: controllerTag),
-        tag: controllerTag);
-
     return Obx(() {
       final categoryState = controller.categoriesState();
 

@@ -14,16 +14,17 @@ import 'package:gocery/feature/product/presentation/widget/product_item.dart';
 import 'package:gocery/feature/search/presentation/getx/controller/search_page_controller.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  SearchPage({Key? key}) : super(key: key) {
+    controller = Get.put(SearchPageController(controllerTag: controllerTag),
+        tag: controllerTag);
+  }
+
+  late final SearchPageController controller;
+
+  final String controllerTag = Utility.randomUid();
 
   @override
   Widget build(BuildContext context) {
-    String controllerTag = Utility.randomUid();
-
-    final SearchPageController controller = Get.put(
-        SearchPageController(controllerTag: controllerTag),
-        tag: controllerTag);
-
     return RefreshIndicator(
       onRefresh: () async {
         controller.init();

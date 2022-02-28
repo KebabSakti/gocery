@@ -77,15 +77,15 @@ class AppRoute {
     ),
     GetPage(
       name: kSearchPage,
-      page: () => const SearchPage(),
+      page: () => SearchPage(),
     ),
     GetPage(
       name: kProductDetailPage,
-      page: () => const ProductDetailPage(),
+      page: () => ProductDetailPage(),
     ),
     GetPage(
       name: kProductPage,
-      page: () => const ProductPage(),
+      page: () => ProductPage(),
     ),
     GetPage(
       name: kCheckoutPage,
