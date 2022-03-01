@@ -637,10 +637,14 @@ class _HomePageState extends State<HomePage>
                 })
               ],
             ),
-            const Positioned(
-                bottom: 10,
-                right: 10,
-                child: ScrollTopButton(controllerKey: 'HomePage')),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: ScrollTopButton(
+                controllerKey: 'HomePage',
+                scrollController: controller.scrollController,
+              ),
+            ),
           ],
         ),
       ),

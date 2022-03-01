@@ -37,10 +37,6 @@ class HomePageController extends GetxController {
     productFilterController =
         Get.put(ProductFilterController(), tag: 'HomePage');
 
-    scrollTopButtonController = Get.put(
-        ScrollTopButtonController(scrollController: scrollController),
-        tag: 'HomePage');
-
     cartController = Get.find<CartController>();
 
     addToCartPanelController =

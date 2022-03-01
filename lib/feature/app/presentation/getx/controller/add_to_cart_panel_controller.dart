@@ -57,6 +57,10 @@ class AddToCartPanelController extends GetxController {
   }
 
   void toCheckoutPage({required CartItemEntity param}) {
+    cartController.removeCartItem(param: param);
+
+    panelController.close();
+
     Get.toNamed(kCheckoutPage, arguments: [param]);
   }
 

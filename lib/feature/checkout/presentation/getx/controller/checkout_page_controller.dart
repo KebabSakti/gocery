@@ -3,7 +3,10 @@ import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/core/utility/utility.dart';
+import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
+import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
+import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 import 'package:gocery/feature/checkout/data/repository/order_repository_impl.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entity.dart';
@@ -11,12 +14,16 @@ import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dar
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_time_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/voucher_entity.dart';
+import 'package:gocery/feature/checkout/domain/usecase/get_default_payment_channel.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_last_address.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_order_shipping.dart';
+import 'package:gocery/feature/checkout/domain/usecase/get_payment_channel.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_shipping_times.dart';
+import 'package:gocery/feature/checkout/domain/usecase/get_vouchers.dart';
 import 'package:gocery/feature/customer/data/repository/customer_repository_impl.dart';
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
+import 'package:gocery/feature/product/data/model/product_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -25,6 +32,7 @@ class CheckoutPageController extends GetxController {
 
   final PanelController deliveryTimePanel = PanelController();
   final PanelController paymentChannelPanel = PanelController();
+  final PanelController voucherPanel = PanelController();
 
   final _getLastAddress =
       GetLastAddress(repository: Get.find<OrderRepositoryImpl>());
@@ -34,6 +42,11 @@ class CheckoutPageController extends GetxController {
       ShowCustomerAccount(repository: Get.find<CustomerRepositoryImpl>());
   final _getShippingTimes =
       GetShippingTimes(repository: Get.find<OrderRepositoryImpl>());
+  final _getChannelState =
+      GetPaymentChannel(repository: Get.find<OrderRepositoryImpl>());
+  final _getDefaultPayment =
+      GetDefaultPaymentChannel(repository: Get.find<OrderRepositoryImpl>());
+  final _getVouchers = GetVouchers(repository: Get.find<OrderRepositoryImpl>());
 
   final addressState =
       ResponseModel<ShippingAddressEntity>(status: Status.loading).obs;
@@ -43,8 +56,12 @@ class CheckoutPageController extends GetxController {
       ResponseModel<CustomerAccountEntity>(status: Status.loading).obs;
   final shippingTimesState =
       ResponseModel<List<ShippingTimeEntity>>(status: Status.loading).obs;
-  final Rx<PaymentChannelEntity?> paymentChannelState = null.obs;
-  final Rx<VoucherEntity?> voucherState = null.obs;
+  final channelState =
+      ResponseModel<List<PaymentChannelEntity>>(status: Status.loading).obs;
+  final defaultChannelState =
+      ResponseModel<PaymentChannelEntity>(status: Status.loading).obs;
+  final voucherState =
+      ResponseModel<List<VoucherEntity>>(status: Status.loading).obs;
 
   final priceTotal = 0.0.obs;
   final shippingFee = 0.0.obs;
@@ -52,7 +69,6 @@ class CheckoutPageController extends GetxController {
   final voucher = 0.0.obs;
   final point = 0.0.obs;
   final payTotal = 0.0.obs;
-
   final checkbox = false.obs;
 
   Future<void> setAddressState() async {
@@ -139,6 +155,55 @@ class CheckoutPageController extends GetxController {
     }
   }
 
+  Future<void> setChannelState() async {
+    try {
+      channelState(
+          ResponseModel<List<PaymentChannelEntity>>(status: Status.loading));
+
+      List<PaymentChannelEntity> models = await _getChannelState();
+
+      channelState(ResponseModel<List<PaymentChannelEntity>>(
+          status: Status.success, data: models));
+    } catch (e) {
+      MToast.show('Gagal memuat metode pembayaran');
+
+      channelState(
+          ResponseModel<List<PaymentChannelEntity>>(status: Status.error));
+    }
+  }
+
+  Future<void> setDefaultChannelState() async {
+    try {
+      defaultChannelState(
+          ResponseModel<PaymentChannelEntity>(status: Status.loading));
+
+      PaymentChannelEntity model = await _getDefaultPayment();
+
+      defaultChannelState(ResponseModel<PaymentChannelEntity>(
+          status: Status.success, data: model));
+    } catch (e) {
+      MToast.show('Gagal memuat metode pembayaran');
+
+      defaultChannelState(
+          ResponseModel<PaymentChannelEntity>(status: Status.error));
+    }
+  }
+
+  Future<void> setVoucherState() async {
+    try {
+      voucherState(ResponseModel<List<VoucherEntity>>(status: Status.loading));
+
+      List<VoucherEntity> models = await _getVouchers();
+
+      voucherState(ResponseModel<List<VoucherEntity>>(
+          status: Status.success, data: models));
+    } catch (e) {
+      MToast.show('Gagal memuat voucher');
+
+      voucherState(ResponseModel<List<VoucherEntity>>(status: Status.error));
+    }
+  }
+
   void setCheckbox({bool? value}) {
     if (value != null) {
       checkbox(value);
@@ -146,15 +211,105 @@ class CheckoutPageController extends GetxController {
   }
 
   void setAddressNote({required String note}) {
-    addressState(
-      addressState().copyWith(data: addressState().data!.copyWith(note: note)),
-    );
+    if (note.isNotEmpty) {
+      addressState(
+        addressState()
+            .copyWith(data: addressState().data!.copyWith(note: note)),
+      );
+    }
   }
 
-  void openDeliveryTimerPanel() async {
+  void setShippingTime({required String time}) {
+    List<OrderShippingEntity> models = orderShippingState().data!;
+
+    int index = models.indexWhere((element) => element.shipping == 'TERJADWAL');
+
+    if (index >= 0) {
+      models[index] = OrderShippingModel(
+        address: models[index].address,
+        distance: models[index].distance,
+        distanceUnit: models[index].distanceUnit,
+        latitude: models[index].latitude,
+        longitude: models[index].longitude,
+        name: models[index].name,
+        online: models[index].online,
+        phone: models[index].phone,
+        price: models[index].price,
+        shipping: models[index].shipping,
+        type: models[index].type,
+        uid: models[index].uid,
+        time: time,
+      );
+
+      orderShippingState(orderShippingState().copyWith(data: models));
+
+      deliveryTimePanel.close();
+    }
+  }
+
+  void setCartItemNote({required CartItemEntity param}) {
+    int index = cartItems
+        .indexWhere((element) => element.productUid == param.productUid);
+
+    if (index >= 0) {
+      cartItems[index] = CartItemModel(
+        customerAccountUid: cartItems[index].customerAccountUid,
+        itemPriceTotal: cartItems[index].itemPriceTotal,
+        itemQtyTotal: cartItems[index].itemQtyTotal,
+        productModel: cartItems[index].productModel as ProductModel,
+        productUid: cartItems[index].productUid,
+        uid: cartItems[index].uid,
+        note: param.note,
+      );
+    }
+  }
+
+  void setPayment({required PaymentChannelEntity param}) {
+    defaultChannelState(defaultChannelState().copyWith(data: param));
+
+    paymentChannelPanel.close();
+  }
+
+  void setVoucher({required VoucherEntity param}) {
+    List<VoucherEntity> models = voucherState().data!;
+
+    int index = models.indexWhere((element) => element.uid == param.uid);
+
+    if (index >= 0) {
+      models[index] = VoucherModel(
+        amount: param.amount,
+        code: param.code,
+        description: param.description,
+        expiredAt: param.expiredAt,
+        image: param.image,
+        max: param.max,
+        minOrder: param.minOrder,
+        startAt: param.startAt,
+        title: param.title,
+        uid: param.uid,
+        selected: param.selected,
+      );
+
+      voucherState(voucherState().copyWith(data: models));
+    }
+  }
+
+  void openDeliveryTimePanel() {
     setShippingTimesState();
 
     deliveryTimePanel.open();
+  }
+
+  void openPaymentChannelPanel() {
+    setChannelState();
+
+    paymentChannelPanel.open();
+  }
+
+  void openVoucherPanel() {
+    // setVoucherState();
+
+    voucherPanel.open();
   }
 
   double _totalShipping() {
@@ -177,26 +332,34 @@ class CheckoutPageController extends GetxController {
   }
 
   double _totalAppFee() {
-    if (paymentChannelState() == null) {
+    if (defaultChannelState().data == null) {
       return 0.0;
     }
 
-    if (paymentChannelState()!.feeType == 'fix') {
-      return double.parse(paymentChannelState()!.fee!);
+    if (defaultChannelState().data!.feeType == 'fix') {
+      return double.parse(defaultChannelState().data!.fee!);
     }
 
-    double total = (double.parse(paymentChannelState()!.fee!) / 100) *
+    double total = (double.parse(defaultChannelState().data!.fee!) / 100) *
         (_totalCartItem() + _totalShipping());
 
     return total;
   }
 
   double _totalVoucher() {
-    if (voucherState() == null) {
+    if (voucherState().data == null) {
       return 0.0;
     }
 
-    return double.parse(voucherState()!.amount!);
+    List<VoucherEntity> selectedVouchers = voucherState()
+        .data!
+        .where((element) => element.selected == true)
+        .toList();
+
+    double total = selectedVouchers.fold(
+        0, (sum, item) => sum + double.parse(item.amount!));
+
+    return total;
   }
 
   double _totalPoint() {
@@ -219,7 +382,9 @@ class CheckoutPageController extends GetxController {
     voucher(_totalVoucher());
     point(_totalPoint());
 
-    payTotal(pay);
+    double total = pay.isNegative ? 0.0 : pay;
+
+    payTotal(total);
   }
 
   void toDeliveryAddressPage() async {
@@ -244,7 +409,13 @@ class CheckoutPageController extends GetxController {
       paymentChannelPanel.close();
     }
 
-    if (paymentChannelPanel.isPanelClosed && deliveryTimePanel.isPanelClosed) {
+    if (voucherPanel.isPanelOpen) {
+      voucherPanel.close();
+    }
+
+    if (paymentChannelPanel.isPanelClosed &&
+        deliveryTimePanel.isPanelClosed &&
+        voucherPanel.isPanelClosed) {
       return true;
     }
 
@@ -260,7 +431,7 @@ class CheckoutPageController extends GetxController {
       _calculateTotal();
     });
 
-    ever(paymentChannelState, (_) {
+    ever(defaultChannelState, (_) {
       _calculateTotal();
     });
 
@@ -280,7 +451,11 @@ class CheckoutPageController extends GetxController {
   void init() {
     setAddressState();
 
+    setDefaultChannelState();
+
     setCustomerPoint();
+
+    setVoucherState();
   }
 
   @override

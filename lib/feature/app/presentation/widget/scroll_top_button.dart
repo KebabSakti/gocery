@@ -4,14 +4,20 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/scroll_top_button_controller.dart';
 
-class ScrollTopButton extends GetView<ScrollTopButtonController> {
-  const ScrollTopButton({Key? key, required this.controllerKey})
-      : super(key: key);
+class ScrollTopButton extends StatelessWidget {
+  ScrollTopButton({
+    Key? key,
+    required this.controllerKey,
+    required this.scrollController,
+  }) : super(key: key) {
+    controller = Get.put(
+        ScrollTopButtonController(scrollController: scrollController),
+        tag: controllerKey);
+  }
 
   final String controllerKey;
-
-  @override
-  String? get tag => controllerKey;
+  final ScrollController scrollController;
+  late final ScrollTopButtonController controller;
 
   @override
   Widget build(BuildContext context) {

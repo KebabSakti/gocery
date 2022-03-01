@@ -174,10 +174,13 @@ class ProductPage extends StatelessWidget {
                               ],
                             ),
                             Positioned(
-                                bottom: 10,
-                                right: 10,
-                                child: ScrollTopButton(
-                                    controllerKey: controller.controllerTag)),
+                              bottom: 10,
+                              right: 10,
+                              child: ScrollTopButton(
+                                controllerKey: controller.controllerTag,
+                                scrollController: controller.scrollController,
+                              ),
+                            ),
                           ],
                         ),
                       ),

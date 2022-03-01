@@ -15,6 +15,7 @@ class VoucherModel extends VoucherEntity {
   VoucherModel({
     String? uid,
     String? title,
+    String? code,
     String? description,
     String? image,
     int? max,
@@ -22,9 +23,11 @@ class VoucherModel extends VoucherEntity {
     String? minOrder,
     String? startAt,
     String? expiredAt,
+    bool? selected,
   }) : super(
           uid: uid,
           title: title,
+          code: code,
           description: description,
           image: image,
           max: max,
@@ -32,11 +35,13 @@ class VoucherModel extends VoucherEntity {
           minOrder: minOrder,
           startAt: startAt,
           expiredAt: expiredAt,
+          selected: selected,
         );
 
   factory VoucherModel.fromJson(Map<String, dynamic> json) => VoucherModel(
         uid: json["uid"],
         title: json["title"],
+        code: json["code"],
         description: json["description"],
         image: json["image"],
         max: json["max"],
@@ -44,11 +49,13 @@ class VoucherModel extends VoucherEntity {
         minOrder: json["min_order"],
         startAt: json["start_at"],
         expiredAt: json["expired_at"],
+        selected: json["selected"],
       );
 
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "title": title,
+        "code": code,
         "description": description,
         "image": image,
         "max": max,
@@ -56,5 +63,6 @@ class VoucherModel extends VoucherEntity {
         "min_order": minOrder,
         "start_at": startAt,
         "expired_at": expiredAt,
+        "selected": selected,
       };
 }

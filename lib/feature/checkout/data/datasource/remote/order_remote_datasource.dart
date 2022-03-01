@@ -8,9 +8,11 @@ import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/checkout/data/datasource/order_datasource.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
+import 'package:gocery/feature/checkout/data/model/payment_channel_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_address_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_time_model.dart';
+import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 
 class OrderRemoteDatasource implements OrderDatasource {
   OrderRemoteDatasource({required this.client});
@@ -65,9 +67,50 @@ class OrderRemoteDatasource implements OrderDatasource {
   }
 
   @override
+  Future<List<PaymentChannelModel>> getPaymentChannels() async {
+    try {
+      final response = await client.get(kOrderPaymentChannel);
+
+      final List<PaymentChannelModel> models =
+          await compute(_paymentChannels, response.toString());
+
+      return models;
+    } on DioError catch (exception, stackTrace) {
+      throw NetworkException(exception, stackTrace);
+    }
+  }
+
+  @override
+  Future<PaymentChannelModel> getDefaultPaymentChannel() async {
+    try {
+      final response = await client.get(kOrderDefaultPaymentChannel);
+
+      final PaymentChannelModel model =
+          await compute(paymentChannelModelFromJson, response.toString());
+
+      return model;
+    } on DioError catch (exception, stackTrace) {
+      throw NetworkException(exception, stackTrace);
+    }
+  }
+
+  @override
+  Future<List<VoucherModel>> getVouchers() async {
+    try {
+      final response = await client.get(kOrderVoucher);
+
+      final List<VoucherModel> models =
+          await compute(_vouchers, response.toString());
+
+      return models;
+    } on DioError catch (exception, stackTrace) {
+      throw NetworkException(exception, stackTrace);
+    }
+  }
+
+  @override
   Future<void> submitOrder({required OrderModel param}) async {
-    // TODO: implement submitOrder
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 }
 
@@ -85,6 +128,24 @@ List<ShippingTimeModel> _orderTimes(dynamic data) {
 
   List<ShippingTimeModel> datas = List<ShippingTimeModel>.from(
       parsed.map((item) => ShippingTimeModel.fromJson(item)));
+
+  return datas;
+}
+
+List<PaymentChannelModel> _paymentChannels(dynamic data) {
+  var parsed = jsonDecode(data);
+
+  List<PaymentChannelModel> datas = List<PaymentChannelModel>.from(
+      parsed.map((item) => PaymentChannelModel.fromJson(item)));
+
+  return datas;
+}
+
+List<VoucherModel> _vouchers(dynamic data) {
+  var parsed = jsonDecode(data);
+
+  List<VoucherModel> datas = List<VoucherModel>.from(
+      parsed.map((item) => VoucherModel.fromJson(item)));
 
   return datas;
 }

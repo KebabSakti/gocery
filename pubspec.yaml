@@ -51,7 +51,7 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 flutter_native_splash:
-  color: "#4caf50"
+  color: "#64BA02"
   image: asset/image/ui/splash.png
 
 flutter_icons:

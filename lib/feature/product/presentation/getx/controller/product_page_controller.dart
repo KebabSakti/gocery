@@ -23,10 +23,6 @@ class ProductPageController extends GetxController {
     productFilterController =
         Get.put(ProductFilterController(), tag: controllerTag);
 
-    scrollTopButtonController = Get.put(
-        ScrollTopButtonController(scrollController: scrollController),
-        tag: controllerTag);
-
     addToCartPanelController =
         Get.put(AddToCartPanelController(), tag: controllerTag);
   }

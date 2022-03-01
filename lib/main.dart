@@ -6,10 +6,18 @@ import 'package:gocery/core/config/app_route.dart';
 import 'package:gocery/core/config/app_theme.dart';
 import 'package:gocery/dependency.dart';
 import 'package:gocery/firebase_options.dart';
+
+import 'core/service/network/dio_client.dart';
+import 'core/service/network/network.dart';
+import 'core/service/storage/secure_storage_client.dart';
+import 'core/service/storage/storage.dart';
 // import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initServices();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -45,4 +53,9 @@ class Gocery extends StatelessWidget {
       initialRoute: kIntroPage,
     );
   }
+}
+
+Future initServices() async {
+  Get.put(SecureStorageImpl(SecureStorageClient()));
+  Get.put(NetworkImpl(DioClient()));
 }

@@ -45,7 +45,7 @@ class OrderEntity {
   final PaymentChannelEntity? paymentChannelEntity;
   final ShippingAddressEntity? shippingAddressEntity;
   final OrderItemEntity? orderItemEntity;
-  final VoucherEntity? voucherEntity;
+  final List<VoucherEntity>? voucherEntity;
   final ShippingDetailEntity? shippingDetailEntity;
   final List<OrderShippingEntity>? orderShippingEntity;
   final List<CartItemEntity>? cartItemEntity;
@@ -66,7 +66,7 @@ class OrderEntity {
     PaymentChannelEntity? paymentChannelEntity,
     ShippingAddressEntity? shippingAddressEntity,
     OrderItemEntity? orderItemEntity,
-    VoucherEntity? voucherEntity,
+    List<VoucherEntity>? voucherEntity,
     ShippingDetailEntity? shippingDetailEntity,
     List<OrderShippingEntity>? orderShippingEntity,
     List<CartItemEntity>? cartItemEntity,

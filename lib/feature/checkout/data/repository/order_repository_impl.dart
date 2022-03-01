@@ -2,9 +2,11 @@ import 'package:gocery/feature/checkout/data/datasource/order_datasource.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_time_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/voucher_entity.dart';
 import 'package:gocery/feature/checkout/domain/repository/order_repository.dart';
 
 class OrderRepositoryImpl implements OrderRepository {
@@ -27,6 +29,21 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<List<ShippingTimeEntity>> getShippingTimes() async {
     return await datasource.getShippingTimes();
+  }
+
+  @override
+  Future<List<PaymentChannelEntity>> getPaymentChannels() async {
+    return await datasource.getPaymentChannels();
+  }
+
+  @override
+  Future<PaymentChannelEntity> getDefaultPaymentChannel() async {
+    return await datasource.getDefaultPaymentChannel();
+  }
+
+  @override
+  Future<List<VoucherEntity>> getVouchers() async {
+    return await datasource.getVouchers();
   }
 
   @override

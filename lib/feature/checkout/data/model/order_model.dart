@@ -36,7 +36,7 @@ class OrderModel extends OrderEntity {
     PaymentChannelModel? paymentChannelModel,
     ShippingAddressModel? shippingAddressModel,
     OrderItemModel? orderItemModel,
-    VoucherModel? voucherModel,
+    List<VoucherModel>? voucherModel,
     ShippingDetailModel? shippingDetailModel,
     List<OrderShippingModel>? orderShippingModel,
     List<CartItemModel>? cartItemModel,
@@ -80,7 +80,8 @@ class OrderModel extends OrderEntity {
         shippingAddressModel:
             ShippingAddressModel.fromJson(json["shipping_address_model"]),
         orderItemModel: OrderItemModel.fromJson(json["order_item_model"]),
-        voucherModel: VoucherModel.fromJson(json["voucher_model"]),
+        voucherModel: List<VoucherModel>.from(
+            json["voucher_model"].map((x) => VoucherModel.fromJson(x))),
         shippingDetailModel:
             ShippingDetailModel.fromJson(json["shipping_detail_model"]),
         orderShippingModel: List<OrderShippingModel>.from(
@@ -108,7 +109,8 @@ class OrderModel extends OrderEntity {
         "shipping_address_model":
             (shippingAddressEntity as ShippingAddressModel).toJson(),
         "order_item_model": (orderItemEntity as OrderItemModel).toJson(),
-        "voucher_model": (voucherEntity as VoucherModel).toJson(),
+        "voucher_model": List<VoucherModel>.from(
+            (voucherEntity as List<VoucherModel>).map((x) => x.toJson())),
         "shipping_detail_model":
             (shippingDetailEntity as ShippingDetailModel).toJson(),
         "order_shipping_model": List<OrderShippingModel>.from(

@@ -57,11 +57,15 @@ const String kCartClear = 'customer/carts';
 const String kAddressLast = 'customer/orders/addresses';
 const String kOrderFee = 'customer/orders/fees';
 const String kOrderTime = 'customer/orders/times';
+const String kOrderPaymentChannel = 'customer/payments/channels';
+const String kOrderDefaultPaymentChannel = 'customer/payments/channels/default';
+const String kOrderVoucher = 'customer/vouchers';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';
 const String kGoceryLogoTop = 'asset/image/ui/gocery_logo_top_clean.svg';
 const String kGoceryLogoSide = 'asset/image/ui/gocery_logo_side_clean.svg';
+const String kGoceryLogoWhite = 'asset/image/ui/splash.png';
 const String kFacebookLogo = 'asset/image/ui/facebook_clean.svg';
 const String kGoogleLogo = 'asset/image/ui/google_clean.svg';
 const String kCoinIcon = 'asset/image/ui/coin.svg';

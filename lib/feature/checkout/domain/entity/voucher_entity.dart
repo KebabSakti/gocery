@@ -2,6 +2,7 @@ class VoucherEntity {
   VoucherEntity({
     this.uid,
     this.title,
+    this.code,
     this.description,
     this.image,
     this.max,
@@ -9,10 +10,12 @@ class VoucherEntity {
     this.minOrder,
     this.startAt,
     this.expiredAt,
+    this.selected,
   });
 
   final String? uid;
   final String? title;
+  final String? code;
   final String? description;
   final String? image;
   final int? max;
@@ -20,10 +23,12 @@ class VoucherEntity {
   final String? minOrder;
   final String? startAt;
   final String? expiredAt;
+  final bool? selected;
 
   VoucherEntity copyWith({
     String? uid,
     String? title,
+    String? code,
     String? description,
     String? image,
     int? max,
@@ -31,10 +36,12 @@ class VoucherEntity {
     String? minOrder,
     String? startAt,
     String? expiredAt,
+    bool? selected,
   }) =>
       VoucherEntity(
         uid: uid ?? this.uid,
         title: title ?? this.title,
+        code: code ?? this.code,
         description: description ?? this.description,
         image: image ?? this.image,
         max: max ?? this.max,
@@ -42,5 +49,6 @@ class VoucherEntity {
         minOrder: minOrder ?? this.minOrder,
         startAt: startAt ?? this.startAt,
         expiredAt: expiredAt ?? this.expiredAt,
+        selected: selected ?? this.selected,
       );
 }

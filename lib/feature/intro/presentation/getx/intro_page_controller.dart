@@ -6,12 +6,6 @@ import 'package:gocery/feature/authentication/domain/usecase/authentication_usec
 class IntroPageController extends GetxController {
   final _authenticationUsecase = AuthenticationUsecase();
 
-  Future _init() async {
-    await _cacheAsset();
-
-    _authState();
-  }
-
   void _authState() {
     _authenticationUsecase.listener(
       userIsLoggedIn: (status) {
@@ -64,6 +58,12 @@ class IntroPageController extends GetxController {
         null,
       ),
     ]);
+  }
+
+  Future _init() async {
+    await _cacheAsset();
+
+    _authState();
   }
 
   @override
