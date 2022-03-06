@@ -6,16 +6,14 @@ import 'package:gocery/feature/authentication/domain/usecase/authentication_usec
 class IntroPageController extends GetxController {
   final _authenticationUsecase = AuthenticationUsecase();
 
-  void _authState() {
-    _authenticationUsecase.listener(
-      userIsLoggedIn: (status) {
-        if (status) {
-          Get.offAllNamed(kAppPage);
-        } else {
-          Get.offAllNamed(kLandingPage);
-        }
-      },
-    );
+  void _authState() async {
+    try {
+      await _authenticationUsecase.validateUser();
+
+      Get.offAllNamed(kAppPage);
+    } catch (_) {
+      Get.offAllNamed(kLoginPage);
+    }
   }
 
   Future _cacheAsset() async {

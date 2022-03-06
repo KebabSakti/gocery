@@ -1,11 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:gocery/core/service/error/auth_exception.dart';
-import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
-import 'package:gocery/core/param/auth_register_param.dart';
 import 'package:gocery/feature/authentication/data/datasource/local/auth_local_datasource.dart';
 import 'package:gocery/feature/authentication/data/datasource/remote/auth_remote_datasource.dart';
 import 'package:gocery/feature/authentication/data/model/authentication_model.dart';
@@ -25,23 +22,6 @@ class AuthRepositoryImpl implements AuthRepository {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
-  Future<void> registerUser({required AuthRegisterParam param}) async {
-    UserCredential userCredential =
-        await _firebaseAuth.createUserWithEmailAndPassword(
-      email: param.email!,
-      password: param.password!,
-    );
-
-    AuthenticationModel authenticationModel = await remoteDatasource.register(
-      param: param.copyWith(
-        token: await userCredential.user?.getIdToken(),
-      ),
-    );
-
-    localDatasource.saveAuthToken(token: authenticationModel.token!);
-  }
-
-  @override
   Future<void> facebookLogin() async {
     final LoginResult loginResult = await _facebookAuth.login();
 
@@ -52,10 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    final UserCredential? userCredential =
-        await _signinWithCredential(facebookAuthCredential);
-
-    await _grantAccess(userCredential: userCredential!);
+    await _grantUserAccess(credential: facebookAuthCredential);
   }
 
   @override
@@ -74,10 +51,7 @@ class AuthRepositoryImpl implements AuthRepository {
       idToken: googleAuth.idToken,
     );
 
-    final UserCredential? userCredential =
-        await _signinWithCredential(googleAuthCredential);
-
-    await _grantAccess(userCredential: userCredential!);
+    await _grantUserAccess(credential: googleAuthCredential);
   }
 
   @override
@@ -92,10 +66,7 @@ class AuthRepositoryImpl implements AuthRepository {
       forceResendingToken: param.resendToken,
       codeAutoRetrievalTimeout: (String verificationId) {},
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
-        final UserCredential? userCredential =
-            await _signinWithCredential(phoneAuthCredential);
-
-        await _grantAccess(userCredential: userCredential!);
+        await _grantUserAccess(credential: phoneAuthCredential);
 
         successCallback();
       },
@@ -112,10 +83,15 @@ class AuthRepositoryImpl implements AuthRepository {
       smsCode: param.otpCode!,
     );
 
-    final UserCredential? userCredential =
-        await _signinWithCredential(phoneAuthCredential);
+    await _grantUserAccess(credential: phoneAuthCredential);
+  }
 
-    await _grantAccess(userCredential: userCredential!);
+  @override
+  Future<void> validateUser() async {
+    final AuthenticationModel model = await remoteDatasource.access(
+        token: await _firebaseAuth.currentUser!.getIdToken());
+
+    await localDatasource.saveAuthToken(token: model.token!);
   }
 
   @override
@@ -127,37 +103,13 @@ class AuthRepositoryImpl implements AuthRepository {
     await localDatasource.deleteAuthToken();
   }
 
-  Future<UserCredential?> _signinWithCredential(
-      AuthCredential credential) async {
-    try {
-      return await _firebaseAuth.signInWithCredential(credential);
-    } on FirebaseAuthException catch (exception, stackTrace) {
-      throw AuthException(exception, stackTrace);
-    }
-  }
+  Future<void> _grantUserAccess({required AuthCredential credential}) async {
+    final UserCredential userCredential =
+        await _firebaseAuth.signInWithCredential(credential);
 
-  Future<void> _grantAccess({required UserCredential userCredential}) async {
-    try {
-      final AuthenticationModel model = await remoteDatasource.access(
-          token: await userCredential.user!.getIdToken());
+    final AuthenticationModel model = await remoteDatasource.access(
+        token: await userCredential.user!.getIdToken());
 
-      await localDatasource.saveAuthToken(token: model.token!);
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
-  }
-
-  @override
-  void authState({required void Function(bool status) userIsLoggedIn}) async {
-    try {
-      final AuthenticationModel model = await remoteDatasource.access(
-          token: await _firebaseAuth.currentUser!.getIdToken());
-
-      await localDatasource.saveAuthToken(token: model.token!);
-
-      userIsLoggedIn(true);
-    } catch (e, _) {
-      userIsLoggedIn(false);
-    }
+    await localDatasource.saveAuthToken(token: model.token!);
   }
 }

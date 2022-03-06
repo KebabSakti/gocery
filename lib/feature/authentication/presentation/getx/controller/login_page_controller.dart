@@ -22,10 +22,6 @@ class LoginPageController extends GetxController {
 
   String phoneField = '';
 
-  void forgotPasswordPressed() {
-    Get.toNamed(kForgotPasswordPage);
-  }
-
   void phoneLoginPressed() async {
     try {
       if (phoneField.isEmpty) {
@@ -71,12 +67,6 @@ class LoginPageController extends GetxController {
       MToast.show(Utility.errorMessage(e));
     }
   }
-
-  void registerPressed() {
-    Get.toNamed(kRegisterPage);
-  }
-
-  void emailLoginPressed() async {}
 
   void facebookLoginPressed() async {
     try {
