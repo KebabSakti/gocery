@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:gocery/core/service/error/auth_exception.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
 import 'package:gocery/feature/authentication/data/datasource/local/auth_local_datasource.dart';
@@ -104,12 +105,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   Future<void> _grantUserAccess({required AuthCredential credential}) async {
-    final UserCredential userCredential =
-        await _firebaseAuth.signInWithCredential(credential);
+    try {
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
 
-    final AuthenticationModel model = await remoteDatasource.access(
-        token: await userCredential.user!.getIdToken());
+      final AuthenticationModel model = await remoteDatasource.access(
+          token: await userCredential.user!.getIdToken());
 
-    await localDatasource.saveAuthToken(token: model.token!);
+      await localDatasource.saveAuthToken(token: model.token!);
+    } on FirebaseAuthException catch (e, s) {
+      throw AuthException(e, s);
+    }
   }
 }

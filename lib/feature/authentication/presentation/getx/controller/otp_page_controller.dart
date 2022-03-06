@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
-import 'package:gocery/core/service/error/failure.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
+import 'package:gocery/core/service/error/map_exception_message.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
@@ -19,7 +21,7 @@ class OtpPageController extends GetxController {
   void sendPressed() async {
     try {
       if (otpCode.length < 6) {
-        throw Failure('Kode OTP memerlukan 6 digit angka');
+        throw OtpCodeToShort();
       }
 
       MDialog.loading();
@@ -32,14 +34,10 @@ class OtpPageController extends GetxController {
       );
 
       Get.offAllNamed(kAppPage);
-    } catch (e) {
+    } on Exception catch (e) {
       MDialog.close();
 
-      if (e is Failure) {
-        MToast.show(e.message);
-      } else {
-        MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
-      }
+      MToast.show(MapExceptionMessage.exception(e));
     }
   }
 
@@ -61,10 +59,10 @@ class OtpPageController extends GetxController {
       verificationFailed: (Exception e) {
         MDialog.close();
 
-        if (e is Failure) {
-          MToast.show(e.message);
+        if (e is FirebaseAuthException) {
+          MToast.show(MapExceptionMessage.exception(InvalidPhoneNumber()));
         } else {
-          MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
+          MToast.show(MapExceptionMessage.exception(Exception()));
         }
       },
       codeSent: (verificationId, resendToken) {

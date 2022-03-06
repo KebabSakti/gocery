@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:geocoding/geocoding.dart';
-import 'package:gocery/core/service/error/auth_exception.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:intl/intl.dart';

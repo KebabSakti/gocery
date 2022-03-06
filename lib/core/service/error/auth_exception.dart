@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gocery/core/service/error/base_exception.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
 
 class AuthException extends BaseException {
   AuthException(FirebaseAuthException exception, StackTrace stackTrace)
@@ -16,11 +17,3 @@ class AuthException extends BaseException {
     }
   }
 }
-
-class UserDisabled implements Exception {}
-
-class InvalidOtpCode implements Exception {}
-
-class InvalidPhoneNumber implements Exception {}
-
-class LoginProviderNotSelected implements Exception {}

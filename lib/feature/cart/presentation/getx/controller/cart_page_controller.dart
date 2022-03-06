@@ -2,6 +2,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/error/business_exception.dart';
+import 'package:gocery/core/service/error/map_exception_message.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
@@ -33,6 +34,6 @@ class CartPageController extends GetxController {
   }
 
   _orderLimit() {
-    MToast.show('Produk melebihi limit order');
+    MToast.show(MapExceptionMessage.exception(MaxOrderLimit()));
   }
 }

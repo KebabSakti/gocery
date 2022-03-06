@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:dio/adapter.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/core/service/storage/storage.dart';
 
@@ -59,33 +60,57 @@ class DioClient implements Network {
 
   @override
   Future get(String path, {Map<String, dynamic>? query}) async {
-    return await _dio.get(path, queryParameters: query);
+    try {
+      return await _dio.get(path, queryParameters: query);
+    } on dio.DioError catch (e, s) {
+      throw NetworkException(e, s);
+    }
   }
 
   @override
   Future post(String path,
       {required dynamic data, Map<String, dynamic>? query}) async {
-    return await _dio.post(path, data: data, queryParameters: query);
+    try {
+      return await _dio.post(path, data: data, queryParameters: query);
+    } on dio.DioError catch (e, s) {
+      throw NetworkException(e, s);
+    }
   }
 
   @override
   Future download(String path, {String? savePath}) async {
-    return await _dio.download(path, savePath);
+    try {
+      return await _dio.download(path, savePath);
+    } on dio.DioError catch (e, s) {
+      throw NetworkException(e, s);
+    }
   }
 
   @override
   Future upload(String path, {required formData}) async {
-    return await _dio.post(path, data: formData);
+    try {
+      return await _dio.post(path, data: formData);
+    } on dio.DioError catch (e, s) {
+      throw NetworkException(e, s);
+    }
   }
 
   @override
   Future delete(String path,
       {required data, Map<String, dynamic>? query}) async {
-    return await _dio.delete(path, data: data, queryParameters: query);
+    try {
+      return await _dio.delete(path, data: data, queryParameters: query);
+    } on dio.DioError catch (e, s) {
+      throw NetworkException(e, s);
+    }
   }
 
   @override
   Future put(String path, {required data, Map<String, dynamic>? query}) async {
-    return await _dio.put(path, data: data, queryParameters: query);
+    try {
+      return await _dio.put(path, data: data, queryParameters: query);
+    } on dio.DioError catch (e, s) {
+      throw NetworkException(e, s);
+    }
   }
 }

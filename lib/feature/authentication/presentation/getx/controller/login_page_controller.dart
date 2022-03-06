@@ -1,12 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/param/auth_phone_login_param.dart';
-import 'package:gocery/core/service/error/auth_exception.dart';
-import 'package:gocery/core/service/error/failure.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
+import 'package:gocery/core/service/error/map_exception_message.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
-import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/authentication/domain/usecase/authentication_usecase.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/timer_countdown_controller.dart';
 
@@ -44,10 +44,10 @@ class LoginPageController extends GetxController {
         verificationFailed: (Exception e) {
           MDialog.close();
 
-          if (e is Failure) {
-            MToast.show(e.message);
+          if (e is FirebaseAuthException) {
+            MToast.show(MapExceptionMessage.exception(InvalidPhoneNumber()));
           } else {
-            MToast.show('Terjadi kesalahan, harap coba beberapa saat lagi');
+            MToast.show(MapExceptionMessage.exception(Exception()));
           }
         },
         codeSent: (verificationId, resendToken) {
@@ -61,10 +61,10 @@ class LoginPageController extends GetxController {
               ));
         },
       );
-    } on Failure catch (e) {
+    } on Exception catch (e) {
       MDialog.close();
 
-      MToast.show(Utility.errorMessage(e));
+      MToast.show(MapExceptionMessage.exception(e));
     }
   }
 
@@ -75,11 +75,11 @@ class LoginPageController extends GetxController {
       await _authenticationUsecase.facebookLogin();
 
       _toHome();
-    } catch (e) {
+    } on Exception catch (e) {
       MDialog.close();
 
       if (e is! LoginProviderNotSelected) {
-        MToast.show(Utility.errorMessage(e));
+        MToast.show(MapExceptionMessage.exception(e));
       }
     }
   }
@@ -91,11 +91,11 @@ class LoginPageController extends GetxController {
       await _authenticationUsecase.googleLogin();
 
       _toHome();
-    } catch (e) {
+    } on Exception catch (e) {
       MDialog.close();
 
       if (e is! LoginProviderNotSelected) {
-        MToast.show(Utility.errorMessage(e));
+        MToast.show(MapExceptionMessage.exception(e));
       }
     }
   }
