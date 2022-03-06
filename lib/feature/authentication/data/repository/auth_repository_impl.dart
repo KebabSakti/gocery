@@ -133,31 +133,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return await _firebaseAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (exception, stackTrace) {
       throw AuthException(exception, stackTrace);
-
-      // if (e is FirebaseAuthException) {
-      //   switch (e.code) {
-      //     case 'user-disabled':
-      //       throw Failure('Akun anda di block, hubungi cs kami untuk info',
-      //           error: e);
-
-      //     case 'invalid-verification-code':
-      //       throw Failure('Kode OTP yang anda masukkan salah', error: e);
-
-      //     case 'invalid-phone-number':
-      //       throw Failure('Nomor hp tidak valid', error: e);
-
-      //     default:
-      //       await Sentry.captureException(e, stackTrace: t);
-
-      //       throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
-      //           error: e);
-      //   }
-      // } else {
-      //   await Sentry.captureException(e, stackTrace: t);
-
-      //   throw Failure('Terjadi kesalahan, harap coba beberapa saat lagi',
-      //       error: e);
-      // }
     }
   }
 

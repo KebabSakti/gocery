@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/login_page_controller.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class LoginPageAlt extends GetView<LoginPageController> {
   const LoginPageAlt({Key? key}) : super(key: key);
@@ -54,27 +55,27 @@ class LoginPageAlt extends GetView<LoginPageController> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: kMediumPadding),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0xff8F9BB3),
-                        ),
+                        border: Border.all(color: kLightColor100),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: InternationalPhoneNumberInput(
-                        countries: const ['ID'],
-                        spaceBetweenSelectorAndTextField: 0,
-                        errorMessage: 'No hp tidak valid',
-                        selectorConfig: const SelectorConfig(
-                          setSelectorButtonAsPrefixIcon: true,
-                        ),
-                        inputDecoration: InputDecoration(
-                          hintText: '812-5498-2664',
-                          hintStyle: Get.theme.textTheme.bodyText2,
+                      child: TextField(
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          icon:
+                              const Icon(AppIcon.phone, color: kLightColor100),
+                          hintText: 'Masukkan nomor hp untuk login',
+                          hintStyle: Get.textTheme.bodyText2,
                           border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          focusedErrorBorder: InputBorder.none,
                         ),
-                        onInputChanged: (phone) {
-                          controller.phoneField = phone.phoneNumber ?? '';
+                        onChanged: (value) {
+                          controller.phoneField =
+                              Utility.phoneParser(phone: value);
                         },
                       ),
                     ),

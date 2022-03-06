@@ -10,9 +10,9 @@ import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.da
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/payment_channel_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_address_model.dart';
-import 'package:gocery/feature/checkout/data/model/order_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_time_model.dart';
 import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
+import 'package:gocery/feature/checkout/domain/entity/order_submit_param_entity.dart';
 
 class OrderRemoteDatasource implements OrderDatasource {
   OrderRemoteDatasource({required this.client});
@@ -109,7 +109,7 @@ class OrderRemoteDatasource implements OrderDatasource {
   }
 
   @override
-  Future<void> submitOrder({required OrderModel param}) async {
+  Future<void> submitOrder({required OrderSubmitParamEntity param}) async {
     // throw UnimplementedError();
   }
 }

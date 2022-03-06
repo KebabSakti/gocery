@@ -5,6 +5,7 @@ import 'package:gocery/core/service/error/auth_exception.dart';
 import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:intl/intl.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:uuid/uuid.dart';
 
 class Utility {
@@ -141,5 +142,13 @@ class Utility {
     String formatted = strings.join(', ');
 
     return formatted;
+  }
+
+  static String phoneParser({required String phone}) {
+    final phoneNumber = PhoneNumber.fromIsoCode('ID', phone);
+
+    final parsed = phoneNumber.international;
+
+    return parsed;
   }
 }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
+import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/delivery_address_page_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class DeliveryAddressPage extends GetView<DeliveryAddressPageController> {
@@ -235,19 +235,17 @@ Widget _panel(DeliveryAddressPageController controller) {
                 const SizedBox(width: kTinyPadding),
                 Expanded(
                   child: Obx(() {
-                    return InternationalPhoneNumberInput(
-                      textFieldController: TextEditingController()
+                    return TextField(
+                      controller: TextEditingController()
                         ..text = controller.addressEntity().phone ?? '',
-                      countries: const ['ID'],
-                      selectorConfig: const SelectorConfig(
-                        setSelectorButtonAsPrefixIcon: true,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        hintText: 'Nomor Hp',
+                        hintStyle: Get.textTheme.bodyText2,
                       ),
-                      inputDecoration: InputDecoration(
-                        hintText: '812-5498-2664',
-                        hintStyle: Get.theme.textTheme.bodyText2,
-                      ),
-                      onInputChanged: (phone) {
-                        controller.phone = phone.phoneNumber ?? '';
+                      onChanged: (value) {
+                        controller.phone = Utility.phoneParser(phone: value);
                       },
                     );
                   }),

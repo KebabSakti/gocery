@@ -8,9 +8,16 @@ const String kProtocol = 'http';
 const String kBaseUrl = '192.168.3.153:1001';
 const String kProxyUrl = '192.168.3.153:8000';
 const bool kNetworkLog = false;
-const bool kProxy = true;
+const bool kProxy = false;
 const int kNetworkConnectTimeout = 60000;
 const int kNetworkReceiveTimeout = 60000;
+
+//WEBSOCKET
+const String kWebsocketHost = '192.168.3.153';
+const String kWebsocketKey = 'PUSHERKEY';
+const int kWebsocketWsPort = 6001;
+const int kWebsocketWssPort = 6001;
+const bool kWebsocketEncrypt = false;
 
 //ROUTE NAME
 const String kIntroPage = '/';

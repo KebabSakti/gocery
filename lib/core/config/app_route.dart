@@ -5,13 +5,9 @@ import 'package:gocery/feature/app/presentation/page/app_page.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/forgot_password_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/login_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/getx/controller/otp_page_controller.dart';
-import 'package:gocery/feature/authentication/presentation/getx/controller/phone_page_controller.dart';
-import 'package:gocery/feature/authentication/presentation/getx/controller/register_page_controller.dart';
 import 'package:gocery/feature/authentication/presentation/page/forgot_password_page.dart';
 import 'package:gocery/feature/authentication/presentation/page/login_page_alt.dart';
 import 'package:gocery/feature/authentication/presentation/page/otp_page.dart';
-import 'package:gocery/feature/authentication/presentation/page/phone_page.dart';
-import 'package:gocery/feature/authentication/presentation/page/register_page.dart';
 import 'package:gocery/feature/chat/presentation/page/chat_detail_page.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/checkout_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/delivery_address_page_controller.dart';
@@ -59,16 +55,6 @@ class AppRoute {
       name: kOtpPage,
       page: () => const OtpPage(),
       binding: BindingsBuilder.put(() => OtpPageController()),
-    ),
-    GetPage(
-      name: kRegisterPage,
-      page: () => const RegisterPage(),
-      binding: BindingsBuilder.put(() => RegisterPageController()),
-    ),
-    GetPage(
-      name: kPhonePage,
-      page: () => const PhonePage(),
-      binding: BindingsBuilder.put(() => PhonePageController()),
     ),
     GetPage(
       name: kAppPage,

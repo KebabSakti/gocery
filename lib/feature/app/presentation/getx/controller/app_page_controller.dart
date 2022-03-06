@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:gocery/core/service/websocket/websocket_impl.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/add_to_cart_panel_controller.dart';
 import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
@@ -9,13 +10,17 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppPageController extends GetxController {
   AppPageController() {
+    websocketImpl = Get.find<WebsocketImpl>();
+
     cartController = Get.put(CartController());
+
     addToCartPanelController =
         Get.put(AddToCartPanelController(), tag: 'AppPage');
   }
 
   late final CartController cartController;
   late final AddToCartPanelController addToCartPanelController;
+  late final WebsocketImpl websocketImpl;
 
   Timer? _timer;
 
@@ -23,6 +28,16 @@ class AppPageController extends GetxController {
   final PanelController addToCartPanel = PanelController();
 
   final activePage = 0.obs;
+
+  Future websocket() async {
+    websocketImpl.bindChannel(
+      channelName: 'public-channel.1',
+      eventName: 'App\\Events\\PublicEvent',
+      onEvent: (event) {
+        event;
+      },
+    );
+  }
 
   Future<bool> onBackButtonPressed() async {
     if (addToCartPanelController.panelController.isPanelOpen) {
@@ -75,7 +90,7 @@ class AppPageController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     _stopTimer();
 
     super.onClose();

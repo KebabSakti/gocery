@@ -80,6 +80,15 @@ class VoucherPanel extends StatelessWidget {
                     if (voucherState.status == Status.success) {
                       final List<VoucherEntity> vouchers = voucherState.data!;
 
+                      if (vouchers.isEmpty) {
+                        return const SizedBox(
+                          height: 400,
+                          child: Center(
+                            child: Text('Belum ada voucher tersedia'),
+                          ),
+                        );
+                      }
+
                       return ListView.separated(
                         itemCount: vouchers.length,
                         separatorBuilder: (context, index) =>
@@ -99,7 +108,8 @@ class VoucherPanel extends StatelessWidget {
                                   'https://cdn-icons-png.flaticon.com/512/726/726476.png',
                               height: 40,
                               placeholder: (context, url) =>
-                                  const ShimmerLoader(height: 30, radius: 50),
+                                  const ShimmerLoader(
+                                      height: 30, width: 30, radius: 30),
                             ),
                             title: Text(
                               vouchers[index].title!,

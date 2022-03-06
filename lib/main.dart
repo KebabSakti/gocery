@@ -1,12 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_route.dart';
 import 'package:gocery/core/config/app_theme.dart';
+import 'package:gocery/core/service/websocket/websocket_impl.dart';
 import 'package:gocery/dependency.dart';
 import 'package:gocery/firebase_options.dart';
 
+import 'core/config/app_const.dart';
 import 'core/service/network/dio_client.dart';
 import 'core/service/network/network.dart';
 import 'core/service/storage/secure_storage_client.dart';
@@ -58,4 +59,5 @@ class Gocery extends StatelessWidget {
 Future initServices() async {
   Get.put(SecureStorageImpl(SecureStorageClient()));
   Get.put(NetworkImpl(DioClient()));
+  Get.put(WebsocketImpl());
 }

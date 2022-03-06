@@ -2,9 +2,9 @@ import 'package:gocery/feature/checkout/data/datasource/order_datasource.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/order_submit_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
-import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_time_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/voucher_entity.dart';
 import 'package:gocery/feature/checkout/domain/repository/order_repository.dart';
@@ -47,7 +47,7 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<void> submitOrder({required OrderEntity param}) async {
+  Future<void> submitOrder({required OrderSubmitParamEntity param}) async {
     // await datasource.submitOrder(param: param);
   }
 }
