@@ -11,9 +11,11 @@ import 'package:gocery/feature/authentication/presentation/page/otp_page.dart';
 import 'package:gocery/feature/chat/presentation/page/chat_detail_page.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/checkout_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/delivery_address_page_controller.dart';
+import 'package:gocery/feature/checkout/presentation/getx/controller/find_courier_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/getx/controller/search_address_page_controller.dart';
 import 'package:gocery/feature/checkout/presentation/page/checkout_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/delivery_address_page.dart';
+import 'package:gocery/feature/checkout/presentation/page/find_courier_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/order_complete_page.dart';
 import 'package:gocery/feature/checkout/presentation/page/search_address_page.dart';
 import 'package:gocery/feature/intro/presentation/getx/intro_page_controller.dart';
@@ -109,6 +111,11 @@ class AppRoute {
       name: kTrackingPage,
       page: () => const TrackingPage(),
       binding: BindingsBuilder.put(() => TrackingPageController()),
+    ),
+    GetPage(
+      name: kFindCourierPage,
+      page: () => const FindCourierPage(),
+      binding: BindingsBuilder.put(() => FindCourierPageController()),
     ),
   ];
 }

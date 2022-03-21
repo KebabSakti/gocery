@@ -24,10 +24,6 @@ import 'package:gocery/feature/search/data/repository/search_repository_impl.dar
 class Dependency extends Bindings {
   @override
   void dependencies() {
-    //EXTERNAL SERVICE
-    // Get.lazyPut(() => SecureStorageImpl(SecureStorageClient()), fenix: true);
-    // Get.lazyPut(() => NetworkImpl(DioClient()), fenix: true);
-
     //AUTHENTICATION
     Get.lazyPut(
         () => AuthRepositoryImpl(

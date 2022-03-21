@@ -6,4 +6,6 @@ abstract class CartRepository {
   Future<void> updateCart({required List<CartItemEntity> param});
 
   Future<void> clearCart();
+
+  Future<bool> stocks({required List<String> param});
 }

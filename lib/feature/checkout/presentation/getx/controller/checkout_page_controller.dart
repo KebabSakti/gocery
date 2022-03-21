@@ -1,6 +1,8 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
+import 'package:gocery/core/service/websocket/websocket.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
@@ -8,6 +10,7 @@ import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 import 'package:gocery/feature/checkout/data/repository/order_repository_impl.dart';
+import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
@@ -28,6 +31,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CheckoutPageController extends GetxController {
+  final websocket = Get.find<WebsocketImpl>();
+
   final List<CartItemEntity> cartItems = Get.arguments;
 
   final PanelController deliveryTimePanel = PanelController();
@@ -70,6 +75,89 @@ class CheckoutPageController extends GetxController {
   final point = 0.0.obs;
   final payTotal = 0.0.obs;
   final checkbox = false.obs;
+
+  String uid = Utility.randomUid();
+
+  double _totalShipping() {
+    if (orderShippingState().data == null) {
+      return 0.0;
+    }
+
+    double total = orderShippingState()
+        .data!
+        .fold(0, (sum, item) => sum + double.parse(item.price!));
+
+    return total;
+  }
+
+  double _totalCartItem() {
+    double total = cartItems.fold(
+        0, (sum, item) => sum + double.parse(item.itemPriceTotal!));
+
+    return total;
+  }
+
+  int _totalCartItemQty() {
+    int total = cartItems.fold(0, (sum, item) => sum + item.itemQtyTotal!);
+
+    return total;
+  }
+
+  double _totalAppFee() {
+    if (defaultChannelState().data == null) {
+      return 0.0;
+    }
+
+    if (defaultChannelState().data!.feeType == 'fix') {
+      return double.parse(defaultChannelState().data!.fee!);
+    }
+
+    double total = (double.parse(defaultChannelState().data!.fee!) / 100) *
+        (_totalCartItem() + _totalShipping());
+
+    return total;
+  }
+
+  double _totalVoucher() {
+    if (voucherState().data == null) {
+      return 0.0;
+    }
+
+    List<VoucherEntity> selectedVouchers = voucherState()
+        .data!
+        .where((element) => element.selected == true)
+        .toList();
+
+    double total = selectedVouchers.fold(
+        0, (sum, item) => sum + double.parse(item.amount!));
+
+    return total;
+  }
+
+  double _totalPoint() {
+    if (customerAccount().data == null) {
+      return 0.0;
+    }
+
+    return double.parse(
+        customerAccount().data!.customerPointEntity!.point!.toString());
+  }
+
+  void _calculateTotal() {
+    double pt = !checkbox() ? 0.0 : _totalPoint();
+    double pay = (_totalCartItem() + _totalShipping() + _totalAppFee()) -
+        (_totalVoucher() + pt);
+
+    priceTotal(_totalCartItem());
+    shippingFee(_totalShipping());
+    appFee(_totalAppFee());
+    voucher(_totalVoucher());
+    point(_totalPoint());
+
+    double total = pay.isNegative ? 0.0 : pay;
+
+    payTotal(total);
+  }
 
   Future<void> setAddressState() async {
     try {
@@ -307,84 +395,7 @@ class CheckoutPageController extends GetxController {
   }
 
   void openVoucherPanel() {
-    // setVoucherState();
-
     voucherPanel.open();
-  }
-
-  double _totalShipping() {
-    if (orderShippingState().data == null) {
-      return 0.0;
-    }
-
-    double total = orderShippingState()
-        .data!
-        .fold(0, (sum, item) => sum + double.parse(item.price!));
-
-    return total;
-  }
-
-  double _totalCartItem() {
-    double total = cartItems.fold(
-        0, (sum, item) => sum + double.parse(item.itemPriceTotal!));
-
-    return total;
-  }
-
-  double _totalAppFee() {
-    if (defaultChannelState().data == null) {
-      return 0.0;
-    }
-
-    if (defaultChannelState().data!.feeType == 'fix') {
-      return double.parse(defaultChannelState().data!.fee!);
-    }
-
-    double total = (double.parse(defaultChannelState().data!.fee!) / 100) *
-        (_totalCartItem() + _totalShipping());
-
-    return total;
-  }
-
-  double _totalVoucher() {
-    if (voucherState().data == null) {
-      return 0.0;
-    }
-
-    List<VoucherEntity> selectedVouchers = voucherState()
-        .data!
-        .where((element) => element.selected == true)
-        .toList();
-
-    double total = selectedVouchers.fold(
-        0, (sum, item) => sum + double.parse(item.amount!));
-
-    return total;
-  }
-
-  double _totalPoint() {
-    if (customerAccount().data == null) {
-      return 0.0;
-    }
-
-    return double.parse(
-        customerAccount().data!.customerPointEntity!.point!.toString());
-  }
-
-  void _calculateTotal() {
-    double pt = !checkbox() ? 0.0 : _totalPoint();
-    double pay = (_totalCartItem() + _totalShipping() + _totalAppFee()) -
-        (_totalVoucher() + pt);
-
-    priceTotal(_totalCartItem());
-    shippingFee(_totalShipping());
-    appFee(_totalAppFee());
-    voucher(_totalVoucher());
-    point(_totalPoint());
-
-    double total = pay.isNegative ? 0.0 : pay;
-
-    payTotal(total);
   }
 
   void toDeliveryAddressPage() async {
@@ -398,6 +409,40 @@ class CheckoutPageController extends GetxController {
         addressState(addressState().copyWith(data: result));
       }
     }
+  }
+
+  Future<void> toFindCourierPage() async {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      } else {
+        OrderEntity param = OrderEntity(
+          uid: uid,
+          cartItemEntity: cartItems,
+          shippingAddressEntity: addressState().data,
+          orderShippingEntity: orderShippingState().data,
+          paymentChannelEntity: defaultChannelState().data,
+          voucherEntity: voucherState().data,
+          qtyTotal: _totalCartItemQty(),
+          priceTotal: priceTotal().toString(),
+          shippingFee: shippingFee().toString(),
+          appFee: appFee().toString(),
+          voucherDeduction: voucher().toString(),
+          pointDeduction: point().toString(),
+          payTotal: payTotal().toString(),
+        );
+
+        // for (OrderShippingEntity item in orderShippingState().data!) {
+        //   websocket.listen(
+        //     channelName: 'private-courier.' + item.uid!,
+        //     eventName: 'OrderCreated',
+        //     onEvent: (event) {},
+        //   );
+        // }
+
+        Get.toNamed(kFindCourierPage, arguments: param);
+      }
+    });
   }
 
   Future<bool> onBackButtonPressed() async {

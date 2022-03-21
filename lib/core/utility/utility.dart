@@ -151,4 +151,12 @@ class Utility {
 
     return parsed;
   }
+
+  static bool validatePhone({required String phone}) {
+    final phoneNumber = PhoneNumber.fromIsoCode('ID', phone);
+
+    final bool result = phoneNumber.validate(type: PhoneNumberType.mobile);
+
+    return result;
+  }
 }

@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/product/data/datasource/product_datasource.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
@@ -19,81 +17,57 @@ class ProductRemoteDatasourceImpl implements ProductDatasource {
   @override
   Future<ProductPagingModel> indexProduct(
       {required IndexProductParamModel param}) async {
-    try {
-      var response = await client.get(
-        kProductIndex,
-        query: param.toJson(),
-      );
+    var response = await client.get(
+      kProductIndex,
+      query: param.toJson(),
+    );
 
-      ProductPagingModel model =
-          await compute(productPagingModelFromJson, response.toString());
+    ProductPagingModel model =
+        await compute(productPagingModelFromJson, response.toString());
 
-      return model;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return model;
   }
 
   @override
   Future<ProductModel> showProduct({required String uid}) async {
-    try {
-      var response = await client.get(kProductShow + '/' + uid + '/show');
+    var response = await client.get(kProductShow + '/' + uid + '/show');
 
-      ProductModel model =
-          await compute(productModelFromJson, response.toString());
+    ProductModel model =
+        await compute(productModelFromJson, response.toString());
 
-      return model;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return model;
   }
 
   @override
   Future<ProductModel> toggleProductFavourite({required String uid}) async {
-    try {
-      var response = await client.post(kProductFavourite, data: {'uid': uid});
+    var response = await client.post(kProductFavourite, data: {'uid': uid});
 
-      ProductModel model =
-          await compute(productModelFromJson, response.toString());
+    ProductModel model =
+        await compute(productModelFromJson, response.toString());
 
-      return model;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return model;
   }
 
   @override
   Future statisticProduct({required ProductStatisticParam param}) async {
-    try {
-      await client.post(kProductStatistic, data: param.toJson());
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    await client.post(kProductStatistic, data: param.toJson());
   }
 
   @override
   Future<List<ProductModel>> productViewHistories() async {
-    try {
-      final response = await client.get(kProductViewHistory);
+    final response = await client.get(kProductViewHistory);
 
-      List<ProductModel> models = await compute(_products, response.toString());
+    List<ProductModel> models = await compute(_products, response.toString());
 
-      return models;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return models;
   }
 }
 
 List<ProductModel> _products(dynamic data) {
-  try {
-    var parsed = jsonDecode(data);
+  var parsed = jsonDecode(data);
 
-    List<ProductModel> datas = List<ProductModel>.from(
-        parsed.map((item) => ProductModel.fromJson(item)));
+  List<ProductModel> datas = List<ProductModel>.from(
+      parsed.map((item) => ProductModel.fromJson(item)));
 
-    return datas;
-  } on DioError catch (exception, stackTrace) {
-    throw NetworkException(exception, stackTrace);
-  }
+  return datas;
 }

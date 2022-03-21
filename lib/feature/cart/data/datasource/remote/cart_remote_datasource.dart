@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/cart/data/datasource/cart_datasource.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
@@ -15,42 +14,30 @@ class CartRemoteDatasource implements CartDatasource {
 
   @override
   Future<List<CartItemModel>> getCartItems() async {
-    try {
-      final response = await client.get(kCartIndex);
+    final response = await client.get(kCartIndex);
 
-      final models = await compute(_cartItems, response.toString());
+    final models = await compute(_cartItems, response.toString());
 
-      return models;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return models;
   }
 
   @override
   Future<void> updateCart({required List<CartItemModel> param}) async {
-    try {
-      await client.post(kCartUpdate,
-          data: FormData.fromMap({
-            'carts': param
-                .map((e) => {
-                      'product_uid': e.productUid,
-                      'item_qty_total': e.itemQtyTotal,
-                      'note': e.note,
-                    })
-                .toList(),
-          }));
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    await client.post(kCartUpdate,
+        data: FormData.fromMap({
+          'carts': param
+              .map((e) => {
+                    'product_uid': e.productUid,
+                    'item_qty_total': e.itemQtyTotal,
+                    'note': e.note,
+                  })
+              .toList(),
+        }));
   }
 
   @override
   Future<void> clearCart() async {
-    try {
-      await client.delete(kCartClear, data: {});
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    await client.delete(kCartClear, data: {});
   }
 
   List<CartItemModel> _cartItems(dynamic data) {
@@ -60,5 +47,15 @@ class CartRemoteDatasource implements CartDatasource {
         parsed.map((item) => CartItemModel.fromJson(item)));
 
     return datas;
+  }
+
+  @override
+  Future<bool> stocks({required List<String> param}) async {
+    final response =
+        await client.get(kCartStock, query: {'uids': param.join()});
+
+    var parsed = jsonDecode(response.toString());
+
+    return parsed;
   }
 }

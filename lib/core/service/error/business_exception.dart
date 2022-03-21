@@ -9,3 +9,5 @@ class InvalidOtpCode implements Exception {}
 class OtpCodeToShort implements Exception {}
 
 class LoginProviderNotSelected implements Exception {}
+
+class NameAndPhoneRequired implements Exception {}

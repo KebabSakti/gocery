@@ -16,19 +16,30 @@ class ShippingTimeModel extends ShippingTimeEntity {
   ShippingTimeModel({
     String? uid,
     String? time,
+    int? preparation,
+    String? delivery,
     bool? enable,
-  }) : super(uid: uid, time: time, enable: enable);
+  }) : super(
+            uid: uid,
+            time: time,
+            delivery: delivery,
+            preparation: preparation,
+            enable: enable);
 
   factory ShippingTimeModel.fromJson(Map<String, dynamic> json) =>
       ShippingTimeModel(
         uid: json["uid"],
         time: json["time"],
+        preparation: json["preparation"],
+        delivery: json["delivery"],
         enable: json["enable"],
       );
 
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "time": time,
+        "preparation": preparation,
+        "delivery": delivery,
         "enable": enable,
       };
 }

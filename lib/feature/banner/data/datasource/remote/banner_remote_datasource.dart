@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/banner/data/model/banner_model.dart';
 
@@ -18,13 +16,9 @@ class BannerRemoteDatasourceImpl implements BannerRemoteDatasource {
 
   @override
   Future<List<BannerModel>> indexBanner() async {
-    try {
-      var response = await client.get(kBannerIndex);
+    var response = await client.get(kBannerIndex);
 
-      return compute(_banners, response.toString());
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return compute(_banners, response.toString());
   }
 }
 

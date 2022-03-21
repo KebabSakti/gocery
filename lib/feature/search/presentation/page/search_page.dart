@@ -173,12 +173,82 @@ class SearchPage extends StatelessWidget {
                                                 ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        productSuggested[index]
-                                                            .image!,
+                                                  child: SizedBox(
+                                                    height: 50,
                                                     width: 50,
+                                                    child: Stack(
+                                                      children: [
+                                                        CachedNetworkImage(
+                                                          imageUrl:
+                                                              productSuggested[
+                                                                      index]
+                                                                  .image!,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        (productSuggested[index]
+                                                                    .stok! >
+                                                                0)
+                                                            ? const SizedBox
+                                                                .shrink()
+                                                            : Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Opacity(
+                                                                  opacity: 0.8,
+                                                                  child: Image
+                                                                      .asset(
+                                                                    kSoldOut,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: 40,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                      ],
+                                                    ),
                                                   ),
+                                                  // child: Ink(
+                                                  //   width: 50,
+                                                  //   decoration: BoxDecoration(
+                                                  //     borderRadius:
+                                                  //         BorderRadius.circular(
+                                                  //             10),
+                                                  //     image: DecorationImage(
+                                                  //       fit: BoxFit.cover,
+                                                  //       image:
+                                                  //           CachedNetworkImageProvider(
+                                                  //         productSuggested[
+                                                  //                 index]
+                                                  //             .image!,
+                                                  //       ),
+                                                  //     ),
+                                                  //   ),
+                                                  //   child: (productSuggested[
+                                                  //                   index]
+                                                  //               .stok! >
+                                                  //           0)
+                                                  //       ? const SizedBox
+                                                  //           .shrink()
+                                                  //       : Align(
+                                                  //           alignment: Alignment
+                                                  //               .center,
+                                                  //           child: Padding(
+                                                  //             padding:
+                                                  //                 const EdgeInsets
+                                                  //                     .all(8.0),
+                                                  //             child: Opacity(
+                                                  //               opacity: 0.8,
+                                                  //               child:
+                                                  //                   Image.asset(
+                                                  //                 kSoldOut,
+                                                  //                 fit: BoxFit
+                                                  //                     .cover,
+                                                  //               ),
+                                                  //             ),
+                                                  //           ),
+                                                  //         ),
+                                                  // ),
                                                 ),
                                                 const SizedBox(width: 16),
                                                 Expanded(
@@ -396,6 +466,31 @@ class SearchPage extends StatelessWidget {
                                                           ),
                                                         ),
                                                       ),
+                                                      child: (products[index]
+                                                                  .stok! >
+                                                              0)
+                                                          ? const SizedBox
+                                                              .shrink()
+                                                          : Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: Opacity(
+                                                                  opacity: 0.8,
+                                                                  child: Image
+                                                                      .asset(
+                                                                    kSoldOut,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
                                                     ),
                                                   ),
                                                 ),

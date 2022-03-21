@@ -645,6 +645,22 @@ class _HomePageState extends State<HomePage>
                 scrollController: controller.scrollController,
               ),
             ),
+            // Obx(() {
+            //   return SizedBox(
+            //     height: controller.cartController.qtyTotal() == 0 ? 0 : 70,
+            //   );
+            // }),
+            // const CartPanel(controllerKey: 'HomePage'),
+            // Obx(() {
+            //   return Positioned(
+            //     bottom: controller.cartController.qtyTotal() == 0 ? 10 : 70,
+            //     right: 10,
+            //     child: ScrollTopButton(
+            //       controllerKey: 'HomePage',
+            //       scrollController: controller.scrollController,
+            //     ),
+            //   );
+            // }),
           ],
         ),
       ),

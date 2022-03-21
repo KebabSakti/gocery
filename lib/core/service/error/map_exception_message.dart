@@ -11,10 +11,6 @@ class MapExceptionMessage {
       return 'Kode OTP yang anda masukkan tidak valid';
     }
 
-    if (exception is InvalidOtpCode) {
-      return 'Kode OTP yang anda masukkan tidak valid';
-    }
-
     if (exception is InvalidPhoneNumber) {
       return 'Nomor hp tidak valid';
     }
@@ -37,6 +33,10 @@ class MapExceptionMessage {
 
     if (exception is OtpCodeToShort) {
       return 'Kode OTP memerlukan 6 digit angka';
+    }
+
+    if (exception is NameAndPhoneRequired) {
+      return 'Nama dan nomor hp tidak boleh kosong';
     }
 
     return 'Terjadi kesalahan, harap coba beberapa saat lagi';

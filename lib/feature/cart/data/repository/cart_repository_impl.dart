@@ -22,4 +22,9 @@ class CartRepositoryImpl implements CartRepository {
   Future<void> clearCart() async {
     return await datasource.clearCart();
   }
+
+  @override
+  Future<bool> stocks({required List<String> param}) async {
+    return await datasource.stocks(param: param);
+  }
 }

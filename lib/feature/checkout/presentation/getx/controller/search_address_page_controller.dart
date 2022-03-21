@@ -51,6 +51,7 @@ class SearchAddressPageController extends GetxController {
 
     if (response.status == 'OK') {
       var result = param.copyWith(
+        address: response.results[0].formattedAddress,
         latitude: response.results[0].geometry.location.lat.toString(),
         longitude: response.results[0].geometry.location.lng.toString(),
       );

@@ -680,8 +680,10 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                                       style: Get.textTheme.bodyText1),
                                   Obx(() {
                                     return Text(
-                                        Utility.currency(
-                                            controller.voucher().toString()),
+                                        '- ' +
+                                            Utility.currency(controller
+                                                .voucher()
+                                                .toString()),
                                         style: Get.textTheme.bodyText1);
                                   }),
                                 ],
@@ -747,8 +749,10 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                                     return Text(
                                         !controller.checkbox()
                                             ? 'Rp 0'
-                                            : Utility.currency(
-                                                controller.point().toString()),
+                                            : '- ' +
+                                                Utility.currency(controller
+                                                    .point()
+                                                    .toString()),
                                         style: Get.textTheme.bodyText1);
                                   }),
                                 ],
@@ -826,9 +830,7 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                         onTap: (controller.priceTotal() == 0.0 ||
                                 controller.shippingFee() == 0.0)
                             ? null
-                            : () {
-                                Get.toNamed(kOrderCompletePage);
-                              },
+                            : controller.toFindCourierPage,
                         overlayColor: MaterialStateProperty.resolveWith(
                             (states) => kPrimaryColor400),
                         child: Ink(

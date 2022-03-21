@@ -5,6 +5,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
+import 'package:gocery/core/service/error/map_exception_message.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
@@ -15,13 +17,11 @@ class DeliveryAddressPageController extends GetxController {
   GoogleMapController? mapController;
   CameraPosition? mCameraPosition;
 
-  String? name;
-  String? phone;
-  String? note;
-
   final Completer<GoogleMapController> completer = Completer();
   final PanelController panelController = PanelController();
-  final TextEditingController searchField = TextEditingController();
+  final TextEditingController nameField = TextEditingController();
+  final TextEditingController phoneField = TextEditingController();
+  final TextEditingController noteField = TextEditingController();
 
   final addressEntity = ShippingAddressEntity().obs;
   final searchMode = false.obs;
@@ -58,13 +58,20 @@ class DeliveryAddressPageController extends GetxController {
   }
 
   void saveDeliveryInfo() {
-    if (name == null || phone == null) {
-      MToast.show('Nama atau No Telp tidak boleh kosong');
-    } else {
-      var result =
-          addressEntity().copyWith(name: name, phone: phone, note: note);
+    try {
+      if (addressEntity().name == null || addressEntity().phone == null) {
+        throw NameAndPhoneRequired();
+      }
+
+      if (!Utility.validatePhone(phone: addressEntity().phone!)) {
+        throw InvalidPhoneNumber();
+      }
+
+      var result = addressEntity();
 
       Get.back(result: result);
+    } on Exception catch (e) {
+      MToast.show(MapExceptionMessage.exception(e));
     }
   }
 
@@ -72,9 +79,9 @@ class DeliveryAddressPageController extends GetxController {
     final ShippingAddressEntity? argument = Get.arguments;
 
     if (argument != null) {
-      name = argument.name;
-      phone = argument.phone;
-      note = argument.note;
+      nameField.text = argument.name ?? '';
+      phoneField.text = argument.phone ?? '';
+      noteField.text = argument.note ?? '';
 
       addressEntity(argument);
 
@@ -133,10 +140,14 @@ class DeliveryAddressPageController extends GetxController {
   }
 
   void toSearchAddressPage() async {
-    var result = await Get.toNamed(kSearchAddressPage);
+    var result =
+        await Get.toNamed(kSearchAddressPage) as ShippingAddressEntity?;
 
     if (result != null) {
-      addressEntity(result);
+      addressEntity(addressEntity().copyWith(
+        latitude: result.latitude,
+        longitude: result.longitude,
+      ));
 
       CameraPosition cameraPosition = CameraPosition(
         target: LatLng(
@@ -150,12 +161,7 @@ class DeliveryAddressPageController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    searchField.addListener(() {
-      searchMode(searchField.text.isNotEmpty);
-    });
-
+  void init() {
     ever(searchMode, (bool value) {
       if (value) {
         panelController.close();
@@ -163,6 +169,11 @@ class DeliveryAddressPageController extends GetxController {
         panelController.open();
       }
     });
+  }
+
+  @override
+  void onInit() {
+    init();
 
     super.onInit();
   }

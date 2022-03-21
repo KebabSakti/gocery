@@ -6,4 +6,6 @@ abstract class CartDatasource {
   Future<void> updateCart({required List<CartItemModel> param});
 
   Future<void> clearCart();
+
+  Future<bool> stocks({required List<String> param});
 }

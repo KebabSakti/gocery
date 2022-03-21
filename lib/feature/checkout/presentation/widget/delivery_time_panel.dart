@@ -114,7 +114,8 @@ class DeliveryTimePanel extends StatelessWidget {
                                       ? null
                                       : () {
                                           controller.setShippingTime(
-                                              time: shippingTimes[index].time!);
+                                              time: shippingTimes[index]
+                                                  .delivery!);
                                         },
                                   child: Ink(
                                     padding: const EdgeInsets.all(kBigPadding),
@@ -123,7 +124,7 @@ class DeliveryTimePanel extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          shippingTimes[index].time!,
+                                          shippingTimes[index].delivery!,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30,

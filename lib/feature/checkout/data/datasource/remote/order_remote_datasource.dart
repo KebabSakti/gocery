@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/checkout/data/datasource/order_datasource.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.dart';
@@ -21,91 +19,67 @@ class OrderRemoteDatasource implements OrderDatasource {
 
   @override
   Future<ShippingAddressModel> getLastAddress() async {
-    try {
-      final response = await client.get(kAddressLast);
+    final response = await client.get(kAddressLast);
 
-      final ShippingAddressModel model =
-          await compute(shippingAddressModelFromJson, response.toString());
+    final ShippingAddressModel model =
+        await compute(shippingAddressModelFromJson, response.toString());
 
-      return model;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return model;
   }
 
   @override
   Future<List<OrderShippingModel>> getOrderShipping(
       {required OrderShippingParamModel param}) async {
-    try {
-      final response = await client.get(kOrderFee, query: {
-        'latitude': param.latitude,
-        'longitude': param.longitude,
-        'type': param.type
-      });
+    final response = await client.get(kOrderFee, query: {
+      'latitude': param.latitude,
+      'longitude': param.longitude,
+      'type': param.type
+    });
 
-      final List<OrderShippingModel> models =
-          await compute(_orderShippings, response.toString());
+    final List<OrderShippingModel> models =
+        await compute(_orderShippings, response.toString());
 
-      return models;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return models;
   }
 
   @override
   Future<List<ShippingTimeModel>> getShippingTimes() async {
-    try {
-      final response = await client.get(kOrderTime);
+    final response = await client.get(kOrderTime);
 
-      final List<ShippingTimeModel> models =
-          await compute(_orderTimes, response.toString());
+    final List<ShippingTimeModel> models =
+        await compute(_orderTimes, response.toString());
 
-      return models;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return models;
   }
 
   @override
   Future<List<PaymentChannelModel>> getPaymentChannels() async {
-    try {
-      final response = await client.get(kOrderPaymentChannel);
+    final response = await client.get(kOrderPaymentChannel);
 
-      final List<PaymentChannelModel> models =
-          await compute(_paymentChannels, response.toString());
+    final List<PaymentChannelModel> models =
+        await compute(_paymentChannels, response.toString());
 
-      return models;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return models;
   }
 
   @override
   Future<PaymentChannelModel> getDefaultPaymentChannel() async {
-    try {
-      final response = await client.get(kOrderDefaultPaymentChannel);
+    final response = await client.get(kOrderDefaultPaymentChannel);
 
-      final PaymentChannelModel model =
-          await compute(paymentChannelModelFromJson, response.toString());
+    final PaymentChannelModel model =
+        await compute(paymentChannelModelFromJson, response.toString());
 
-      return model;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return model;
   }
 
   @override
   Future<List<VoucherModel>> getVouchers() async {
-    try {
-      final response = await client.get(kOrderVoucher);
+    final response = await client.get(kOrderVoucher);
 
-      final List<VoucherModel> models =
-          await compute(_vouchers, response.toString());
+    final List<VoucherModel> models =
+        await compute(_vouchers, response.toString());
 
-      return models;
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return models;
   }
 
   @override

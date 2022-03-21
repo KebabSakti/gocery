@@ -202,21 +202,20 @@ Widget _panel(DeliveryAddressPageController controller) {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: Obx(() {
-                    return TextField(
-                      controller: TextEditingController()
-                        ..text = controller.addressEntity().name ?? '',
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
-                        hintText: 'Nama',
-                        hintStyle: Get.textTheme.bodyText2,
-                      ),
-                      onChanged: (value) {
-                        controller.name = value;
-                      },
-                    );
-                  }),
+                  child: TextField(
+                    controller: controller.nameField
+                      ..text = controller.addressEntity().name ?? '',
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      hintText: 'Nama',
+                      hintStyle: Get.textTheme.bodyText2,
+                    ),
+                    onChanged: (value) {
+                      controller.addressEntity(
+                          controller.addressEntity().copyWith(name: value));
+                    },
+                  ),
                 ),
               ],
             ),
@@ -234,21 +233,22 @@ Widget _panel(DeliveryAddressPageController controller) {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: Obx(() {
-                    return TextField(
-                      controller: TextEditingController()
-                        ..text = controller.addressEntity().phone ?? '',
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: 'Nomor Hp',
-                        hintStyle: Get.textTheme.bodyText2,
-                      ),
-                      onChanged: (value) {
-                        controller.phone = Utility.phoneParser(phone: value);
-                      },
-                    );
-                  }),
+                  child: TextField(
+                    controller: controller.phoneField
+                      ..text = controller.addressEntity().phone ?? '',
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: 'Nomor Hp',
+                      hintStyle: Get.textTheme.bodyText2,
+                    ),
+                    onChanged: (value) {
+                      String phone = Utility.phoneParser(phone: value);
+
+                      controller.addressEntity(
+                          controller.addressEntity().copyWith(phone: phone));
+                    },
+                  ),
                 ),
               ],
             ),
@@ -266,20 +266,19 @@ Widget _panel(DeliveryAddressPageController controller) {
                 ),
                 const SizedBox(width: kTinyPadding),
                 Expanded(
-                  child: Obx(() {
-                    return TextField(
-                      controller: TextEditingController()
-                        ..text = controller.addressEntity().note ?? '',
-                      textInputAction: TextInputAction.done,
-                      decoration: InputDecoration(
-                        hintText: 'Catatan',
-                        hintStyle: Get.textTheme.bodyText2,
-                      ),
-                      onChanged: (value) {
-                        controller.note = value;
-                      },
-                    );
-                  }),
+                  child: TextField(
+                    controller: controller.noteField
+                      ..text = controller.addressEntity().note ?? '',
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                      hintText: 'Catatan',
+                      hintStyle: Get.textTheme.bodyText2,
+                    ),
+                    onChanged: (value) {
+                      controller.addressEntity(
+                          controller.addressEntity().copyWith(note: value));
+                    },
+                  ),
                 ),
               ],
             ),

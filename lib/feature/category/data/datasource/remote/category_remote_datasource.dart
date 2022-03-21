@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/service/error/network_exception.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/category/data/model/category_model.dart';
 
@@ -18,13 +16,9 @@ class CategoryRemoteDatasourceImpl implements CategoryRemoteDatasource {
 
   @override
   Future<List<CategoryModel>> index() async {
-    try {
-      var response = await client.get(kCategoryIndex);
+    var response = await client.get(kCategoryIndex);
 
-      return compute(_categories, response.toString());
-    } on DioError catch (exception, stackTrace) {
-      throw NetworkException(exception, stackTrace);
-    }
+    return compute(_categories, response.toString());
   }
 }
 

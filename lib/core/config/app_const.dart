@@ -8,7 +8,7 @@ const String kProtocol = 'http';
 const String kBaseUrl = '192.168.3.153:1001';
 const String kProxyUrl = '192.168.3.153:8000';
 const bool kNetworkLog = false;
-const bool kProxy = false;
+const bool kProxy = true;
 const int kNetworkConnectTimeout = 60000;
 const int kNetworkReceiveTimeout = 60000;
 
@@ -18,6 +18,19 @@ const String kWebsocketKey = 'PUSHERKEY';
 const int kWebsocketWsPort = 6001;
 const int kWebsocketWssPort = 6001;
 const bool kWebsocketEncrypt = false;
+
+//NOTIFICATION CHANNEL
+const String kOrderChannelKey = 'gocery_partner_order_channel';
+const String kOrderStatusChannelKey = 'gocery_partner_order_status_channel';
+const String kChatChannelKey = 'gocery_partner_chat_channel';
+const String kPromoChannelKey = 'gocery_partner_promo_channel';
+const String kServiceChannelKey = 'gocery_partner_service_channel';
+const String kOrderChannelGroupKey = 'gocery_partner_order_channel_group';
+const String kOrderStatusChannelGroupKey =
+    'gocery_partner_order_status_channel_group';
+const String kChatChannelGroupKey = 'gocery_partner_chat_channel_group';
+const String kPromoChannelGroupKey = 'gocery_partner_promo_channel_group';
+const String kServiceChannelGroupKey = 'gocery_partner_service_channel_group';
 
 //ROUTE NAME
 const String kIntroPage = '/';
@@ -39,8 +52,10 @@ const String kVoucherPage = '/voucher';
 const String kOrderDetailPage = '/order_detail';
 const String kChatDetailPage = '/chat_detail';
 const String kTrackingPage = '/tracking';
+const String kFindCourierPage = '/find_courier';
 
 //REST API
+const String kBroadcastAuth = 'customer/broadcasting/auth';
 const String kAuthAccess = 'customer/auth/access';
 const String kAuthRegister = 'customer/auth/register';
 const String kAuthRevoke = 'customer/auth/revoke';
@@ -61,6 +76,7 @@ const String kSearchDelete = 'customer/searches';
 const String kCartIndex = 'customer/carts';
 const String kCartUpdate = 'customer/carts';
 const String kCartClear = 'customer/carts';
+const String kCartStock = 'customer/carts/stocks';
 const String kAddressLast = 'customer/orders/addresses';
 const String kOrderFee = 'customer/orders/fees';
 const String kOrderTime = 'customer/orders/times';
@@ -79,6 +95,8 @@ const String kCoinIcon = 'asset/image/ui/coin.svg';
 const String kEmptyCart = 'asset/image/ui/empty_cart_small.svg';
 const String kOrderComplete = 'asset/image/ui/complete_clean.svg';
 const String kScrollTopButtonIcon = 'asset/image/ui/up.svg';
+const String kSoldOut = 'asset/image/ui/sold_min.png';
+const String kPulseAnimation = 'asset/image/ui/pulse.json';
 const String kLandingOne = 'asset/image/content/landing_one.svg';
 const String kLandingTwo = 'asset/image/content/landing_two.svg';
 

@@ -66,7 +66,7 @@ class CheckoutCartItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      'TERJADWAL',
+                      cartItemEntity.productModel!.shipping!,
                       style: Get.textTheme.overline,
                     ),
                   ),

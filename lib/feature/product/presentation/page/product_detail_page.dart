@@ -9,6 +9,7 @@ import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
 import 'package:gocery/feature/app/presentation/widget/add_to_cart_panel.dart';
+import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/product/data/model/index_product_param_model.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 import 'package:gocery/feature/product/presentation/getx/controller/product_detail_page_controller.dart';
@@ -47,13 +48,107 @@ class ProductDetailPage extends StatelessWidget {
                         Obx(() {
                           if (controller.productState().status ==
                               Status.success) {
-                            return CachedNetworkImage(
-                              imageUrl: controller.productState().data!.image!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                              placeholder: (context, url) =>
-                                  const ShimmerLoader(),
+                            return Stack(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl:
+                                      controller.productState().data!.image!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  placeholder: (context, url) =>
+                                      const ShimmerLoader(),
+                                ),
+                                (controller.productState().data!.stok! > 0)
+                                    ? const SizedBox.shrink()
+                                    : Align(
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(
+                                              kHugePadding),
+                                          child: Opacity(
+                                            opacity: 0.8,
+                                            child: Image.asset(
+                                              kSoldOut,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                Obx(() {
+                                  int productIndex = controller.cartController
+                                      .getIndex(
+                                          param:
+                                              controller.productState().data!);
+
+                                  if (productIndex >= 0) {
+                                    final CartItemEntity cartItem = controller
+                                        .cartController
+                                        .cartItemState()
+                                        .data![productIndex];
+
+                                    return Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        height: 35,
+                                        width: 35,
+                                        alignment: Alignment.center,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: kMediumPadding,
+                                            vertical: kHugePadding),
+                                        decoration: BoxDecoration(
+                                          color: kLightColor50,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.2),
+                                              spreadRadius: 2,
+                                              blurRadius: 10,
+                                              offset: const Offset(1,
+                                                  1), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 3),
+                                              child: Icon(AppIcon.shoppingcart),
+                                            ),
+                                            Positioned(
+                                              right: 1,
+                                              child: ClipOval(
+                                                child: Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: Colors.redAccent,
+                                                  child: Center(
+                                                    child: Text(
+                                                      cartItem.itemQtyTotal!
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        color: kLightColor,
+                                                        fontSize: 7,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return const SizedBox.shrink();
+                                }),
+                              ],
                             );
                           }
 
@@ -266,14 +361,20 @@ class ProductDetailPage extends StatelessWidget {
                                           width: double.infinity,
                                           height: 45,
                                           child: ElevatedButton(
-                                            onPressed: () {
-                                              controller
-                                                  .addToCartPanelController
-                                                  .showPanel(
-                                                      param: controller
-                                                          .productState()
-                                                          .data!);
-                                            },
+                                            onPressed: (controller
+                                                        .productState()
+                                                        .data!
+                                                        .stok ==
+                                                    0)
+                                                ? null
+                                                : () {
+                                                    controller
+                                                        .addToCartPanelController
+                                                        .showPanel(
+                                                            param: controller
+                                                                .productState()
+                                                                .data!);
+                                                  },
                                             child: const Text(
                                                 'Tambah ke keranjang'),
                                           ),
@@ -418,11 +519,11 @@ class ProductDetailPage extends StatelessWidget {
                                             },
                                             onFavouriteTap: () {},
                                             onBuyTap: () {
-                                              controller
-                                                  .addToCartPanelController
-                                                  .showPanel(
-                                                      param: productSimiliar[
-                                                          index]);
+                                              // controller
+                                              //     .addToCartPanelController
+                                              //     .showPanel(
+                                              //         param: productSimiliar[
+                                              //             index]);
                                             },
                                           ),
                                         );

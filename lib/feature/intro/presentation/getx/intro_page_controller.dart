@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
@@ -59,6 +60,12 @@ class IntroPageController extends GetxController {
   }
 
   Future _init() async {
+    AwesomeNotifications()
+        .actionStream
+        .listen((ReceivedNotification receivedNotification) {
+      receivedNotification;
+    });
+
     await _cacheAsset();
 
     _authState();
