@@ -50,4 +50,10 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<void> submitOrder({required OrderSubmitParamEntity param}) async {
     // await datasource.submitOrder(param: param);
   }
+
+  @override
+  Future<List<ShippingAddressEntity>> placesPredictions(
+      {String keyword = ''}) async {
+    return await datasource.placesPredictions(keyword: keyword);
+  }
 }

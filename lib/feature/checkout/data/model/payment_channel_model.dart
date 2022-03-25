@@ -21,6 +21,8 @@ class PaymentChannelModel extends PaymentChannelEntity {
     String? picture,
     String? fee,
     String? feeType,
+    int? min,
+    int? max,
   }) : super(
           uid: uid,
           channelCode: channelCode,
@@ -29,6 +31,8 @@ class PaymentChannelModel extends PaymentChannelEntity {
           picture: picture,
           fee: fee,
           feeType: feeType,
+          min: min,
+          max: max,
         );
 
   factory PaymentChannelModel.fromJson(Map<String, dynamic> json) =>
@@ -40,6 +44,8 @@ class PaymentChannelModel extends PaymentChannelEntity {
         picture: json["picture"],
         fee: json["fee"],
         feeType: json["fee_type"],
+        min: json["min"],
+        max: json["max"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -50,5 +56,7 @@ class PaymentChannelModel extends PaymentChannelEntity {
         "picture": picture,
         "fee": fee,
         "fee_type": feeType,
+        "min": min,
+        "max": max,
       };
 }

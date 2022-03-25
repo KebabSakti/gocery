@@ -1,12 +1,16 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
+import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/service/websocket/websocket.dart';
+import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
+import 'package:gocery/feature/cart/data/repository/cart_repository_impl.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
+import 'package:gocery/feature/cart/domain/usecase/cart_stock.dart';
+import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 import 'package:gocery/feature/checkout/data/repository/order_repository_impl.dart';
@@ -26,6 +30,7 @@ import 'package:gocery/feature/checkout/domain/usecase/get_vouchers.dart';
 import 'package:gocery/feature/customer/data/repository/customer_repository_impl.dart';
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
+import 'package:gocery/feature/home/presentation/getx/controller/home_page_controller.dart';
 import 'package:gocery/feature/product/data/model/product_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -38,6 +43,9 @@ class CheckoutPageController extends GetxController {
   final PanelController deliveryTimePanel = PanelController();
   final PanelController paymentChannelPanel = PanelController();
   final PanelController voucherPanel = PanelController();
+
+  final cartController = Get.find<CartController>();
+  final homePageController = Get.find<HomePageController>();
 
   final _getLastAddress =
       GetLastAddress(repository: Get.find<OrderRepositoryImpl>());
@@ -52,6 +60,7 @@ class CheckoutPageController extends GetxController {
   final _getDefaultPayment =
       GetDefaultPaymentChannel(repository: Get.find<OrderRepositoryImpl>());
   final _getVouchers = GetVouchers(repository: Get.find<OrderRepositoryImpl>());
+  final _cartStock = CartStock(repository: Get.find<CartRepositoryImpl>());
 
   final addressState =
       ResponseModel<ShippingAddressEntity>(status: Status.loading).obs;
@@ -75,6 +84,9 @@ class CheckoutPageController extends GetxController {
   final point = 0.0.obs;
   final payTotal = 0.0.obs;
   final checkbox = false.obs;
+  final itemsOutOfStock = false.obs;
+  final payment = true.obs;
+  // final closed = false.obs;
 
   String uid = Utility.randomUid();
 
@@ -157,6 +169,19 @@ class CheckoutPageController extends GetxController {
     double total = pay.isNegative ? 0.0 : pay;
 
     payTotal(total);
+  }
+
+  void _validatePaymentRule({required PaymentChannelEntity paymentChannel}) {
+    if (paymentChannel.channelCode != 'COD') {
+      if (payTotal() > paymentChannel.max! ||
+          payTotal() < paymentChannel.min!) {
+        payment(false);
+      } else {
+        payment(true);
+      }
+    } else {
+      payment(true);
+    }
   }
 
   Future<void> setAddressState() async {
@@ -356,6 +381,8 @@ class CheckoutPageController extends GetxController {
     defaultChannelState(defaultChannelState().copyWith(data: param));
 
     paymentChannelPanel.close();
+
+    _validatePaymentRule(paymentChannel: param);
   }
 
   void setVoucher({required VoucherEntity param}) {
@@ -412,37 +439,49 @@ class CheckoutPageController extends GetxController {
   }
 
   Future<void> toFindCourierPage() async {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      } else {
-        OrderEntity param = OrderEntity(
-          uid: uid,
-          cartItemEntity: cartItems,
-          shippingAddressEntity: addressState().data,
-          orderShippingEntity: orderShippingState().data,
-          paymentChannelEntity: defaultChannelState().data,
-          voucherEntity: voucherState().data,
-          qtyTotal: _totalCartItemQty(),
-          priceTotal: priceTotal().toString(),
-          shippingFee: shippingFee().toString(),
-          appFee: appFee().toString(),
-          voucherDeduction: voucher().toString(),
-          pointDeduction: point().toString(),
-          payTotal: payTotal().toString(),
-        );
+    try {
+      MDialog.loading();
 
-        // for (OrderShippingEntity item in orderShippingState().data!) {
-        //   websocket.listen(
-        //     channelName: 'private-courier.' + item.uid!,
-        //     eventName: 'OrderCreated',
-        //     onEvent: (event) {},
-        //   );
-        // }
+      bool result = await _cartStock(
+          param: cartItems.map((e) => e.productModel!.uid!).toList());
 
-        Get.toNamed(kFindCourierPage, arguments: param);
+      if (!result) {
+        throw OutOfStock();
       }
-    });
+
+      itemsOutOfStock(false);
+
+      OrderEntity param = OrderEntity(
+        uid: uid,
+        cartItemEntity: cartItems,
+        shippingAddressEntity: addressState().data,
+        orderShippingEntity: orderShippingState().data,
+        paymentChannelEntity: defaultChannelState().data,
+        voucherEntity: voucherState().data,
+        qtyTotal: _totalCartItemQty(),
+        priceTotal: priceTotal().toString(),
+        shippingFee: shippingFee().toString(),
+        appFee: appFee().toString(),
+        voucherDeduction: voucher().toString(),
+        pointDeduction: point().toString(),
+        payTotal: payTotal().toString(),
+      );
+
+      MDialog.close();
+
+      Get.toNamed(kFindCourierPage, arguments: param);
+    } on OutOfStock catch (_) {
+      homePageController.init();
+
+      await cartController.getCartItems();
+
+      MDialog.close();
+
+      itemsOutOfStock(true);
+
+      MToast.show(
+          'Beberapa produk dalam keranjang anda kehabisan stok, update keranjang belanjaan untuk melanjutkan');
+    }
   }
 
   Future<bool> onBackButtonPressed() async {
@@ -491,9 +530,15 @@ class CheckoutPageController extends GetxController {
     ever(checkbox, (_) {
       _calculateTotal();
     });
+
+    ever(payTotal, (_) {
+      if (defaultChannelState().data != null) {
+        _validatePaymentRule(paymentChannel: defaultChannelState().data!);
+      }
+    });
   }
 
-  void init() {
+  void init() async {
     setAddressState();
 
     setDefaultChannelState();

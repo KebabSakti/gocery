@@ -6,6 +6,7 @@ import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/utility/utility.dart';
 import 'package:gocery/core/widget/shimmer_loader.dart';
+import 'package:gocery/feature/app/presentation/widget/message_box.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
@@ -237,6 +238,18 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Obx(() {
+                        //   return !controller.closed()
+                        //       ? const SizedBox.shrink()
+                        //       : const Padding(
+                        //           padding: EdgeInsets.only(
+                        //               left: kMediumPadding,
+                        //               right: kMediumPadding,
+                        //               top: kMediumPadding),
+                        //           child: MessageBox(
+                        //               'Tidak ada jam pengiriman tersedia'),
+                        //         );
+                        // }),
                         const Padding(
                           padding: EdgeInsets.only(
                               left: kMediumPadding,
@@ -420,6 +433,18 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Obx(() {
+                          return (!controller.itemsOutOfStock())
+                              ? const SizedBox.shrink()
+                              : const Padding(
+                                  padding: EdgeInsets.only(
+                                      left: kMediumPadding,
+                                      right: kMediumPadding,
+                                      top: kMediumPadding),
+                                  child: MessageBox(
+                                      'Beberapa produk yang dipesan kehabisan stok, update keranjang belanjaan untuk melanjutkan'),
+                                );
+                        }),
                         const SizedBox(height: kMediumPadding),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -488,6 +513,19 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Obx(() {
+                          return (controller.payment())
+                              ? const SizedBox.shrink()
+                              : Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: kMediumPadding,
+                                      right: kMediumPadding,
+                                      top: kMediumPadding,
+                                      bottom: kTinyPadding),
+                                  child: MessageBox(
+                                      'Minimum transaksi ${Utility.currency(controller.defaultChannelState().data!.min.toString())} dan Maksimum ${Utility.currency(controller.defaultChannelState().data!.max.toString())} untuk metode pembayaran ${controller.defaultChannelState().data!.name}'),
+                                );
+                        }),
                         Padding(
                           padding: const EdgeInsets.all(kMediumPadding),
                           child: Obx(() {
@@ -771,8 +809,7 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                                       controller.payTotal() == 0.0
                                           ? 'GRATIS!!'
                                           : Utility.currency(
-                                              controller.payTotal().toString(),
-                                            ),
+                                              controller.payTotal().toString()),
                                       style: Get.textTheme.headline4!.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -793,7 +830,9 @@ class CheckoutPage extends GetView<CheckoutPageController> {
             bottomSheet: Obx(() {
               return Material(
                 color: (controller.priceTotal() == 0.0 ||
-                        controller.shippingFee() == 0.0)
+                            controller.shippingFee() == 0.0) ||
+                        controller.itemsOutOfStock() == true ||
+                        controller.payment() == false
                     ? Colors.grey
                     : kPrimaryColor,
                 child: Ink(
@@ -828,7 +867,9 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                       ),
                       InkWell(
                         onTap: (controller.priceTotal() == 0.0 ||
-                                controller.shippingFee() == 0.0)
+                                controller.shippingFee() == 0.0 ||
+                                controller.itemsOutOfStock() == true ||
+                                controller.payment() == false)
                             ? null
                             : controller.toFindCourierPage,
                         overlayColor: MaterialStateProperty.resolveWith(

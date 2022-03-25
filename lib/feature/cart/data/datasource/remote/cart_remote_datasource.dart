@@ -52,7 +52,7 @@ class CartRemoteDatasource implements CartDatasource {
   @override
   Future<bool> stocks({required List<String> param}) async {
     final response =
-        await client.get(kCartStock, query: {'uids': param.join()});
+        await client.get(kOrderStock, query: {'uids': param.join(',')});
 
     var parsed = jsonDecode(response.toString());
 

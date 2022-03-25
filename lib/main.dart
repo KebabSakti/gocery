@@ -13,7 +13,6 @@ import 'core/service/network/dio_client.dart';
 import 'core/service/network/network.dart';
 import 'core/service/storage/secure_storage_client.dart';
 import 'core/service/storage/storage.dart';
-// import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -7,6 +7,8 @@ class PaymentChannelEntity {
     this.picture,
     this.fee,
     this.feeType,
+    this.min,
+    this.max,
   });
 
   final String? uid;
@@ -16,6 +18,8 @@ class PaymentChannelEntity {
   final String? picture;
   final String? fee;
   final String? feeType;
+  final int? min;
+  final int? max;
 
   PaymentChannelEntity copyWith({
     String? uid,
@@ -25,6 +29,8 @@ class PaymentChannelEntity {
     String? picture,
     String? fee,
     String? feeType,
+    int? min,
+    int? max,
   }) =>
       PaymentChannelEntity(
         uid: uid ?? this.uid,
@@ -34,5 +40,7 @@ class PaymentChannelEntity {
         picture: picture ?? this.picture,
         fee: fee ?? this.fee,
         feeType: feeType ?? this.feeType,
+        min: min ?? this.min,
+        max: max ?? this.max,
       );
 }

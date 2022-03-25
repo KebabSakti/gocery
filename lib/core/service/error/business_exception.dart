@@ -11,3 +11,5 @@ class OtpCodeToShort implements Exception {}
 class LoginProviderNotSelected implements Exception {}
 
 class NameAndPhoneRequired implements Exception {}
+
+class OutOfStock implements Exception {}

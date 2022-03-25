@@ -1,9 +1,9 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
-import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/service/error/map_exception_message.dart';
+import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/app/presentation/getx/controller/app_page_controller.dart';
 import 'package:gocery/feature/cart/data/repository/cart_repository_impl.dart';
@@ -19,7 +19,7 @@ class CartPageController extends GetxController {
 
   final _cartStock = CartStock(repository: Get.find<CartRepositoryImpl>());
 
-  final RxInt outOfStock = 0.obs;
+  final outOfStock = false.obs;
 
   void incrementItem({required CartItemEntity param}) {
     try {
@@ -39,38 +39,36 @@ class CartPageController extends GetxController {
   }
 
   void toCheckoutPage({required List<CartItemEntity> param}) async {
-    bool inStock = await _cartStock(
-        param: param.map((e) => e.productModel!.uid!).toList());
+    try {
+      MDialog.loading();
 
-    if (inStock) {
+      bool result = await _cartStock(
+          param: param.map((e) => e.productModel!.uid!).toList());
+
+      if (!result) {
+        throw OutOfStock();
+      }
+
+      outOfStock(false);
+
+      MDialog.close();
+
       Get.toNamed(kCheckoutPage, arguments: param);
-    } else {
-      MToast.show('Beberapa item pada keranjang kehabisan stok');
-
+    } on OutOfStock catch (_) {
       homePageController.init();
 
-      cartController.getCartItems();
+      await cartController.getCartItems();
+
+      MDialog.close();
+
+      outOfStock(true);
+
+      MToast.show(
+          'Beberapa produk dalam keranjang anda kehabisan stok, update keranjang belanjaan untuk melanjutkan');
     }
   }
 
   _orderLimit() {
     MToast.show(MapExceptionMessage.exception(MaxOrderLimit()));
-  }
-
-  @override
-  void onInit() {
-    ever(cartController.cartItemState,
-        (ResponseModel<List<CartItemEntity>> response) {
-      if (response.status == Status.success) {
-        if (response.data!.isNotEmpty) {
-          outOfStock.value = response.data!
-              .where((element) => element.productModel!.stok == 0)
-              .toList()
-              .length;
-        }
-      }
-    });
-
-    super.onInit();
   }
 }

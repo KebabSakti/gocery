@@ -21,4 +21,6 @@ abstract class OrderRepository {
   Future<List<VoucherEntity>> getVouchers();
 
   Future<void> submitOrder({required OrderSubmitParamEntity param});
+
+  Future<List<ShippingAddressEntity>> placesPredictions({String keyword = ''});
 }

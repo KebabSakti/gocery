@@ -20,17 +20,16 @@ const int kWebsocketWssPort = 6001;
 const bool kWebsocketEncrypt = false;
 
 //NOTIFICATION CHANNEL
-const String kOrderChannelKey = 'gocery_partner_order_channel';
-const String kOrderStatusChannelKey = 'gocery_partner_order_status_channel';
-const String kChatChannelKey = 'gocery_partner_chat_channel';
-const String kPromoChannelKey = 'gocery_partner_promo_channel';
-const String kServiceChannelKey = 'gocery_partner_service_channel';
-const String kOrderChannelGroupKey = 'gocery_partner_order_channel_group';
-const String kOrderStatusChannelGroupKey =
-    'gocery_partner_order_status_channel_group';
-const String kChatChannelGroupKey = 'gocery_partner_chat_channel_group';
-const String kPromoChannelGroupKey = 'gocery_partner_promo_channel_group';
-const String kServiceChannelGroupKey = 'gocery_partner_service_channel_group';
+const String kOrderChannelKey = 'gocery_order_channel';
+const String kOrderStatusChannelKey = 'gocery_order_status_channel';
+const String kChatChannelKey = 'gocery_chat_channel';
+const String kPromoChannelKey = 'gocery_promo_channel';
+const String kServiceChannelKey = 'gocery_service_channel';
+const String kOrderChannelGroupKey = 'gocery_order_channel_group';
+const String kOrderStatusChannelGroupKey = 'gocery_order_status_channel_group';
+const String kChatChannelGroupKey = 'gocery_chat_channel_group';
+const String kPromoChannelGroupKey = 'gocery_promo_channel_group';
+const String kServiceChannelGroupKey = 'gocery_service_channel_group';
 
 //ROUTE NAME
 const String kIntroPage = '/';
@@ -76,13 +75,13 @@ const String kSearchDelete = 'customer/searches';
 const String kCartIndex = 'customer/carts';
 const String kCartUpdate = 'customer/carts';
 const String kCartClear = 'customer/carts';
-const String kCartStock = 'customer/carts/stocks';
 const String kAddressLast = 'customer/orders/addresses';
 const String kOrderFee = 'customer/orders/fees';
 const String kOrderTime = 'customer/orders/times';
 const String kOrderPaymentChannel = 'customer/payments/channels';
 const String kOrderDefaultPaymentChannel = 'customer/payments/channels/default';
 const String kOrderVoucher = 'customer/vouchers';
+const String kOrderStock = 'customer/orders/stocks';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';

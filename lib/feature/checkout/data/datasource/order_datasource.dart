@@ -21,4 +21,6 @@ abstract class OrderDatasource {
   Future<List<VoucherModel>> getVouchers();
 
   Future<void> submitOrder({required OrderSubmitParamEntity param});
+
+  Future<List<ShippingAddressModel>> placesPredictions({String keyword = ''});
 }

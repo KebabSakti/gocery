@@ -13,9 +13,15 @@ import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_submit_param_entity.dart';
 
 class OrderRemoteDatasource implements OrderDatasource {
-  OrderRemoteDatasource({required this.client});
+  OrderRemoteDatasource({
+    required this.client,
+    // required this.googleMapsPlaces,
+    // required this.googleMapsGeocoding,
+  });
 
   final Network client;
+  // final GoogleMapsPlaces googleMapsPlaces;
+  // final GoogleMapsGeocoding googleMapsGeocoding;
 
   @override
   Future<ShippingAddressModel> getLastAddress() async {
@@ -85,6 +91,13 @@ class OrderRemoteDatasource implements OrderDatasource {
   @override
   Future<void> submitOrder({required OrderSubmitParamEntity param}) async {
     // throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ShippingAddressModel>> placesPredictions(
+      {String keyword = ''}) async {
+    // TODO: implement placesPredictions
+    throw UnimplementedError();
   }
 }
 
