@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_route.dart';
 import 'package:gocery/core/config/app_theme.dart';
+import 'package:gocery/core/service/map_api/map_api.dart';
+import 'package:gocery/core/service/map_api/map_api_service.dart';
 import 'package:gocery/core/service/websocket/websocket.dart';
 import 'package:gocery/core/service/websocket/websocket_service.dart';
 import 'package:gocery/dependency.dart';
 import 'package:gocery/firebase_options.dart';
+import 'package:google_maps_webservice/geocoding.dart';
+import 'package:google_maps_webservice/places.dart';
 
 import 'core/config/app_const.dart';
 import 'core/service/network/dio_client.dart';
@@ -43,6 +47,12 @@ Future _initServices() async {
   Get.put(SecureStorageImpl(SecureStorageClient()));
   Get.put(NetworkImpl(DioClient()));
   Get.put(WebsocketImpl(implementation: WebsocketService()));
+  Get.put(MapApiImpl(
+    implementation: MapApiService(
+      geocoding: GoogleMapsGeocoding(apiKey: kMapKey),
+      places: GoogleMapsPlaces(apiKey: kMapKey),
+    ),
+  ));
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
