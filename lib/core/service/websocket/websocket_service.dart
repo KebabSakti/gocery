@@ -21,7 +21,7 @@ class WebsocketService implements Websocket {
     String token = await _token();
 
     PusherOptions options = PusherOptions(
-      host: kWebsocketHost,
+      host: kHost,
       wsPort: kWebsocketWsPort,
       wssPort: kWebsocketWssPort,
       encrypted: kWebsocketEncrypt,

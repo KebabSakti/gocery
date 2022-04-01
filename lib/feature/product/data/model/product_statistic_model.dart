@@ -30,6 +30,16 @@ class ProductStatisticModel extends ProductStatisticEntity {
         sold: sold ?? this.sold,
       );
 
+  factory ProductStatisticModel.toModel(
+          {required ProductStatisticEntity productStatisticEntity}) =>
+      ProductStatisticModel(
+        productUid: productStatisticEntity.productUid,
+        uid: productStatisticEntity.uid,
+        favourite: productStatisticEntity.favourite,
+        view: productStatisticEntity.view,
+        sold: productStatisticEntity.sold,
+      );
+
   factory ProductStatisticModel.fromJson(Map<String, dynamic> json) =>
       ProductStatisticModel(
         productUid: json['product_uid'],

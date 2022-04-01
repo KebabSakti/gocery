@@ -43,6 +43,24 @@ class OrderShippingModel extends OrderShippingEntity {
           time: time,
         );
 
+  factory OrderShippingModel.toModel(
+          {required OrderShippingEntity orderShippingEntity}) =>
+      OrderShippingModel(
+        address: orderShippingEntity.address,
+        distance: orderShippingEntity.distance,
+        distanceUnit: orderShippingEntity.distanceUnit,
+        latitude: orderShippingEntity.latitude,
+        longitude: orderShippingEntity.longitude,
+        name: orderShippingEntity.name,
+        online: orderShippingEntity.online,
+        phone: orderShippingEntity.phone,
+        price: orderShippingEntity.price,
+        shipping: orderShippingEntity.shipping,
+        time: orderShippingEntity.time,
+        type: orderShippingEntity.type,
+        uid: orderShippingEntity.uid,
+      );
+
   factory OrderShippingModel.fromJson(Map<String, dynamic> json) =>
       OrderShippingModel(
         uid: json["uid"],

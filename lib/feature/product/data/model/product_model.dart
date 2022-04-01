@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:gocery/feature/product/data/model/product_statistic_model.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
+import 'package:gocery/feature/product/domain/entity/product_statistic_entity.dart';
 
 ProductModel productModelFromJson(String str) =>
     ProductModel.fromJson(json.decode(str));
@@ -93,6 +94,31 @@ class ProductModel extends ProductEntity {
         favourite: favourite ?? this.favourite,
         productStatisticModel: productStatisticModel ??
             this.productStatisticModel as ProductStatisticModel,
+      );
+
+  factory ProductModel.toModel({required ProductEntity productEntity}) =>
+      ProductModel(
+        categoryUid: productEntity.categoryUid,
+        uid: productEntity.uid,
+        name: productEntity.name,
+        description: productEntity.description,
+        image: productEntity.image,
+        price: productEntity.price,
+        discount: productEntity.discount,
+        finalPrice: productEntity.finalPrice,
+        unit: productEntity.unit,
+        unitCount: productEntity.unitCount,
+        minOrder: productEntity.minOrder,
+        maxOrder: productEntity.maxOrder,
+        stok: productEntity.stok,
+        point: productEntity.point,
+        shipping: productEntity.shipping,
+        type: productEntity.type,
+        deeplink: productEntity.deeplink,
+        favourite: productEntity.favourite,
+        productStatisticModel: ProductStatisticModel.toModel(
+            productStatisticEntity:
+                productEntity.productStatisticModel as ProductStatisticEntity),
       );
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(

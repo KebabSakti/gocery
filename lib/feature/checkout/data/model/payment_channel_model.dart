@@ -35,6 +35,20 @@ class PaymentChannelModel extends PaymentChannelEntity {
           max: max,
         );
 
+  factory PaymentChannelModel.toModel(
+          {required PaymentChannelEntity paymentChannelEntity}) =>
+      PaymentChannelModel(
+        channelCategory: paymentChannelEntity.channelCategory,
+        channelCode: paymentChannelEntity.channelCode,
+        fee: paymentChannelEntity.fee,
+        feeType: paymentChannelEntity.feeType,
+        max: paymentChannelEntity.max,
+        min: paymentChannelEntity.min,
+        name: paymentChannelEntity.name,
+        picture: paymentChannelEntity.picture,
+        uid: paymentChannelEntity.uid,
+      );
+
   factory PaymentChannelModel.fromJson(Map<String, dynamic> json) =>
       PaymentChannelModel(
         uid: json["uid"],

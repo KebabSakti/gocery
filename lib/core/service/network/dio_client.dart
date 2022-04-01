@@ -50,8 +50,11 @@ class DioClient implements Network {
         client.findProxy = (uri) {
           return "PROXY $kProxyUrl";
         };
+
         client.badCertificateCallback =
             (X509Certificate cert, String host, int port) => true;
+
+        return null;
       };
     }
 

@@ -4,16 +4,16 @@ import 'dart:ui';
 const String kMapKey = 'AIzaSyB7doxfW-m-TpBRogzeX2EVyIL9RmGXar0';
 
 //NETWORK
+const String kHost = '192.168.1.12';
 const String kProtocol = 'http';
-const String kBaseUrl = '192.168.3.153:1001';
-const String kProxyUrl = '192.168.3.153:8000';
+const String kBaseUrl = '$kHost:1001';
+const String kProxyUrl = '$kHost:8000';
 const bool kNetworkLog = false;
 const bool kProxy = true;
 const int kNetworkConnectTimeout = 60000;
 const int kNetworkReceiveTimeout = 60000;
 
 //WEBSOCKET
-const String kWebsocketHost = '192.168.3.153';
 const String kWebsocketKey = 'PUSHERKEY';
 const int kWebsocketWsPort = 6001;
 const int kWebsocketWssPort = 6001;
@@ -82,6 +82,7 @@ const String kOrderPaymentChannel = 'customer/payments/channels';
 const String kOrderDefaultPaymentChannel = 'customer/payments/channels/default';
 const String kOrderVoucher = 'customer/vouchers';
 const String kOrderStock = 'customer/orders/stocks';
+const String kOrderSubmit = 'customer/orders';
 
 //ASSETS
 const String kGoceryLogo = 'asset/image/ui/gocery_logo_clean.svg';

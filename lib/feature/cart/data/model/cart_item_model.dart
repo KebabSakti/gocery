@@ -26,6 +26,18 @@ class CartItemModel extends CartItemEntity {
           productModel: productModel,
         );
 
+  factory CartItemModel.toModel({required CartItemEntity cartItemEntity}) =>
+      CartItemModel(
+        customerAccountUid: cartItemEntity.customerAccountUid,
+        itemPriceTotal: cartItemEntity.itemPriceTotal,
+        itemQtyTotal: cartItemEntity.itemQtyTotal,
+        note: cartItemEntity.note,
+        productUid: cartItemEntity.productUid,
+        uid: cartItemEntity.uid,
+        productModel: ProductModel.toModel(
+            productEntity: cartItemEntity.productModel as ProductModel),
+      );
+
   factory CartItemModel.fromJson(Map<String, dynamic> json) => CartItemModel(
         customerAccountUid: json["customer_account_uid"],
         productUid: json["product_uid"],

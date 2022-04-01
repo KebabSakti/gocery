@@ -25,7 +25,7 @@ class AppTheme {
     colorScheme: const ColorScheme.light(
       brightness: Brightness.light,
       surface: kLightColor,
-      primaryVariant: kPrimaryColor700,
+      primaryContainer: kPrimaryColor700,
       error: kErrorColor,
       onError: kLightColor,
       background: kBackgroundColor,

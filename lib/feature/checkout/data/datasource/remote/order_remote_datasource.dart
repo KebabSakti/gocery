@@ -3,14 +3,20 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/network/network.dart';
+import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
+import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/checkout/data/datasource/order_datasource.dart';
+import 'package:gocery/feature/checkout/data/model/order_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/payment_channel_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_address_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_time_model.dart';
 import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
-import 'package:gocery/feature/checkout/domain/entity/order_submit_param_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/shipping_address_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/voucher_entity.dart';
 
 class OrderRemoteDatasource implements OrderDatasource {
   OrderRemoteDatasource({
@@ -89,14 +95,45 @@ class OrderRemoteDatasource implements OrderDatasource {
   }
 
   @override
-  Future<void> submitOrder({required OrderSubmitParamEntity param}) async {
-    // throw UnimplementedError();
+  Future<void> submitOrder({required OrderEntity param}) async {
+    await client.post(
+      kOrderSubmit,
+      data: {
+        'uid': param.uid,
+        'items': param.cartItemEntity!
+            .map((e) => CartItemModel.toModel(cartItemEntity: e).toJson())
+            .toList(),
+        'delivery': ShippingAddressModel.toModel(
+                shippingAddressEntity:
+                    param.shippingAddressEntity as ShippingAddressEntity)
+            .toJson(),
+        'shippings': param.orderShippingEntity!
+            .map((e) =>
+                OrderShippingModel.toModel(orderShippingEntity: e).toJson())
+            .toList(),
+        'payment': PaymentChannelModel.toModel(
+                paymentChannelEntity:
+                    param.paymentChannelEntity as PaymentChannelEntity)
+            .toJson(),
+        'vouchers': param.voucherEntity!
+            .map((e) => VoucherModel.toModel(
+                    voucherEntity: param.voucherEntity as VoucherEntity)
+                .toJson())
+            .toList(),
+        'qty_total': param.qtyTotal,
+        'price_total': param.priceTotal,
+        'shipping_fee': param.shippingFee,
+        'app_fee': param.appFee,
+        'voucher_deduction': param.voucherDeduction,
+        'point_deduction': param.pointDeduction,
+        'pay_total': param.payTotal,
+      },
+    );
   }
 
   @override
   Future<List<ShippingAddressModel>> placesPredictions(
       {String keyword = ''}) async {
-    // TODO: implement placesPredictions
     throw UnimplementedError();
   }
 }

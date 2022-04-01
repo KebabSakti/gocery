@@ -47,6 +47,7 @@ Future _initServices() async {
   Get.put(SecureStorageImpl(SecureStorageClient()));
   Get.put(NetworkImpl(DioClient()));
   Get.put(WebsocketImpl(implementation: WebsocketService()));
+
   Get.put(MapApiImpl(
     implementation: MapApiService(
       geocoding: GoogleMapsGeocoding(apiKey: kMapKey),

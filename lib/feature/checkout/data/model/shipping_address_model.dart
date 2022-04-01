@@ -35,6 +35,20 @@ class ShippingAddressModel extends ShippingAddressEntity {
           phone: phone,
         );
 
+  factory ShippingAddressModel.toModel(
+          {required ShippingAddressEntity shippingAddressEntity}) =>
+      ShippingAddressModel(
+        address: shippingAddressEntity.address,
+        latitude: shippingAddressEntity.latitude,
+        longitude: shippingAddressEntity.longitude,
+        name: shippingAddressEntity.name,
+        note: shippingAddressEntity.note,
+        orderUid: shippingAddressEntity.orderUid,
+        phone: shippingAddressEntity.phone,
+        placeId: shippingAddressEntity.placeId,
+        uid: shippingAddressEntity.uid,
+      );
+
   factory ShippingAddressModel.fromJson(Map<String, dynamic> json) =>
       ShippingAddressModel(
         orderUid: json["order_uid"],

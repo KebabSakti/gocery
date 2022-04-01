@@ -38,6 +38,21 @@ class VoucherModel extends VoucherEntity {
           selected: selected,
         );
 
+  factory VoucherModel.toModel({required VoucherEntity voucherEntity}) =>
+      VoucherModel(
+        amount: voucherEntity.amount,
+        code: voucherEntity.code,
+        description: voucherEntity.description,
+        expiredAt: voucherEntity.expiredAt,
+        image: voucherEntity.image,
+        max: voucherEntity.max,
+        minOrder: voucherEntity.minOrder,
+        selected: voucherEntity.selected,
+        startAt: voucherEntity.startAt,
+        title: voucherEntity.title,
+        uid: voucherEntity.uid,
+      );
+
   factory VoucherModel.fromJson(Map<String, dynamic> json) => VoucherModel(
         uid: json["uid"],
         title: json["title"],

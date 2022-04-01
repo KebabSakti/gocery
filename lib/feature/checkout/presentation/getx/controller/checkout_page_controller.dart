@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/model/response_model.dart';
+import 'package:gocery/core/service/error/base_exception.dart';
 import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/service/websocket/websocket.dart';
 import 'package:gocery/core/utility/mdialog.dart';
@@ -27,6 +28,7 @@ import 'package:gocery/feature/checkout/domain/usecase/get_order_shipping.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_payment_channel.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_shipping_times.dart';
 import 'package:gocery/feature/checkout/domain/usecase/get_vouchers.dart';
+import 'package:gocery/feature/checkout/domain/usecase/submit_order.dart';
 import 'package:gocery/feature/customer/data/repository/customer_repository_impl.dart';
 import 'package:gocery/feature/customer/domain/entity/customer_account_entity.dart';
 import 'package:gocery/feature/customer/domain/usecase/show_customer_account.dart';
@@ -61,6 +63,8 @@ class CheckoutPageController extends GetxController {
       GetDefaultPaymentChannel(repository: Get.find<OrderRepositoryImpl>());
   final _getVouchers = GetVouchers(repository: Get.find<OrderRepositoryImpl>());
   final _cartStock = CartStock(repository: Get.find<CartRepositoryImpl>());
+
+  final _submitOrder = SubmitOrder(repository: Get.find<OrderRepositoryImpl>());
 
   final addressState =
       ResponseModel<ShippingAddressEntity>(status: Status.loading).obs;
@@ -452,7 +456,7 @@ class CheckoutPageController extends GetxController {
       itemsOutOfStock(false);
 
       OrderEntity param = OrderEntity(
-        uid: uid,
+        uid: Utility.randomUid(),
         cartItemEntity: cartItems,
         shippingAddressEntity: addressState().data,
         orderShippingEntity: orderShippingState().data,
@@ -467,9 +471,11 @@ class CheckoutPageController extends GetxController {
         payTotal: payTotal().toString(),
       );
 
-      MDialog.close();
+      await _submitOrder(param: param);
 
-      Get.toNamed(kFindCourierPage, arguments: param);
+      // MDialog.close();
+
+      // Get.toNamed(kFindCourierPage, arguments: param);
     } on OutOfStock catch (_) {
       homePageController.init();
 
@@ -481,6 +487,8 @@ class CheckoutPageController extends GetxController {
 
       MToast.show(
           'Beberapa produk dalam keranjang anda kehabisan stok, update keranjang belanjaan untuk melanjutkan');
+    } on Exception catch (e, t) {
+      throw BaseException(e, t);
     }
   }
 
