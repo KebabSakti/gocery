@@ -31,7 +31,7 @@ class OrderCompletePage extends StatelessWidget {
                 ),
                 const SizedBox(height: kBigPadding),
                 Text(
-                  'Orderan anda berhasil di proses, kamu bisa lihat progress orderan kamu di halaman Order',
+                  'Orderan anda berhasil di proses, lihat status orderan kamu di halaman order',
                   textAlign: TextAlign.center,
                   style: Get.theme.textTheme.headline2,
                 ),

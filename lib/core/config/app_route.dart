@@ -117,5 +117,9 @@ class AppRoute {
       page: () => const FindCourierPage(),
       binding: BindingsBuilder.put(() => FindCourierPageController()),
     ),
+    GetPage(
+      name: kOrderCompletePage,
+      page: () => const OrderCompletePage(),
+    ),
   ];
 }

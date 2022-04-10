@@ -155,6 +155,10 @@ class CheckoutPageController extends GetxController {
       return 0.0;
     }
 
+    if (!checkbox()) {
+      return 0.0;
+    }
+
     return double.parse(
         customerAccount().data!.customerPointEntity!.point!.toString());
   }
@@ -446,12 +450,8 @@ class CheckoutPageController extends GetxController {
     try {
       MDialog.loading();
 
-      bool result = await _cartStock(
+      await _cartStock(
           param: cartItems.map((e) => e.productModel!.uid!).toList());
-
-      if (!result) {
-        throw OutOfStock();
-      }
 
       itemsOutOfStock(false);
 
@@ -473,9 +473,9 @@ class CheckoutPageController extends GetxController {
 
       await _submitOrder(param: param);
 
-      // MDialog.close();
+      MDialog.close();
 
-      // Get.toNamed(kFindCourierPage, arguments: param);
+      Get.toNamed(kFindCourierPage, arguments: param);
     } on OutOfStock catch (_) {
       homePageController.init();
 

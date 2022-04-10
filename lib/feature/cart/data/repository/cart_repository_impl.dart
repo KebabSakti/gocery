@@ -24,7 +24,7 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<bool> stocks({required List<String> param}) async {
-    return await datasource.stocks(param: param);
+  Future<void> stocks({required List<String> param}) async {
+    await datasource.stocks(param: param);
   }
 }

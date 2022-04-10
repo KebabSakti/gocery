@@ -5,7 +5,7 @@ class CartStock {
 
   CartStock({required this.repository});
 
-  Future<bool> call({required List<String> param}) async {
-    return await repository.stocks(param: param);
+  Future<void> call({required List<String> param}) async {
+    await repository.stocks(param: param);
   }
 }

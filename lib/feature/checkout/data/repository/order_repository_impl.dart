@@ -56,4 +56,9 @@ class OrderRepositoryImpl implements OrderRepository {
       {String keyword = ''}) async {
     return await datasource.placesPredictions(keyword: keyword);
   }
+
+  @override
+  Future<void> cancelOrder({required String orderUid}) async {
+    await datasource.cancelOrder(orderUid: orderUid);
+  }
 }

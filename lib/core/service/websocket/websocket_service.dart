@@ -5,7 +5,7 @@ import 'package:gocery/core/service/websocket/websocket.dart';
 import 'package:pusher_client/pusher_client.dart';
 
 class WebsocketService implements Websocket {
-  static const String url = '$kProtocol://$kBaseUrl/api/v1/$kBroadcastAuth';
+  static const String url = kBaseUrl + kBroadcastAuth;
 
   Future<String> _token() async {
     //access secure local storage for authorization token

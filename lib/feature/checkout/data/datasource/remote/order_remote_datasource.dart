@@ -4,9 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/service/network/network.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
-import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/checkout/data/datasource/order_datasource.dart';
-import 'package:gocery/feature/checkout/data/model/order_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_param_model.dart';
 import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/payment_channel_model.dart';
@@ -135,6 +133,11 @@ class OrderRemoteDatasource implements OrderDatasource {
   Future<List<ShippingAddressModel>> placesPredictions(
       {String keyword = ''}) async {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> cancelOrder({required String orderUid}) async {
+    await client.get(kOrderCancel, query: {'order_uid': orderUid});
   }
 }
 

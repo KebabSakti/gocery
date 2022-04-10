@@ -13,7 +13,6 @@ import 'package:gocery/feature/checkout/data/model/shipping_address_model.dart';
 import 'package:gocery/feature/checkout/data/model/shipping_detail_model.dart';
 import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
-import 'package:gocery/feature/checkout/domain/entity/order_status_entity.dart';
 
 OrderModel orderModelFromJson(String str) =>
     OrderModel.fromJson(json.decode(str));

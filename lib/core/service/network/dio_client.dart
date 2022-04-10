@@ -21,7 +21,7 @@ class DioClient implements Network {
     final String? token = await _sBox.read(key: 'token');
 
     //network client configuration
-    _dio.options.baseUrl = '$kProtocol://$kBaseUrl/api/v1/';
+    _dio.options.baseUrl = kBaseUrl;
     _dio.options.connectTimeout = kNetworkConnectTimeout;
     _dio.options.receiveTimeout = kNetworkReceiveTimeout;
     _dio.options.responseType = dio.ResponseType.plain;

@@ -7,5 +7,5 @@ abstract class CartDatasource {
 
   Future<void> clearCart();
 
-  Future<bool> stocks({required List<String> param});
+  Future<void> stocks({required List<String> param});
 }

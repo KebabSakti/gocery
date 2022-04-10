@@ -23,4 +23,6 @@ abstract class OrderRepository {
   Future<void> submitOrder({required OrderEntity param});
 
   Future<List<ShippingAddressEntity>> placesPredictions({String keyword = ''});
+
+  Future<void> cancelOrder({required String orderUid});
 }

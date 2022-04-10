@@ -23,4 +23,6 @@ abstract class OrderDatasource {
   Future<void> submitOrder({required OrderEntity param});
 
   Future<List<ShippingAddressModel>> placesPredictions({String keyword = ''});
+
+  Future<void> cancelOrder({required String orderUid});
 }

@@ -42,12 +42,7 @@ class CartPageController extends GetxController {
     try {
       MDialog.loading();
 
-      bool result = await _cartStock(
-          param: param.map((e) => e.productModel!.uid!).toList());
-
-      if (!result) {
-        throw OutOfStock();
-      }
+      await _cartStock(param: param.map((e) => e.productModel!.uid!).toList());
 
       outOfStock(false);
 
@@ -65,6 +60,10 @@ class CartPageController extends GetxController {
 
       MToast.show(
           'Beberapa produk dalam keranjang anda kehabisan stok, update keranjang belanjaan untuk melanjutkan');
+    } on Exception catch (e) {
+      MDialog.close();
+
+      MToast.show(MapExceptionMessage.exception(e));
     }
   }
 

@@ -52,6 +52,31 @@ class MDialog {
     );
   }
 
+  static prompt(String message, {required Function onOk}) {
+    Get.dialog(
+      AlertDialog(
+        content: Text(
+          message,
+          style: Get.textTheme.bodyText1,
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: const Text('Lanjutkan'),
+            onPressed: () {
+              onOk();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   static close() {
     if (Get.isDialogOpen != null) {
       if (Get.isDialogOpen!) {
