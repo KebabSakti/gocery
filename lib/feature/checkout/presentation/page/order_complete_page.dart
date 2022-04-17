@@ -31,7 +31,7 @@ class OrderCompletePage extends StatelessWidget {
                 ),
                 const SizedBox(height: kBigPadding),
                 Text(
-                  'Orderan anda berhasil di proses, lihat status orderan kamu di halaman order',
+                  'Order berhasil, lihat status orderan di halaman order',
                   textAlign: TextAlign.center,
                   style: Get.theme.textTheme.headline2,
                 ),
@@ -61,9 +61,7 @@ class OrderCompletePage extends StatelessWidget {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () async {
-                          await launch(
-                              'https://checkout-staging.xendit.co/web/61e273d5b088a50b28578f82',
-                              forceWebView: true,
+                          await launch('https://ayobelanja.page.link/KPo2',
                               enableJavaScript: true);
                         },
                         style: ElevatedButton.styleFrom(

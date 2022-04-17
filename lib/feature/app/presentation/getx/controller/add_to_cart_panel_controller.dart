@@ -5,6 +5,7 @@ import 'package:gocery/core/service/error/business_exception.dart';
 import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
 import 'package:gocery/feature/cart/presentation/getx/controller/cart_controller.dart';
+import 'package:gocery/feature/checkout/domain/entity/order_param_entity.dart';
 import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -57,11 +58,14 @@ class AddToCartPanelController extends GetxController {
   }
 
   void toCheckoutPage({required CartItemEntity param}) {
+    OrderParamEntity orderParamEntity =
+        OrderParamEntity(clearCart: false, cartItems: [param]);
+
     cartController.removeCartItem(param: param);
 
     panelController.close();
 
-    Get.toNamed(kCheckoutPage, arguments: [param]);
+    Get.toNamed(kCheckoutPage, arguments: orderParamEntity);
   }
 
   CartItemEntity _getCartItem({required ProductEntity param}) {

@@ -37,38 +37,6 @@ class _CartPageState extends State<CartPage>
           if (cartItems.isNotEmpty) {
             return Column(
               children: [
-                Obx(() {
-                  return (!controller.outOfStock())
-                      ? const SizedBox.shrink()
-                      : Container(
-                          padding: const EdgeInsets.all(kMediumPadding),
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor100,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                  offset: const Offset(
-                                      1, 1), // changes position of shadow
-                                ),
-                              ]),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Icon(
-                                AppIcon.infocircle,
-                                color: Colors.amber,
-                              ),
-                              SizedBox(width: kSmallPadding),
-                              Expanded(
-                                child: Text(
-                                    'Beberapa produk dalam keranjang anda kehabisan stok, update keranjang belanjaan untuk melanjutkan'),
-                              ),
-                            ],
-                          ),
-                        );
-                }),
                 Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
@@ -267,8 +235,7 @@ class _CartPageState extends State<CartPage>
                 ),
                 Obx(() {
                   return Material(
-                    color:
-                        (controller.outOfStock()) ? Colors.grey : kPrimaryColor,
+                    color: kPrimaryColor,
                     child: Ink(
                       height: 56,
                       child: Row(
@@ -296,11 +263,9 @@ class _CartPageState extends State<CartPage>
                             ),
                           ),
                           InkWell(
-                            onTap: (controller.outOfStock())
-                                ? null
-                                : () {
-                                    controller.toCheckoutPage(param: cartItems);
-                                  },
+                            onTap: () {
+                              controller.toCheckoutPage(param: cartItems);
+                            },
                             overlayColor: MaterialStateProperty.resolveWith(
                                 (_) => kPrimaryColor400),
                             child: Ink(

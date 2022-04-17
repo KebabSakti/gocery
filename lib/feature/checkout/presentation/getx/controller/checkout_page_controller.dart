@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
+import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/model/response_model.dart';
 import 'package:gocery/core/service/error/base_exception.dart';
 import 'package:gocery/core/service/error/business_exception.dart';
+import 'package:gocery/core/service/error/map_exception_message.dart';
 import 'package:gocery/core/service/websocket/websocket.dart';
 import 'package:gocery/core/utility/mdialog.dart';
 import 'package:gocery/core/utility/mtoast.dart';
@@ -16,6 +19,7 @@ import 'package:gocery/feature/checkout/data/model/order_shipping_model.dart';
 import 'package:gocery/feature/checkout/data/model/voucher_model.dart';
 import 'package:gocery/feature/checkout/data/repository/order_repository_impl.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_entity.dart';
+import 'package:gocery/feature/checkout/domain/entity/order_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/order_shipping_param_entity.dart';
 import 'package:gocery/feature/checkout/domain/entity/payment_channel_entity.dart';
@@ -40,7 +44,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class CheckoutPageController extends GetxController {
   final websocket = Get.find<WebsocketImpl>();
 
-  final List<CartItemEntity> cartItems = Get.arguments;
+  final OrderParamEntity orderParamEntity = Get.arguments;
 
   final PanelController deliveryTimePanel = PanelController();
   final PanelController paymentChannelPanel = PanelController();
@@ -107,14 +111,15 @@ class CheckoutPageController extends GetxController {
   }
 
   double _totalCartItem() {
-    double total = cartItems.fold(
-        0, (sum, item) => sum + double.parse(item.itemPriceTotal!));
+    double total = orderParamEntity.cartItems!
+        .fold(0, (sum, item) => sum + double.parse(item.itemPriceTotal!));
 
     return total;
   }
 
   int _totalCartItemQty() {
-    int total = cartItems.fold(0, (sum, item) => sum + item.itemQtyTotal!);
+    int total = orderParamEntity.cartItems!
+        .fold(0, (sum, item) => sum + item.itemQtyTotal!);
 
     return total;
   }
@@ -226,7 +231,7 @@ class CheckoutPageController extends GetxController {
             param: OrderShippingParamEntity(
           latitude: addressState().data!.latitude,
           longitude: addressState().data!.longitude,
-          type: Utility.getCartItemTypes(param: cartItems),
+          type: Utility.getCartItemTypes(param: orderParamEntity.cartItems!),
         ));
 
         orderShippingState(ResponseModel<List<OrderShippingEntity>>(
@@ -369,28 +374,34 @@ class CheckoutPageController extends GetxController {
   }
 
   void setCartItemNote({required CartItemEntity param}) {
-    int index = cartItems
+    int index = orderParamEntity.cartItems!
         .indexWhere((element) => element.productUid == param.productUid);
 
     if (index >= 0) {
-      cartItems[index] = CartItemModel(
-        customerAccountUid: cartItems[index].customerAccountUid,
-        itemPriceTotal: cartItems[index].itemPriceTotal,
-        itemQtyTotal: cartItems[index].itemQtyTotal,
-        productModel: cartItems[index].productModel as ProductModel,
-        productUid: cartItems[index].productUid,
-        uid: cartItems[index].uid,
+      orderParamEntity.cartItems![index] = CartItemModel(
+        customerAccountUid:
+            orderParamEntity.cartItems![index].customerAccountUid,
+        itemPriceTotal: orderParamEntity.cartItems![index].itemPriceTotal,
+        itemQtyTotal: orderParamEntity.cartItems![index].itemQtyTotal,
+        productModel:
+            orderParamEntity.cartItems![index].productModel as ProductModel,
+        productUid: orderParamEntity.cartItems![index].productUid,
+        uid: orderParamEntity.cartItems![index].uid,
         note: param.note,
       );
     }
   }
 
   void setPayment({required PaymentChannelEntity param}) {
-    defaultChannelState(defaultChannelState().copyWith(data: param));
+    if (param.channelCode == 'ID_OVO' && param.extra == null) {
+      setOvoNumber(param: param);
+    } else {
+      defaultChannelState(defaultChannelState().copyWith(data: param));
 
-    paymentChannelPanel.close();
+      paymentChannelPanel.close();
 
-    _validatePaymentRule(paymentChannel: param);
+      _validatePaymentRule(paymentChannel: param);
+    }
   }
 
   void setVoucher({required VoucherEntity param}) {
@@ -415,6 +426,42 @@ class CheckoutPageController extends GetxController {
 
       voucherState(voucherState().copyWith(data: models));
     }
+  }
+
+  void setOvoNumber({required PaymentChannelEntity param}) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Nomor OVO anda'),
+        content: TextField(
+          controller: TextEditingController()..text = param.extra ?? '',
+          keyboardType: TextInputType.phone,
+          autofocus: true,
+          style: Get.textTheme.headline3,
+          decoration: const InputDecoration(
+            suffixIconConstraints: BoxConstraints(),
+            suffixIcon: Icon(AppIcon.phoneandorid),
+          ),
+          onSubmitted: (value) {
+            try {
+              if (!Utility.validatePhone(phone: value)) {
+                throw InvalidPhoneNumber();
+              }
+
+              defaultChannelState(defaultChannelState()
+                  .copyWith(data: param.copyWith(extra: value)));
+
+              Get.back();
+
+              paymentChannelPanel.close();
+
+              _validatePaymentRule(paymentChannel: param);
+            } on Exception catch (e) {
+              MToast.show(MapExceptionMessage.exception(e));
+            }
+          },
+        ),
+      ),
+    );
   }
 
   void openDeliveryTimePanel() {
@@ -451,13 +498,15 @@ class CheckoutPageController extends GetxController {
       MDialog.loading();
 
       await _cartStock(
-          param: cartItems.map((e) => e.productModel!.uid!).toList());
+          param: orderParamEntity.cartItems!
+              .map((e) => e.productModel!.uid!)
+              .toList());
 
       itemsOutOfStock(false);
 
       OrderEntity param = OrderEntity(
         uid: Utility.randomUid(),
-        cartItemEntity: cartItems,
+        cartItemEntity: orderParamEntity.cartItems!,
         shippingAddressEntity: addressState().data,
         orderShippingEntity: orderShippingState().data,
         paymentChannelEntity: defaultChannelState().data,
@@ -472,6 +521,10 @@ class CheckoutPageController extends GetxController {
       );
 
       await _submitOrder(param: param);
+
+      if (orderParamEntity.clearCart!) {
+        await cartController.clearCart();
+      }
 
       MDialog.close();
 

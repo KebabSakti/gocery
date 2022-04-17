@@ -5,6 +5,7 @@ import 'package:gocery/core/utility/mtoast.dart';
 import 'package:gocery/feature/cart/data/model/cart_item_model.dart';
 import 'package:gocery/feature/cart/data/repository/cart_repository_impl.dart';
 import 'package:gocery/feature/cart/domain/entity/cart_item_entity.dart';
+import 'package:gocery/feature/cart/domain/usecase/clear_cart.dart';
 import 'package:gocery/feature/cart/domain/usecase/get_cart_items.dart';
 import 'package:gocery/feature/cart/domain/usecase/update_cart.dart';
 import 'package:gocery/feature/product/data/model/product_model.dart';
@@ -13,6 +14,7 @@ import 'package:gocery/feature/product/domain/entity/product_entity.dart';
 class CartController extends GetxController {
   final _getCartItems = GetCartItem(repository: Get.find<CartRepositoryImpl>());
   final _updateCart = UpdateCart(repository: Get.find<CartRepositoryImpl>());
+  final _clearCart = ClearCart(repository: Get.find<CartRepositoryImpl>());
 
   final cartItemState =
       ResponseModel<List<CartItemEntity>>(status: Status.loading, data: []).obs;
@@ -113,7 +115,9 @@ class CartController extends GetxController {
     setItemQty(param: param, qty: 0);
   }
 
-  void clearCart() {
+  Future<void> clearCart() async {
+    await _clearCart();
+
     cartItemState(
         ResponseModel<List<CartItemEntity>>(status: Status.empty, data: []));
   }

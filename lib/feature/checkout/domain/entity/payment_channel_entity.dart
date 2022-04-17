@@ -11,6 +11,7 @@ class PaymentChannelEntity {
     this.min,
     this.max,
     this.expire,
+    this.extra,
   });
 
   final String? uid;
@@ -24,6 +25,7 @@ class PaymentChannelEntity {
   final int? min;
   final int? max;
   final int? expire;
+  final String? extra;
 
   PaymentChannelEntity copyWith({
     String? uid,
@@ -37,6 +39,7 @@ class PaymentChannelEntity {
     int? min,
     int? max,
     int? expire,
+    String? extra,
   }) =>
       PaymentChannelEntity(
         uid: uid ?? this.uid,
@@ -50,5 +53,6 @@ class PaymentChannelEntity {
         min: min ?? this.min,
         max: max ?? this.max,
         expire: expire ?? this.expire,
+        extra: extra ?? this.extra,
       );
 }

@@ -519,11 +519,11 @@ class ProductDetailPage extends StatelessWidget {
                                             },
                                             onFavouriteTap: () {},
                                             onBuyTap: () {
-                                              // controller
-                                              //     .addToCartPanelController
-                                              //     .showPanel(
-                                              //         param: productSimiliar[
-                                              //             index]);
+                                              controller
+                                                  .addToCartPanelController
+                                                  .showPanel(
+                                                      param: productSimiliar[
+                                                          index]);
                                             },
                                           ),
                                         );

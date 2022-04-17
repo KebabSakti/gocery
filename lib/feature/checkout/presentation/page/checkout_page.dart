@@ -453,7 +453,8 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text('Produk Yang Dipesan'),
-                              Text('${controller.cartItems.length} Item',
+                              Text(
+                                  '${controller.orderParamEntity.cartItems!.length} Item',
                                   style: Get.textTheme.bodyText1),
                             ],
                           ),
@@ -463,22 +464,24 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kMediumPadding),
                           child: CheckoutCartItem(
-                            cartItemEntity: controller.cartItems[0],
+                            cartItemEntity:
+                                controller.orderParamEntity.cartItems![0],
                             onSubmitted: (value) {
                               controller.setCartItemNote(
-                                  param: controller.cartItems[0]
+                                  param: controller
+                                      .orderParamEntity.cartItems![0]
                                       .copyWith(note: value));
                             },
                           ),
                         ),
                         const SizedBox(height: kMediumPadding),
-                        (controller.cartItems.length == 1)
+                        (controller.orderParamEntity.cartItems!.length == 1)
                             ? const SizedBox.shrink()
                             : ExpansionTile(
                                 title: const Text('Semua Item'),
                                 tilePadding: const EdgeInsets.symmetric(
                                     horizontal: kMediumPadding),
-                                children: controller.cartItems
+                                children: controller.orderParamEntity.cartItems!
                                     .asMap()
                                     .entries
                                     .map((e) {
@@ -493,7 +496,8 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                                       cartItemEntity: e.value,
                                       onSubmitted: (value) {
                                         controller.setCartItemNote(
-                                            param: controller.cartItems[0]
+                                            param: controller
+                                                .orderParamEntity.cartItems![0]
                                                 .copyWith(note: value));
                                       },
                                     ),
@@ -541,17 +545,63 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: Row(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        CachedNetworkImage(
-                                          imageUrl: payment.picture!,
-                                          height: 20,
+                                        Row(
+                                          children: [
+                                            CachedNetworkImage(
+                                              imageUrl: payment.picture!,
+                                              height: 20,
+                                            ),
+                                            const SizedBox(
+                                                width: kSmallPadding),
+                                            Expanded(
+                                              child: Text(payment.name!,
+                                                  style:
+                                                      Get.textTheme.bodyText1),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: kSmallPadding),
-                                        Expanded(
-                                          child: Text(payment.name!,
-                                              style: Get.textTheme.bodyText1),
-                                        ),
+                                        (payment.extra == null)
+                                            ? const SizedBox.shrink()
+                                            : Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 6),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      payment.extra!,
+                                                      style: Get
+                                                          .textTheme.bodyText1,
+                                                    ),
+                                                    const SizedBox(width: 6),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        controller.setOvoNumber(
+                                                            param: payment);
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          const Icon(
+                                                              AppIcon
+                                                                  .editpencil,
+                                                              size: 15,
+                                                              color:
+                                                                  kPrimaryColor),
+                                                          const SizedBox(
+                                                              width: 2),
+                                                          Text('Edit',
+                                                              style: Get
+                                                                  .textTheme
+                                                                  .headline4),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                       ],
                                     ),
                                   ),

@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:gocery/core/config/app_const.dart';
 import 'package:gocery/core/config/app_icons.dart';
 import 'package:gocery/core/utility/mtoast.dart';
+import 'package:gocery/feature/app/presentation/widget/message_box.dart';
 import 'package:gocery/feature/order/presentation/getx/controller/order_detail_page_controller.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class OrderDetailPage extends GetView<OrderDetailPageController> {
   const OrderDetailPage({Key? key}) : super(key: key);
@@ -44,207 +44,59 @@ class OrderDetailPage extends GetView<OrderDetailPageController> {
             ),
             child: Column(
               children: [
+                const Padding(
+                  padding: EdgeInsets.only(
+                      left: kMediumPadding,
+                      right: kMediumPadding,
+                      top: kMediumPadding),
+                  child: MessageBox(
+                      'Agar orderan dapat di proses, lakukan pembayaran sebelum\n\n01:00 PM (59 menit lagi)'),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(kMediumPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'http://4.bp.blogspot.com/-C-RFJkQ5Rdo/TqJcZf6LawI/AAAAAAAAAEY/I2GRCN43URY/s1600/Brad-pitt.jpg',
-                              fit: BoxFit.cover,
-                              width: 50,
-                              height: 50,
-                            ),
-                          ),
-                          const SizedBox(width: kSmallPadding),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Udin Pitt',
-                                        style: Get.textTheme.bodyText1,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 6, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          'TERJADWAL',
-                                          style: Get.textTheme.overline,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    ClipOval(
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Get.toNamed(kChatDetailPage);
-                                          },
-                                          child: Ink(
-                                            child: const Icon(
-                                              AppIcon.chat,
-                                              color: kPrimaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    ClipOval(
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () async {
-                                            await Permission.location.request();
-
-                                            if (await Permission.location
-                                                .request()
-                                                .isGranted) {
-                                              Get.toNamed(kTrackingPage);
-                                            }
-                                          },
-                                          child: Ink(
-                                            child: const Icon(
-                                              AppIcon.mapmarker,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      CachedNetworkImage(
+                        imageUrl:
+                            'https://res.cloudinary.com/vjtechsolution/image/upload/v1627370426/ayo%20mobile/AnyConv.com__bniva.png',
+                        height: 30,
                       ),
+                      (true == true)
+                          ? ElevatedButton(
+                              onPressed: () {},
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.shield, size: 22),
+                                  SizedBox(width: 4),
+                                  Text('Bayar'),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 6),
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.check_circle_rounded,
+                                    color: kLightColor,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Lunas',
+                                    style: Get.theme.textTheme.caption,
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ),
-                const Divider(height: 1),
-                Padding(
-                  padding: const EdgeInsets.all(kMediumPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXh0lBC4y8H5mpx33dGp5KiqKhLrWjsju1zA&usqp=CAU',
-                              fit: BoxFit.cover,
-                              width: 50,
-                              height: 50,
-                            ),
-                          ),
-                          const SizedBox(width: kSmallPadding),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Om Kurir',
-                                        style: Get.textTheme.bodyText1,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 6, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: Colors.amber,
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          'LANGSUNG',
-                                          style: Get.textTheme.overline,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    ClipOval(
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Get.toNamed(kChatDetailPage);
-                                          },
-                                          child: Ink(
-                                            child: const Icon(
-                                              AppIcon.chat,
-                                              color: kPrimaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    ClipOval(
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () async {
-                                            await Permission.location.request();
-
-                                            if (await Permission.location
-                                                .request()
-                                                .isGranted) {
-                                              Get.toNamed(kTrackingPage);
-                                            }
-                                          },
-                                          child: Ink(
-                                            child: const Icon(
-                                              AppIcon.mapmarker,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
@@ -295,54 +147,20 @@ class OrderDetailPage extends GetView<OrderDetailPageController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Status'),
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'PENGANTARAN',
-                            style: Get.textTheme.overline,
-                          ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'MENUNGGU PEMBAYARAN',
+                          style: Get.textTheme.overline!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
-                  ),
-                ),
-                const Divider(height: 1),
-                InkWell(
-                  onTap: () {},
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(kMediumPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl:
-                              'https://res.cloudinary.com/vjtechsolution/image/upload/v1627370426/ayo%20mobile/AnyConv.com__bniva.png',
-                          height: 30,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'Lunas',
-                            style: Get.theme.textTheme.caption,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ],
@@ -449,7 +267,7 @@ class OrderDetailPage extends GetView<OrderDetailPageController> {
           ),
         ),
         const SizedBox(height: kMediumPadding),
-        Container(
+        Ink(
           decoration: BoxDecoration(
             color: kLightColor,
             borderRadius: BorderRadius.circular(10),
@@ -525,6 +343,36 @@ class OrderDetailPage extends GetView<OrderDetailPageController> {
                         Text('LANGSUNG', style: Get.textTheme.bodyText1),
                       ],
                     ),
+                    const SizedBox(height: kBigPadding),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'http://4.bp.blogspot.com/-C-RFJkQ5Rdo/TqJcZf6LawI/AAAAAAAAAEY/I2GRCN43URY/s1600/Brad-pitt.jpg',
+                            fit: BoxFit.cover,
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                        const SizedBox(width: kSmallPadding),
+                        Text(
+                          'Bradd Pitt',
+                          style: Get.textTheme.bodyText1,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          constraints: const BoxConstraints(),
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(
+                            AppIcon.mylocation,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -586,24 +434,36 @@ class OrderDetailPage extends GetView<OrderDetailPageController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Jam Kirim', style: Get.textTheme.bodyText1),
-                        Row(
-                          children: [
-                            Text('10:00 AM', style: Get.textTheme.bodyText1),
-                            const SizedBox(width: 6),
-                            GestureDetector(
-                              onTap: () {
-                                //
-                              },
-                              child: Row(
-                                children: [
-                                  const Icon(AppIcon.editpencil,
-                                      size: 15, color: kPrimaryColor),
-                                  const SizedBox(width: 2),
-                                  Text('Edit', style: Get.textTheme.headline4),
-                                ],
-                              ),
-                            ),
-                          ],
+                        Text('10:00 AM', style: Get.textTheme.bodyText1),
+                      ],
+                    ),
+                    const SizedBox(height: kBigPadding),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'https://www.mrdustbin.com/en/wp-content/uploads/2021/05/johnny-depp.jpg',
+                            fit: BoxFit.cover,
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                        const SizedBox(width: kSmallPadding),
+                        Text(
+                          'Johny Depp',
+                          style: Get.textTheme.bodyText1,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          constraints: const BoxConstraints(),
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(
+                            AppIcon.mylocation,
+                            color: Colors.redAccent,
+                          ),
                         ),
                       ],
                     ),

@@ -57,15 +57,15 @@ class MDialog {
       AlertDialog(
         content: Text(
           message,
-          style: Get.textTheme.bodyText1,
+          style: Get.textTheme.bodyText2,
         ),
         actions: <Widget>[
-          TextButton(
-            child: const Text('Batal'),
-            onPressed: () {
-              Get.back();
-            },
-          ),
+          // TextButton(
+          //   child: const Text('Batal'),
+          //   onPressed: () {
+          //     Get.back();
+          //   },
+          // ),
           TextButton(
             child: const Text('Lanjutkan'),
             onPressed: () {
