@@ -24,6 +24,7 @@ import 'package:gocery/feature/landing/presentation/getx/landing_page_controller
 import 'package:gocery/feature/landing/presentation/page/landing_page.dart';
 import 'package:gocery/feature/order/presentation/getx/controller/order_detail_page_controller.dart';
 import 'package:gocery/feature/order/presentation/page/order_detail_page.dart';
+import 'package:gocery/feature/payment/presentation/page/payment_page.dart';
 import 'package:gocery/feature/product/presentation/page/product_detail_page.dart';
 import 'package:gocery/feature/product/presentation/page/produt_page.dart';
 import 'package:gocery/feature/search/presentation/page/search_page.dart';
@@ -120,6 +121,10 @@ class AppRoute {
     GetPage(
       name: kOrderCompletePage,
       page: () => const OrderCompletePage(),
+    ),
+    GetPage(
+      name: kPaymentPage,
+      page: () => const PaymentPage(),
     ),
   ];
 }

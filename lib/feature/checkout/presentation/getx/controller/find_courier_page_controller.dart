@@ -34,7 +34,11 @@ class FindCourierPageController extends GetxController {
         courierCount += 1;
 
         if (courierCount == _order.orderShippingEntity!.length) {
-          _toOrderCompletePage();
+          if (_order.paymentChannelEntity!.channelCode == 'COD') {
+            _toOrderCompletePage();
+          } else {
+            _toPaymentPage();
+          }
         }
       },
     );
@@ -46,6 +50,10 @@ class FindCourierPageController extends GetxController {
 
   void _toOrderCompletePage() {
     Get.offAllNamed(kOrderCompletePage);
+  }
+
+  void _toPaymentPage() {
+    Get.offAllNamed(kPaymentPage);
   }
 
   void init() {

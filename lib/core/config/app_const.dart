@@ -52,6 +52,7 @@ const String kOrderDetailPage = '/order_detail';
 const String kChatDetailPage = '/chat_detail';
 const String kTrackingPage = '/tracking';
 const String kFindCourierPage = '/find_courier';
+const String kPaymentPage = '/payment';
 
 //REST API
 const String kBroadcastAuth = 'customer/broadcasting/auth';

@@ -800,8 +800,6 @@ class CheckoutPage extends GetView<CheckoutPageController> {
                                                   return Checkbox(
                                                     value:
                                                         controller.checkbox(),
-                                                    // visualDensity:
-                                                    //     VisualDensity.compact,
                                                     onChanged:
                                                         controller.point() <
                                                                 1000

@@ -160,9 +160,9 @@ class CheckoutPageController extends GetxController {
       return 0.0;
     }
 
-    if (!checkbox()) {
-      return 0.0;
-    }
+    // if (!checkbox()) {
+    //   return 0.0;
+    // }
 
     return double.parse(
         customerAccount().data!.customerPointEntity!.point!.toString());
